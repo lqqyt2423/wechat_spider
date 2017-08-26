@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script type="text/javascript" src="../src/juicer.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var data={
+			list:[
+				{name:'guokai',show:true},
+				{name:'benben',show:false},
+				{name:'dier',show:true}
+			],
+			blah:[
+				{num:1},
+				{num:2},
+				{num:3,inner:[
+					{'time':'15:00'},
+					{'time':'16:00'},
+					{'time':'17:00'},
+					{'time':'18:00'}
+				]},
+				{num:4}
+			]
+		};
+
+		var tpl=[
+			'<ul>',
+				'{@each list as it, k}',
+					'<li>${it.name} (index: ${k})</li>',
+				'{@/each}',
+				'{# first level attribute must specify the "data." prefix}',
+				'{@each blah as it}',
+					'<li>',
+						'num: ${it.num} <br />',
+						'{@if it.num==3}',
+							'{@each it.inner as it2}',
+								'${it2.time} <br />',
+							'{@/each}',
+						'{@/if}',
+					'</li>',
+				'{@/each}',
+			'</ul>'
+		].join('\n');
+
+		var inc=function(n) {
+			return n+1;
+		};
+
+		var starttimestamp=new Date().getTime();
+
+		juicer.set('cache',true);
+		juicer.set('errorhandling',false);
+		juicer.set('strip',true);
+		juicer.set('detection',false);
+
+		for(var i=0;i<1000;i++) {
+			juicer(tpl,data);
+		}
+
+		var endtimestamp=new Date().getTime();
+		var exhausttime=endtimestamp-starttimestamp;
+
+		document.write(juicer(tpl,data));
+		document.write('run time: '+exhausttime);
+
+		console.log(juicer(tpl).render.toString());
+		console.log(exhausttime);
+	</script>
+</body>
+</html>

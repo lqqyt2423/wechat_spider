@@ -1,0 +1,19 @@
+{
+  "name": "wechat_spider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rule.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "liqiang",
+  "license": "ISC",
+  "dependencies": {
+    "anyproxy": "^3.10.4",
+    "mongoose": "^4.11.4",
+    "mongoose-timestamp": "^0.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

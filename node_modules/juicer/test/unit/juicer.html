@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+    <script type="text/javascript" src="qunit-1.5.0.js"></script>
+	<link rel="stylesheet" href="qunit-1.5.0.css" />
+	<!--<script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.5.0.js"></script>-->
+	<!--<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.5.0.css" />-->
+</head>
+<body>
+    <!--
+    {@helper double}
+        function(num) {
+            return num * 2;
+        }
+    {@/helper}
+    -->
+
+    <!--
+    {@helper uri}
+        function uri(input) {
+            return 'http://juicer.name';
+        }
+    {@/helper}
+    -->
+
+    <div id="qunit"></div>
+    <script type="text/tmpl" id="juicer-tmpl">
+        {@if benben === 'cc'}
+            ${hello}
+        {@else if benben === '.cc'}
+            ${hello}.cc
+        {@else}
+            ${hello}.jp
+        {@/if}
+    </script>
+
+    <script type="text/tmpl" id="juicer-sub-tmpl">${time}</script>
+    <script type="text/javascript" src="../../src/juicer.js"></script>
+    <script type="text/javascript" src="test.js"></script>
+</body>
+</html>
