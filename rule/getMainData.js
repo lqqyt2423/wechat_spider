@@ -1,3 +1,5 @@
+'use strict';
+
 const Post = require('../models/Post');
 const url = require('url');
 const querystring = require('querystring');

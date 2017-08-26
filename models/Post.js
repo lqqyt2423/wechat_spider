@@ -16,6 +16,7 @@ const Post = new mongoose.Schema({
   sourceUrl: String,
   cover: String,
   digest: String,
+  isFail: Boolean
 });
 
 Post.plugin(require('mongoose-timestamp'));

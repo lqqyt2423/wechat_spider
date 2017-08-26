@@ -1,5 +1,8 @@
+'use strict';
+
 const getMainData = require('./getMainData');
 const getProfileData = require('./getProfileData');
+const insertJsToNextPage = require('./insertJsToNextPage');
 
 
 module.exports = {
@@ -46,7 +49,16 @@ module.exports = {
       } else if (/profile_ext.+__biz/.test(link)) {
         getProfileData(link, res, serverResData).then(() => {
           callback(serverResData);
-        })
+        });
+      // 文章页跳转
+      } else if (/\/s\?__biz/.test(link) || /mp\/appmsg\/show/.test(link)) {
+        insertJsToNextPage(link, serverResData).then((content) => {
+          if (content) {
+            callback(content);
+          } else {
+            callback(serverResData);
+          }
+        });
       } else {
         callback(serverResData);
       }

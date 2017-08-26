@@ -1,3 +1,5 @@
+'use strict';
+
 const proxy = require('anyproxy');
 
 //create cert when you want to use https features
