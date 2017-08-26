@@ -1,1 +1,0 @@
-var juicer=require("juicer");var fs=require("fs");exports.__express=function(c,a,b){fs.readFile(c,"utf8",function(d,e){if(d){return b(d);}e=juicer(e,a);b(null,e);});};
