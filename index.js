@@ -20,3 +20,5 @@ const options = {
     silent        : false //optional, do not print anything into terminal. do not set it when you are still debugging.
 };
 new proxy.proxyServer(options);
+
+require('./server').listen(8004);

@@ -10,8 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "anyproxy": "^3.10.4",
+    "body-parser": "^1.17.2",
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
     "mongoose": "^4.11.4",
-    "mongoose-timestamp": "^0.6.0"
+    "mongoose-timestamp": "^0.6.0",
+    "morgan": "^1.8.2"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

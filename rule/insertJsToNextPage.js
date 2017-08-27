@@ -12,6 +12,10 @@ function insertJsToNextPage(link, content) {
   const [ msgBiz, msgMid, msgIdx ] = [ identifier.__biz, identifier.mid, identifier.idx ];
   content = content.toString();
   let promise = Promise.resolve();
+  promise = promise.then(() => {
+    return saveData(msgBiz, msgMid, msgIdx, content).then(() => {});
+  });
+  if (config.disable) return promise;
   // 判断此文是否失效
   if (content.indexOf('global_error_msg') > -1 || content.indexOf('icon_msg warn') > -1) {
     promise = promise.then(() => {
@@ -65,6 +69,21 @@ function postQueue() {
       }
     })
   }
+}
+
+function saveData(msgBiz, msgMid, msgIdx, content) {
+  let wechatId = /<span class="profile_meta_value">(.+?)<\/span>/.exec(content)[1];
+  return Post.findOne({
+    msgBiz: msgBiz,
+    msgMid: msgMid,
+    msgIdx: msgIdx
+  }).then(post => {
+    if (post) {
+      return Post.findByIdAndUpdate(post._id, {
+        wechatId: wechatId
+      });
+    }
+  });
 }
 
 module.exports = insertJsToNextPage;

@@ -16,7 +16,8 @@ const Post = new mongoose.Schema({
   sourceUrl: String,
   cover: String,
   digest: String,
-  isFail: Boolean
+  isFail: Boolean,
+  wechatId: String
 });
 
 Post.plugin(require('mongoose-timestamp'));
