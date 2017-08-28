@@ -7,7 +7,7 @@ const Post = require('../models/Post');
 var links = [];
 
 function insertJsToNextPage(link, content) {
-  console.log('links.length: ', links.length);
+  console.log('Post.links.length => ', links.length);
   let identifier = querystring.parse(url.parse(link).query);
   const [ msgBiz, msgMid, msgIdx ] = [ identifier.__biz, identifier.mid, identifier.idx ];
   content = content.toString();

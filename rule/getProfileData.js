@@ -49,19 +49,21 @@ function getProfileData(link, response, content) {
   for (let i=0, len=postList.length; i<len; i++) {
     let post = postList[i];
     let appMsg = post.app_msg_ext_info;
-    let publishAt = new Date(post.comm_msg_info.datetime*1000);
-    parsePosts.push({
-      appMsg: appMsg,
-      publishAt: publishAt
-    });
-    let multiAppMsg = appMsg.multi_app_msg_item_list;
-    if (multiAppMsg && multiAppMsg.length) {
-      multiAppMsg.forEach(appMsg => {
-        parsePosts.push({
-          appMsg: appMsg,
-          publishAt: publishAt
-        });
+    if (appMsg) {
+      let publishAt = new Date(post.comm_msg_info.datetime*1000);
+      parsePosts.push({
+        appMsg: appMsg,
+        publishAt: publishAt
       });
+      let multiAppMsg = appMsg.multi_app_msg_item_list;
+      if (multiAppMsg && multiAppMsg.length) {
+        multiAppMsg.forEach(appMsg => {
+          parsePosts.push({
+            appMsg: appMsg,
+            publishAt: publishAt
+          });
+        });
+      }
     }
   }
   return promise.then(() => {

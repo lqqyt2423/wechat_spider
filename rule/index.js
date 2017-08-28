@@ -3,6 +3,7 @@
 const getMainData = require('./getMainData');
 const getProfileData = require('./getProfileData');
 const insertJsToNextPage = require('./insertJsToNextPage');
+const insertJsToNextProfile = require('./insertJsToNextProfile');
 
 
 module.exports = {
@@ -11,11 +12,22 @@ module.exports = {
     },
 
     shouldUseLocalResponse : function(req,reqBody) {
+      // 自定义网络请求，控制历史页下拉或跳转
+      if (req.url.indexOf('tonextprofile') > -1) {
+        return true;
+      }
       return false;
     },
 
     dealLocalResponse : function(req,reqBody,callback) {
-      callback(statusCode,resHeader,responseData);
+      // 自定义网络请求，控制历史页下拉或跳转
+      if (req.url.indexOf('tonextprofile') > -1) {
+        insertJsToNextProfile.isJumpToNext(req.url).then(text => {
+          console.log('isJumpToNextProfile => ', text);
+          callback(200, { 'content-type': 'text/plain' }, text);
+        });
+      }
+      // callback(statusCode,resHeader,responseData);
     },
 
     replaceRequestProtocol:function(req,protocol) {
@@ -48,7 +60,9 @@ module.exports = {
       // 通过历史消息页抓取文章url等
       } else if (/profile_ext.+__biz/.test(link)) {
         getProfileData(link, res, serverResData).then(() => {
-          callback(serverResData);
+          return insertJsToNextProfile(link, res, serverResData)
+        }).then(content => {
+          callback(content);
         });
       // 文章页跳转
       } else if (/\/s\?__biz/.test(link) || /mp\/appmsg\/show/.test(link)) {
