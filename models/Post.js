@@ -17,9 +17,17 @@ const Post = new mongoose.Schema({
   cover: String,
   digest: String,
   isFail: Boolean,
-  wechatId: String
-});
+  wechatId: String,
+  updateNumAt: Date
+}, { toJSON: { virtuals: true } });
 
 Post.plugin(require('mongoose-timestamp'));
+
+Post.virtual('profile', {
+  ref: 'Profile',
+  localField: 'msgBiz',
+  foreignField: 'msgBiz',
+  justOne: true
+})
 
 module.exports = mongoose.model('Post', Post);

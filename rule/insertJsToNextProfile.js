@@ -51,19 +51,37 @@ function profileQueue() {
     })
   } else {
     let query = {};
-    query.updatedAt = { $lte: config.maxUpdatedAt };
+    let promise = Promise.resolve();
+    query.$or = [
+      { updatedAt: { $lte: config.maxUpdatedAt } },
+      { createdAt: { $gte: config.maxUpdatedAt } }
+    ];
     let targetBiz = config.targetBiz;
     if (targetBiz && targetBiz.length) {
       query.msgBiz = { $in: targetBiz };
+      promise = promise.then(() => {
+        return Promise.all(targetBiz.map(biz => {
+          return Profile.findOne({ msgBiz: biz }).then(profile => {
+            if (!profile) {
+              let profile = new Profile({
+                msgBiz: biz
+              });
+              return profile.save();
+            }
+          })
+        }))
+      })
     }
-    return Profile.find(query, { msgBiz: 1 }).then(profiles => {
-      if (profiles && profiles.length) {
-        profiles.forEach(profile => {
-          let link = `https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${profile.msgBiz}&scene=124#wechat_redirect`;
-          links.push(link);
-        });
-        return links.shift();
-      }
+    return promise.then(() => {
+      return Profile.find(query, { msgBiz: 1 }).then(profiles => {
+        if (profiles && profiles.length) {
+          profiles.forEach(profile => {
+            let link = `https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${profile.msgBiz}&scene=124#wechat_redirect`;
+            links.push(link);
+          });
+          return links.shift();
+        }
+      })
     })
   }
 }

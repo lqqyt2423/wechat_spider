@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+var config = {
   mongodb: {
     db: 'mongodb://127.0.0.1:27017/wechat_spider'
   },
@@ -13,10 +13,10 @@ module.exports = {
     targetBiz: []
   },
   insertJsToNextProfile: {
-    disable: true,
+    disable: false,
     jumpInterval: 5,
     // 抓取到minTime 就跳转至下一公众号
-    minTime: new Date(2017, 7, 1),
+    minTime: new Date(2017, 8, 1),
     // 自定义最近多久更新的公众号本次就不用抓取
     maxUpdatedAt: new Date(),
     targetBiz: [],
@@ -24,3 +24,8 @@ module.exports = {
     beginTime: new Date()
   }
 };
+
+// config.insertJsToNextProfile.targetBiz = require('./targetProfileBiz.json');
+// config.insertJsToNextPage.targetBiz = require('./targetProfileBiz.json');
+
+module.exports = config;

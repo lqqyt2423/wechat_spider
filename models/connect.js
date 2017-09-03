@@ -10,3 +10,6 @@ mongoose.connect(config.mongodb.db, {
 });
 
 mongoose.Promise = global.Promise;
+
+// 载入 mongoose 插件
+require('./plugins/paginator');

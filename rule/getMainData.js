@@ -19,7 +19,8 @@ function getMainData(link, content) {
 			if (post) {
 				return Post.findByIdAndUpdate(post._id, {
 					readNum: readNum,
-					likeNum: likeNum
+					likeNum: likeNum,
+					updateNumAt: new Date()
 				});
 			} else {
 				let post = new Post({
@@ -27,7 +28,8 @@ function getMainData(link, content) {
 					msgMid: msgMid,
 					msgIdx: msgIdx,
 					readNum: readNum,
-					likeNum: likeNum
+					likeNum: likeNum,
+					updateNumAt: new Date()
 				});
 				return post.save();
 			}
