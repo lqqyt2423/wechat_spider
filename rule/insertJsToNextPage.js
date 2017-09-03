@@ -14,6 +14,8 @@ function insertJsToNextPage(link, content) {
   let promise = Promise.resolve();
   promise = promise.then(() => {
     return saveData(msgBiz, msgMid, msgIdx, content).then(() => {});
+  }).catch(e => {
+    console.log(e);
   });
   if (config.disable) return promise;
   // 判断此文是否失效

@@ -53,7 +53,8 @@ function profileQueue() {
     let query = {};
     let promise = Promise.resolve();
     query.$or = [
-      { updatedAt: { $lte: config.maxUpdatedAt } },
+      { openHistoryPageAt: { $lte: config.maxUpdatedAt } },
+      { openHistoryPageAt: { $exists: false } },
       { createdAt: { $gte: config.maxUpdatedAt } }
     ];
     let targetBiz = config.targetBiz;

@@ -27,13 +27,15 @@ function getProfileData(link, response, content) {
           return Profile.findByIdAndUpdate(profile._id, {
             msgBiz: msgBiz,
             title: title,
-            headimg: headimg
+            headimg: headimg,
+            openHistoryPageAt: new Date()
           });
         } else {
           let profile = new Profile({
             msgBiz: msgBiz,
             title: title,
-            headimg: headimg
+            headimg: headimg,
+            openHistoryPageAt: new Date()
           });
           return profile.save();
         }

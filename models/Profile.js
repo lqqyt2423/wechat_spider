@@ -9,7 +9,8 @@ const Profile = new mongoose.Schema({
   wechatId: String,
   desc: String,
   msgBiz: String,
-  headimg: String
+  headimg: String,
+  openHistoryPageAt: Date
 });
 
 Profile.plugin(require('mongoose-timestamp'));
