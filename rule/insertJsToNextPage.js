@@ -52,7 +52,7 @@ function postQueue() {
       return links.shift();
     })
   } else {
-    let query = {};
+    let query = { isFail: null };
     query.publishAt = { $gte: config.minTime, $lte: config.maxTime };
     if (!config.isCrawlExist) {
       query.updateNumAt = null;
