@@ -55,8 +55,11 @@ function postQueue() {
     let query = {};
     query.publishAt = { $gte: config.minTime, $lte: config.maxTime };
     if (!config.isCrawlExist) {
-      query.readNum = null;
-      query.likeNum = null;
+      query.updateNumAt = null;
+    } else {
+      query.$or = [{ updateNumAt: null }, {
+        $and: [{ updateNumAt: { $exists: true } }, { publishAt: { $exists: true } }, { $where: `this.updateNumAt.getTime() - this.publishAt.getTime() < ${config.crawlExistInterval}` }]
+      }];
     }
     let targetBiz = config.targetBiz;
     if (targetBiz && targetBiz.length) {

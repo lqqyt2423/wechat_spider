@@ -37,7 +37,7 @@ api.get('/profile', (req, res, next) => {
   if (req.query.target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
   }
-  return Profile.find(query).sort({ updatedAt: -1 }).paginate(req.query).then(result => {
+  return Profile.find(query).sort({ openHistoryPageAt: 1 }).paginate(req.query).then(result => {
     let data = result.data;
     let metadata = {
       options: result.options,

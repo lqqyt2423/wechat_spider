@@ -2,7 +2,7 @@
   "name": "wechat_spider",
   "version": "1.0.0",
   "description": "",
-  "main": "rule.js",
+  "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
   },

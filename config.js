@@ -8,17 +8,19 @@ var config = {
     disable: false,
     jumpInterval: 3,
     minTime: new Date(2017, 6, 1),
-    maxTime: new Date(2017, 7, 27),
+    maxTime: new Date(2017, 8, 27),
     isCrawlExist: false,
+    // if true updateNumAt - publishAt
+    crawlExistInterval: 1000*60*60*24*5,
     targetBiz: []
   },
   insertJsToNextProfile: {
     disable: false,
     jumpInterval: 10,
     // 抓取到minTime 就跳转至下一公众号
-    minTime: new Date(2017, 6, 1),
+    minTime: new Date(2017, 8, 23),
     // 自定义最近多久更新的公众号本次就不用抓取
-    maxUpdatedAt: new Date('2017-09-03T05:43:28.639Z'),
+    maxUpdatedAt: new Date(2017, 9, 1),
     targetBiz: [],
     // 程序开始时间
     beginTime: new Date()
