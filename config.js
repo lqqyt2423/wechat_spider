@@ -8,10 +8,10 @@ var config = {
     disable: false,
     jumpInterval: 3,
     minTime: new Date(2017, 6, 1),
-    maxTime: new Date(2017, 8, 27),
-    isCrawlExist: false,
+    maxTime: new Date(2017, 9, 1),
+    isCrawlExist: true,
     // if true updateNumAt - publishAt
-    crawlExistInterval: 1000*60*60*24*5,
+    crawlExistInterval: 1000*60*60*24*3,
     targetBiz: []
   },
   insertJsToNextProfile: {
