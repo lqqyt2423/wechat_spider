@@ -4,8 +4,8 @@ const Profile = require('../models/Profile');
 const Post = require('../models/Post');
 const config = require('../config').insertJsToNextProfile;
 
-api.get('/', (req, res, next) => {
-  let query = {};
+api.get('/posts', (req, res, next) => {
+  let query = { title: { $exists: true } };
   if (req.query.target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
   }
@@ -15,11 +15,12 @@ api.get('/', (req, res, next) => {
   if (req.query.mainData === 'false') {
     query.readNum = { $exists: false };
   }
-  return Post.find(query).sort({ updatedAt: -1 }).populate('profile').paginate(req.query).then(result => {
+  return Post.find(query).sort({ publishAt: -1 }).populate('profile').paginate(req.query).then(result => {
     let data = result.data;
     let metadata = {
       options: result.options,
-      current: result.current,
+      perPage: result.options.perPage,
+      currentPage: result.current,
       next: result.next,
       prev: result.prev,
       totalPages: result.totalPages,
@@ -32,7 +33,7 @@ api.get('/', (req, res, next) => {
   })
 })
 
-api.get('/profile', (req, res, next) => {
+api.get('/profiles', (req, res, next) => {
   let query = {};
   if (req.query.target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
