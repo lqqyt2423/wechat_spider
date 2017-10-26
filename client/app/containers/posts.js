@@ -27,7 +27,7 @@ class Posts extends React.Component {
     let metadata = posts.metadata;
     return (
       <div>
-        <table className="table table-striped table-hover">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>发布时间</th>
@@ -37,7 +37,6 @@ class Posts extends React.Component {
               <th>公众号</th>
               <th>阅读数</th>
               <th>点赞数</th>
-              <th>链接</th>
             </tr>
           </thead>
           <tbody>
@@ -48,11 +47,10 @@ class Posts extends React.Component {
                     <td>{moment(post.publishAt).format('YYYY/MM/DD HH:mm')}</td>
                     <td>{post.updateNumAt ? moment(post.updateNumAt).format('YYYY/MM/DD HH:mm') : ''}</td>
                     <td>{post.updateNumAt ? `${((new Date(post.updateNumAt).getTime() - new Date(post.publishAt).getTime())/1000/60/60/24).toFixed(1)}天` : ''}</td>
-                    <td>{post.title}</td>
-                    <td>{post.profile ? post.profile.title : post.msgBiz}</td>
+                    <td><a href={post.link} target="_blank">{post.title}</a></td>
+                    <td>{post.profile ? (<span><img style={{ height: '24px', marginRight: '3px' }} src={post.profile.headimg} className="img-circle" />{post.profile.title}</span>) : post.msgBiz}</td>
                     <td>{post.readNum ? post.readNum : ''}</td>
                     <td>{post.likeNum ? post.likeNum : ''}</td>
-                    <td><a href={post.link} target="_blank">打开</a></td>
                   </tr>
                 );
               })
