@@ -16,11 +16,11 @@ var config = {
   },
   insertJsToNextProfile: {
     disable: false,
-    jumpInterval: 10,
+    jumpInterval: 20,
     // 抓取到minTime 就跳转至下一公众号
-    minTime: new Date(2017, 8, 23),
+    minTime: new Date(2016, 11, 31),
     // 自定义最近多久更新的公众号本次就不用抓取
-    maxUpdatedAt: new Date(2017, 9, 1),
+    maxUpdatedAt: new Date(2017, 9, 28),
     targetBiz: [],
     // 程序开始时间
     beginTime: new Date()

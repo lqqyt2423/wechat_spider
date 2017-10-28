@@ -1,6 +1,6 @@
 import config from './config';
 
-function assembleUrl(path, params, method) {
+export function assembleUrl(path, params, method) {
   path = path || '';
   params = params || {};
   method = method ? method.toLowerCase() : 'get';
@@ -67,10 +67,11 @@ export function receiveProfiles(profiles) {
   };
 };
 
-export function fetchProfiles() {
+export function fetchProfiles(query) {
+  let path = assembleUrl(config.profiles, query);
   return function(dispatch) {
     dispatch(requestProfiles());
-    return fetch(config.profiles).then(res => res.json()).then(profiles => {
+    return fetch(path).then(res => res.json()).then(profiles => {
       dispatch(receiveProfiles(profiles));
     });
   };

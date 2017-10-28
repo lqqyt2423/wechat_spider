@@ -28,6 +28,14 @@ Post.virtual('profile', {
   localField: 'msgBiz',
   foreignField: 'msgBiz',
   justOne: true
-})
+});
+
+// 索引
+Post.index({ publishAt: -1 });
+Post.index({ publishAt: -1, msgIdx: 1 });
+Post.index({ publishAt: 1 });
+Post.index({ publishAt: 1, msgIdx: 1 });
+Post.index({ updateNumAt: -1 });
+Post.index({ updateNumAt: 1 });
 
 module.exports = mongoose.model('Post', Post);

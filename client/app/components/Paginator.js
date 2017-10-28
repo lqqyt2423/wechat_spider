@@ -4,12 +4,15 @@ import classnames from 'classnames';
 import assign from 'lodash.assign';
 import get from 'lodash/get';
 import set from 'lodash/set';
+import { assembleUrl } from '../actions';
 
 class Paginator extends React.Component {
   static get propTypes() {
     return {
-      action: PropTypes.func.isRequired,
-      dispatch: PropTypes.func.isRequired,
+      // action: PropTypes.func.isRequired,
+      // dispatch: PropTypes.func.isRequired,
+      action: PropTypes.func,
+      dispatch: PropTypes.func,
       currentPage: PropTypes.number,
       perPage: PropTypes.number,
       totalPages: PropTypes.number,
@@ -52,15 +55,26 @@ class Paginator extends React.Component {
 
   loadPage(page, overwrite) {
     return () => {
-      let { dispatch, action, query, onChange } = this.props;
+      let { dispatch, action, query, onChange, pathname, search, history } = this.props;
       let { perPage } = this.state;
       if (perPage > 50) perPage = 50;
+      if (search && search.indexOf('?') === 0) {
+        let searchObj = {};
+        search.replace('?', '').split('&').forEach(item => {
+          let key = item.split('=')[0];
+          let value = item.replace(`${key}=`, '');
+          searchObj[key] = value;
+        });
+        query = assign({}, query, searchObj);
+      }
       query = assign({}, query, { page, perPage });
       if (overwrite) query._overwrite = true;
 
       if (typeof onChange === 'function') onChange(page, perPage);
 
-      dispatch(action(query));
+      // dispatch(action(query));
+      let path = assembleUrl(pathname, query);
+      history.push(path);
     };
   }
 
@@ -97,7 +111,7 @@ class Paginator extends React.Component {
     const { totalPages } = this.props;
     let value = e.target.value;
     if(value > totalPages) value = totalPages;
-    if(value < 1) value = 1;
+    if(value < 1) value = '';
     this.setState({Page: value});
   }
 

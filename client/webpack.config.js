@@ -47,7 +47,7 @@ module.exports = {
     contentBase: './',
     historyApiFallback: true,
     proxy: {
-      '/': 'http://localhost:8004'
+      '/api': 'http://localhost:8004'
     }
   },
   module: {
