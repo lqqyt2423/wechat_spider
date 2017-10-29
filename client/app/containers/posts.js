@@ -94,7 +94,7 @@ class Posts extends React.Component {
                     <td>{moment(post.publishAt).format('YY-MM-DD HH:mm')}</td>
                     <td>{post.updateNumAt ? moment(post.updateNumAt).format('YY-MM-DD HH:mm') : ''}</td>
                     <td>{post.updateNumAt ? timeDiff(post.updateNumAt, post.publishAt) : ''}</td>
-                    <td><a title={post.title} href={post.link} target="_blank">{post.title.substr(0, 35)}</a></td>
+                    <td><a title={post.title} href={post.link} target="_blank">{post.title.substr(0, 30)}</a></td>
                     <td>{post.msgIdx}</td>
                     <td><Link to={`/posts?msgBiz=${post.msgBiz}`}>{post.profile ? (<span><img style={{ height: '24px', marginRight: '3px' }} src={post.profile.headimg} className="img-circle" />{post.profile.title}</span>) : post.msgBiz}</Link></td>
                     <td>{post.readNum ? post.readNum : ''}</td>
