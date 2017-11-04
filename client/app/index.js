@@ -27,6 +27,7 @@ let store = createStore(
 
 import Posts from './containers/posts';
 import Profiles from './containers/profiles';
+import Home from './containers/home';
 
 class App extends React.Component {
 
@@ -56,8 +57,6 @@ class App extends React.Component {
 }
 
 const connectedApp = connect(state => state)(App);
-
-const Home = () => <div>hello world</div>;
 
 render(
   (

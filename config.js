@@ -8,7 +8,7 @@ var config = {
     disable: false,
     jumpInterval: 2,
     minTime: new Date(2017, 0, 1),
-    maxTime: new Date(2017, 9, 1),
+    maxTime: new Date(2017, 10, 1),
     isCrawlExist: true,
     // if true updateNumAt - publishAt
     crawlExistInterval: 1000*60*60*24*3,

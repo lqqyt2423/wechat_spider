@@ -1,3 +1,5 @@
+'use strict';
+const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
@@ -19,4 +21,9 @@ app.use('/api', data);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-module.exports = app;
+const server = http.createServer(app);
+
+const io = require('socket.io')(server);
+
+exports = module.exports = server;
+exports.io = io;

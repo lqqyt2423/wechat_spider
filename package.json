@@ -18,7 +18,10 @@
     "moment": "^2.18.1",
     "mongoose": "^4.11.4",
     "mongoose-timestamp": "^0.6.0",
-    "morgan": "^1.8.2"
+    "morgan": "^1.8.2",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
