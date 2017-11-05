@@ -92,11 +92,18 @@ api.get('/profiles', (req, res, next) => {
       Promise.all(data.map(item => {
         return Promise.all([
           Post.count({ msgBiz: item.msgBiz }).then(count => {
-            // data 对象有些奇怪
             item._doc.postsAllCount = count;
           }),
           Post.count({ msgBiz: item.msgBiz, readNum: { $exists: true } }).then(count => {
             item._doc.postsHasDataCount = count;
+          }),
+          Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: -1 }).limit(1).then(posts => {
+            if (!posts.length) return;
+            item._doc.newestPostTime = posts[0].publishAt;
+          }),
+          Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: 1 }).limit(1).then(posts => {
+            if (!posts.length) return;
+            item._doc.oldestPostTime = posts[0].publishAt;
           })
         ])
       })).then(() => {
