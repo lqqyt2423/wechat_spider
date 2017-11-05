@@ -117,7 +117,7 @@ class Paginator extends React.Component {
 
   render() {
     let self = this;
-    let { currentPage, totalPages, pager } = this.props;
+    let { currentPage, totalPages, pager, count } = this.props;
     currentPage = currentPage || 1;
     totalPages = totalPages || 1;
     pager = pager || 5;
@@ -157,6 +157,7 @@ class Paginator extends React.Component {
                   onClick={this.changePage.bind(this)}>跳转</button>
         </div>
         <div className='pagination-per-page' style={{ float: 'right', padding: '30px 0' }}>
+          共 {count} 个
           每页
           <input type="number"
             style={{ marginLeft: '5px', marginRight: '5px' }}

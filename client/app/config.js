@@ -4,6 +4,7 @@ const config = {};
 if (ENV === 'development') {
   config.posts = '/api/posts';
   config.profiles = '/api/profiles';
+  config.cates = '/api/categories';
 } else {
   config.posts = '';
   config.post = '';

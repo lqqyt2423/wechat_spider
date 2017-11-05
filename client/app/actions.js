@@ -76,3 +76,29 @@ export function fetchProfiles(query) {
     });
   };
 };
+
+export const REQUEST_CATES = 'REQUEST_CATES';
+
+export function requestCates() {
+  return {
+    type: REQUEST_CATES
+  };
+};
+
+export const RECEIVE_CATES = 'RECEIVE_CATES';
+
+export function receiveCates(cates) {
+  return {
+    type: RECEIVE_CATES,
+    cates
+  };
+};
+
+export function fetchCates() {
+  return function(dispatch) {
+    dispatch(requestCates());
+    return fetch(config.cates).then(res => res.json()).then(cates => {
+      dispatch(receiveCates(cates));
+    });
+  };
+};

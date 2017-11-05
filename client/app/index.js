@@ -28,6 +28,7 @@ let store = createStore(
 import Posts from './containers/posts';
 import Profiles from './containers/profiles';
 import Home from './containers/home';
+import Categories from './containers/categories';
 
 class App extends React.Component {
 
@@ -45,6 +46,7 @@ class App extends React.Component {
             <List>
               <ListItem primaryText="Posts" onClick={() => { history.push('/posts') }} />
               <ListItem primaryText="Profiles" onClick={() => { history.push('/profiles') }} />
+              <ListItem primaryText="Cates" onClick={() => { history.push('/categories') }} />
             </List>
           </Drawer>
           <div className="wrapper">
@@ -66,6 +68,7 @@ render(
           <IndexRoute component={Home} />
           <Route path="/posts" component={Posts} />
           <Route path="/profiles" component={Profiles} />
+          <Route path="/categories" component={Categories} />
         </Route>
       </Router>
     </Provider>
