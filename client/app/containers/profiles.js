@@ -55,7 +55,6 @@ class Profiles extends React.Component {
                     <td><Link to={`/posts?msgBiz=${profile.msgBiz}`}>{profile.title}</Link></td>
                     <td>{profile.newestPostTime ? moment(profile.newestPostTime).format('YY-MM-DD'): ''}</td>
                     <td>{profile.oldestPostTime ? moment(profile.oldestPostTime).format('YY-MM-DD'): ''}</td>
-                    <td>{}</td>
                     <td>{profile.postsAllCount}</td>
                     <td>{profile.postsHasDataCount}</td>
                     <td>{profile.postsAllCount - profile.postsHasDataCount}</td>
