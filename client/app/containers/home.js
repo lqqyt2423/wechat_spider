@@ -22,29 +22,27 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: null
+      posts: []
     };
   }
 
   componentDidMount() {
-    const socket = io('http://localhost:8004');
-    socket.on('connect', () => {
-      console.log('socket connect');
-    });
-    socket.on('disconnect', () => {
-      console.log('socket disconnect');
-    });
-    socket.on('message', data => {
+    this.socket = io('http://localhost:8004');
+    this.socket.on('message', data => {
+      let posts = data.concat(this.state.posts);
       this.setState({
-        posts: JSON.parse(data)
+        posts: posts
       });
     });
   }
 
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   render() {
     let posts = this.state.posts;
-    if (!posts || !posts.data) return <Loading />;
-    let metadata = posts.metadata;
+    if (!posts.length) return <Loading />;
     return (
       <div>
         <table className="table table-striped">
@@ -62,7 +60,7 @@ class Home extends React.Component {
           </thead>
           <tbody>
             {
-              posts.data.map(post => {
+              posts.map(post => {
                 return (
                   <tr key={post._id}>
                     <td>{moment(post.publishAt).format('YY-MM-DD HH:mm')}</td>

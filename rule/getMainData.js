@@ -3,15 +3,7 @@
 const Post = require('../models/Post');
 const url = require('url');
 const querystring = require('querystring');
-
-let count = 0;
 const sendPostsData = require('../api/io').sendPostsData;
-function ioSend() {
-	if (++count >= 5) {
-		sendPostsData();
-		count = 0;
-	}
-}
 
 function getMainData(link, content) {
 	let promise = Promise.resolve();
@@ -43,7 +35,7 @@ function getMainData(link, content) {
 				return post.save();
 			}
 		}).then(() => {
-			ioSend();
+			sendPostsData();
 		}).catch(e => {
 			console.log(e);
 		});
