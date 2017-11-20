@@ -6,8 +6,9 @@ if (ENV === 'development') {
   config.profiles = '/api/profiles';
   config.cates = '/api/categories';
 } else {
-  config.posts = '';
-  config.post = '';
+  config.posts = '/api/posts';
+  config.profiles = '/api/profiles';
+  config.cates = '/api/categories';
 }
 
 export default config;

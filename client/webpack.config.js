@@ -37,8 +37,7 @@ module.exports = {
   entry: './app/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname),
-    publicPath: '/'
+    path: path.resolve(__dirname, './build')
   },
   plugins: plugins,
   devtool: NODE_ENV == 'development' ? 'eval' : undefined,

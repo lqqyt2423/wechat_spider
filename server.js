@@ -19,7 +19,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api', data);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/wechat-data', express.static(path.join(__dirname, './client/build')));
+app.get('/wechat-data/*', (req, res) => {
+  res.sendFile(path.join(__dirname, './client/build/index.html'));
+});
 
 const server = http.createServer(app);
 

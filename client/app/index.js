@@ -3,15 +3,17 @@ import { render } from 'react-dom';
 import { Provider, connect } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reducer from './reducers';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Router, Route, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import {List, ListItem} from 'material-ui/List';
+import { createHistory, useBasename } from 'history';
 import 'normalize.css';
 import './style/font-awesome-4.7.0/css/font-awesome.min.css';
 import './style/style.css';
 const ENV = process.env.NODE_ENV || 'development';
+const BASE_URI = '/wechat-data';
 
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
@@ -59,6 +61,10 @@ class App extends React.Component {
 }
 
 const connectedApp = connect(state => state)(App);
+
+const browserHistory = useBasename(createHistory)({
+    basename: BASE_URI
+});
 
 render(
   (
