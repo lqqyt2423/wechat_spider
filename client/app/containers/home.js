@@ -27,7 +27,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io('http://localhost:8004');
+    this.socket = io('http://localhost:8104');
     this.socket.on('message', data => {
       let posts = data.concat(this.state.posts);
       this.setState({

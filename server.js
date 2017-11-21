@@ -17,7 +17,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api', data);
+app.use('/wechat-data-api', data);
 
 app.use('/wechat-data', express.static(path.join(__dirname, './client/build')));
 app.get('/wechat-data/*', (req, res) => {

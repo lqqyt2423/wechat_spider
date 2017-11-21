@@ -46,7 +46,7 @@ module.exports = {
     contentBase: './',
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:8004'
+      '/wechat-data-api': 'http://localhost:8104'
     }
   },
   module: {
