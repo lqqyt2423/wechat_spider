@@ -12,7 +12,7 @@ const initialState = {
   profiles: {},
   cates: [],
   isFetching: false
-}
+};
 
 function reducer(state = initialState, action) {
   switch (action.type) {

@@ -1,7 +1,6 @@
 'use strict';
 
 const Post = require('../models/Post');
-const Profile = require('../models/Profile');
 const targetBiz = require('../targetProfileBiz.json');
 const config = require('../config').insertJsToNextPage;
 const fs = require('fs');

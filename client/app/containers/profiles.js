@@ -67,7 +67,7 @@ class Profiles extends React.Component {
         </table>
         <Paginator { ...metadata } history={ history } search={ search } pathname={ pathname } ></Paginator>
       </div>
-    )
+    );
   }
 }
 

@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchCates } from '../actions';
 import Loading from '../components/loading';
-import moment from 'moment';
-import { Link } from 'react-router';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import { Card, CardActions, CardTitle } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 
 
@@ -30,15 +28,15 @@ class Categories extends React.Component {
               <Card key={cate._id}>
                 <CardTitle title={cate.name} />
                 <CardActions>
-                  <FlatButton label="Profiles" onClick={() => { history.push(`/profiles?category=${cate._id}`) }} />
-                  <FlatButton label="Posts"  onClick={() => { history.push(`/posts?category=${cate._id}`) }} />
+                  <FlatButton label="Profiles" onClick={() => { history.push(`/profiles?category=${cate._id}`); }} />
+                  <FlatButton label="Posts"  onClick={() => { history.push(`/posts?category=${cate._id}`); }} />
                 </CardActions>
               </Card>
             );
           })
         }
       </div>
-    )
+    );
   }
 }
 

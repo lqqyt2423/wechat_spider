@@ -63,7 +63,7 @@ class Posts extends React.Component {
       sortWay: nextSortType
     });
     let path = assembleUrl(pathname, nextQuery);
-    return (<i onClick={() => { history.push(path) }} className={`fa ${iconClass}`}></i>);
+    return (<i onClick={() => { history.push(path); }} className={`fa ${iconClass}`}></i>);
   }
 
   render() {
@@ -107,7 +107,7 @@ class Posts extends React.Component {
         </table>
         <Paginator { ...metadata } history={ history } search={ search } pathname={ pathname } ></Paginator>
       </div>
-    )
+    );
   }
 }
 

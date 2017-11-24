@@ -39,10 +39,10 @@ function getProfileData(link, response, content) {
           });
           return profile.save();
         }
-      })
-    })
+      });
+    });
     content = /var msgList = '(.+)';\n/.exec(content)[1];
-    content = JSON.parse(escape2Html(content).replace(/\\\//g,"/"));
+    content = JSON.parse(escape2Html(content).replace(/\\\//g,'/'));
     postList = content.list;
   } else {
     return Promise.resolve();
@@ -92,7 +92,7 @@ function getProfileData(link, response, content) {
                 publishAt: publishAt,
                 cover: cover,
                 digest: digest,
-                sourceUrl, sourceUrl
+                sourceUrl: sourceUrl
               });
             } else {
               let post = new Post({
@@ -104,17 +104,17 @@ function getProfileData(link, response, content) {
                 publishAt: publishAt,
                 cover: cover,
                 digest: digest,
-                sourceUrl, sourceUrl
+                sourceUrl: sourceUrl
               });
               return post.save();
             }
           });
         }
       }).catch(e => {
-        console.log(e)
+        console.log(e);
       });
     }));
-  })
+  });
 }
 
 // 转义符换成普通字符

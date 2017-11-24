@@ -55,7 +55,7 @@ class Paginator extends React.Component {
 
   loadPage(page, overwrite) {
     return () => {
-      let { dispatch, action, query, onChange, pathname, search, history } = this.props;
+      let { query, onChange, pathname, search, history } = this.props;
       let { perPage } = this.state;
       if (perPage > 50) perPage = 50;
       if (search && search.indexOf('?') === 0) {
@@ -150,11 +150,11 @@ class Paginator extends React.Component {
         </ul>
         <div className="margin-left-10 inline-block pull-right margin-right-10" style={{padding: '30px 0'}}>
           <input type="text"
-                 value={this.state.Page}
-                 onChange={this.handleChangePage.bind(this)}
-                 style={{display: 'inline-block', width:'40px',marginRight:'10px'}}/>
+            value={this.state.Page}
+            onChange={this.handleChangePage.bind(this)}
+            style={{display: 'inline-block', width:'40px',marginRight:'10px'}}/>
           <button className="btn btn-primary btn-xs"
-                  onClick={this.changePage.bind(this)}>跳转</button>
+            onClick={this.changePage.bind(this)}>跳转</button>
         </div>
         <div className='pagination-per-page' style={{ float: 'right', padding: '30px 0' }}>
           共 {count} 个

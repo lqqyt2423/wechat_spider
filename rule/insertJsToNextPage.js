@@ -32,7 +32,7 @@ function insertJsToNextPage(link, content) {
           });
         }
       });
-    })
+    });
   }
   return promise.then(() => {
     return postQueue().then(link => {
@@ -41,8 +41,8 @@ function insertJsToNextPage(link, content) {
         content = content.replace('</title>', '</title>' + insertJs);
         return content;
       }
-    })
-  })
+    });
+  });
 }
 
 function postQueue() {
@@ -50,7 +50,7 @@ function postQueue() {
     let promise = Promise.resolve();
     return promise.then(() => {
       return links.shift();
-    })
+    });
   } else {
     let query = { isFail: null };
     query.publishAt = { $gte: config.minTime, $lte: config.maxTime };
@@ -72,7 +72,7 @@ function postQueue() {
         });
         return links.shift();
       }
-    })
+    });
   }
 }
 

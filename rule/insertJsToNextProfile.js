@@ -37,10 +37,10 @@ function insertJsToNextProfile(link, response, content) {
     })();
   }
 </script>`;
-    content = content.replace("<!--headTrap<body></body><head></head><html></html>-->","").replace("<!--tailTrap<body></body><head></head><html></html>-->","");
-    content = content.replace("</body>",insertJs + "\n</body>");
+    content = content.replace('<!--headTrap<body></body><head></head><html></html>-->','').replace('<!--tailTrap<body></body><head></head><html></html>-->','');
+    content = content.replace('</body>',insertJs + '\n</body>');
     return content;
-  })
+  });
 }
 
 function profileQueue() {
@@ -48,7 +48,7 @@ function profileQueue() {
     let promise = Promise.resolve();
     return promise.then(() => {
       return links.shift();
-    })
+    });
   } else {
     let query = {};
     let promise = Promise.resolve();
@@ -69,9 +69,9 @@ function profileQueue() {
               });
               return profile.save();
             }
-          })
-        }))
-      })
+          });
+        }));
+      });
     }
     return promise.then(() => {
       return Profile.find(query, { msgBiz: 1 }).then(profiles => {
@@ -82,8 +82,8 @@ function profileQueue() {
           });
           return links.shift();
         }
-      })
-    })
+      });
+    });
   }
 }
 
@@ -99,7 +99,7 @@ function isJumpToNext(link) {
     } else {
       return 'false';
     }
-  })
+  });
 }
 
 exports = module.exports = insertJsToNextProfile;

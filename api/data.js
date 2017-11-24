@@ -38,8 +38,8 @@ api.get('/posts', (req, res, next) => {
       return Category.findOne({ _id: req.query.category }).then(category => {
         if (!category) return;
         query.msgBiz = { $in: category.msgBizs };
-      })
-    })
+      });
+    });
   }
   return promise.then(() => {
     return Post.find(query).sort(sortWay).populate('profile').paginate(req.query).then(result => {
@@ -57,11 +57,11 @@ api.get('/posts', (req, res, next) => {
         metadata: metadata,
         data: data
       });
-    })
+    });
   }).catch(e => {
     console.log(e);
-  })
-})
+  });
+});
 
 api.get('/profiles', (req, res, next) => {
   let query = {};
@@ -74,8 +74,8 @@ api.get('/profiles', (req, res, next) => {
       return Category.findOne({ _id: req.query.category }).then(category => {
         if (!category) return;
         query.msgBiz = { $in: category.msgBizs };
-      })
-    })
+      });
+    });
   }
   return promise.then(() => {
     return Profile.find(query).sort({ openHistoryPageAt: -1 }).paginate(req.query).then(result => {
@@ -105,16 +105,16 @@ api.get('/profiles', (req, res, next) => {
             if (!posts.length) return;
             item._doc.oldestPostTime = posts[0].publishAt;
           })
-        ])
+        ]);
       })).then(() => {
         res.json({
           metadata: metadata,
           data: data
         });
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});
 
 // 新建分类
 api.post('/categories', (req, res, next) => {
@@ -130,15 +130,15 @@ api.post('/categories', (req, res, next) => {
     return category.save();
   }).then(() => {
     res.send('ok');
-  })
-})
+  });
+});
 
 api.get('/categories', (req, res, next) => {
   Category.find({}).populate('profiles').then(categories => {
     res.json(categories);
   }).catch(e => {
     console.log(e);
-  })
-})
+  });
+});
 
 module.exports = api;

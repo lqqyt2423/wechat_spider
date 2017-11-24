@@ -46,9 +46,9 @@ class App extends React.Component {
           <Drawer width={100} open={true} >
             <AppBar title="Home" style={{ padding: '0 16px' }} showMenuIconButton={false} titleStyle={{ 'cursor': 'pointer' }} onTitleTouchTap={() => { history.push('/'); }} />
             <List>
-              <ListItem primaryText="Posts" onClick={() => { history.push('/posts') }} />
-              <ListItem primaryText="Profiles" onClick={() => { history.push('/profiles') }} />
-              <ListItem primaryText="Cates" onClick={() => { history.push('/categories') }} />
+              <ListItem primaryText="Posts" onClick={() => { history.push('/posts'); }} />
+              <ListItem primaryText="Profiles" onClick={() => { history.push('/profiles'); }} />
+              <ListItem primaryText="Cates" onClick={() => { history.push('/categories'); }} />
             </List>
           </Drawer>
           <div className="wrapper">
@@ -56,14 +56,14 @@ class App extends React.Component {
           </div>
         </div>
       </MuiThemeProvider>
-    )
+    );
   }
 }
 
 const connectedApp = connect(state => state)(App);
 
 const browserHistory = useBasename(createHistory)({
-    basename: BASE_URI
+  basename: BASE_URI
 });
 
 render(

@@ -29,7 +29,7 @@ export function requestPosts() {
   return {
     type: REQUEST_POSTS
   };
-};
+}
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 
@@ -38,7 +38,7 @@ export function receivePosts(posts) {
     type: RECEIVE_POSTS,
     posts
   };
-};
+}
 
 export function fetchPosts(query) {
   let path = assembleUrl(config.posts, query);
@@ -48,7 +48,7 @@ export function fetchPosts(query) {
       dispatch(receivePosts(posts));
     });
   };
-};
+}
 
 export const REQUEST_PROFILES = 'REQUEST_PROFILES';
 
@@ -56,7 +56,7 @@ export function requestProfiles() {
   return {
     type: REQUEST_PROFILES
   };
-};
+}
 
 export const RECEIVE_PROFILES = 'RECEIVE_PROFILES';
 
@@ -65,7 +65,7 @@ export function receiveProfiles(profiles) {
     type: RECEIVE_PROFILES,
     profiles
   };
-};
+}
 
 export function fetchProfiles(query) {
   let path = assembleUrl(config.profiles, query);
@@ -75,7 +75,7 @@ export function fetchProfiles(query) {
       dispatch(receiveProfiles(profiles));
     });
   };
-};
+}
 
 export const REQUEST_CATES = 'REQUEST_CATES';
 
@@ -83,7 +83,7 @@ export function requestCates() {
   return {
     type: REQUEST_CATES
   };
-};
+}
 
 export const RECEIVE_CATES = 'RECEIVE_CATES';
 
@@ -92,7 +92,7 @@ export function receiveCates(cates) {
     type: RECEIVE_CATES,
     cates
   };
-};
+}
 
 export function fetchCates() {
   return function(dispatch) {
@@ -101,4 +101,4 @@ export function fetchCates() {
       dispatch(receiveCates(cates));
     });
   };
-};
+}

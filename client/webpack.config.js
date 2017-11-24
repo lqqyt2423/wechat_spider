@@ -30,7 +30,7 @@ if (NODE_ENV != 'development') {
       }
     }),
     new webpack.optimize.UglifyJsPlugin()
-  )
+  );
 }
 
 module.exports = {

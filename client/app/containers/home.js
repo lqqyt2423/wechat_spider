@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchPosts, assembleUrl } from '../actions';
 import Loading from '../components/loading';
 import moment from 'moment';
 import { Link } from 'react-router';
@@ -78,7 +77,7 @@ class Home extends React.Component {
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 
