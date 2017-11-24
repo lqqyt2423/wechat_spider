@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "classnames": "^2.2.3",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.13.1",
     "lodash.assign": "^4.0.9",
     "lodash.camelcase": "^4.3.0",

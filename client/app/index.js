@@ -10,7 +10,7 @@ import Drawer from 'material-ui/Drawer';
 import {List, ListItem} from 'material-ui/List';
 import { createHistory, useBasename } from 'history';
 import 'normalize.css';
-import './style/font-awesome-4.7.0/css/font-awesome.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 import './style/style.css';
 const ENV = process.env.NODE_ENV || 'development';
 const BASE_URI = '/wechat-data';
