@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let NODE_ENV = process.env.NODE_ENV || 'development';
 
+let publicPath = '/';
+
 const babelLoader = {
   loader: 'babel-loader',
   options: {
@@ -23,6 +25,7 @@ const plugins = [
 ];
 
 if (NODE_ENV != 'development') {
+  publicPath = '';
   plugins.push(
     new webpack.DefinePlugin({
       'process.env': {
@@ -37,7 +40,8 @@ module.exports = {
   entry: './app/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, './build')
+    path: path.resolve(__dirname, './build'),
+    publicPath: publicPath
   },
   plugins: plugins,
   devtool: NODE_ENV == 'development' ? 'eval' : undefined,
