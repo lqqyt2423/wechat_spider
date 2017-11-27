@@ -6,9 +6,9 @@ var config = {
   },
   insertJsToNextPage: {
     disable: false,
-    jumpInterval: 2,
+    jumpInterval: 3,
     minTime: new Date(2017, 0, 1),
-    maxTime: new Date(2017, 10, 1),
+    maxTime: new Date(2017, 10, 21),
     isCrawlExist: true,
     // if true updateNumAt - publishAt
     crawlExistInterval: 1000*60*60*24*3,
@@ -16,11 +16,11 @@ var config = {
   },
   insertJsToNextProfile: {
     disable: false,
-    jumpInterval: 5,
+    jumpInterval: 15,
     // 抓取到minTime 就跳转至下一公众号
-    minTime: new Date(2016, 11, 31),
+    minTime: new Date(2017, 9, 28),
     // 自定义最近多久更新的公众号本次就不用抓取
-    maxUpdatedAt: new Date(2017, 9, 28),
+    maxUpdatedAt: new Date(2017, 10, 25),
     targetBiz: [],
     // 程序开始时间
     beginTime: new Date()

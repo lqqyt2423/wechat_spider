@@ -4,6 +4,7 @@ const getMainData = require('./getMainData');
 const getProfileData = require('./getProfileData');
 const insertJsToNextPage = require('./insertJsToNextPage');
 const insertJsToNextProfile = require('./insertJsToNextProfile');
+const getComment = require('./getComment');
 
 
 module.exports = {
@@ -73,6 +74,9 @@ module.exports = {
           callback(serverResData);
         }
       });
+    } else if (/\/mp\/appmsg_comment/.test(link)) {
+      getComment(link, serverResData);
+      callback(serverResData);
     } else {
       callback(serverResData);
     }
