@@ -3,7 +3,6 @@
 require('./connect');
 const mongoose = require('mongoose');
 
-// 数据结构：公众号账号
 const Comment = new mongoose.Schema({
   postId: { type: 'String', ref: 'Post' },
   contentId: String,
