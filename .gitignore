@@ -58,3 +58,5 @@ typings/
 .env
 
 client/build
+
+schools.js
