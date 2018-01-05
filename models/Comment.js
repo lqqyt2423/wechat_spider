@@ -4,7 +4,7 @@ require('./connect');
 const mongoose = require('mongoose');
 
 const Comment = new mongoose.Schema({
-  postId: { type: 'String', ref: 'Post' },
+  postId: { type: 'ObjectId', ref: 'Post' },
   contentId: String,
   nickName: String,
   logoUrl: String,

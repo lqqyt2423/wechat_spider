@@ -18,7 +18,9 @@ const Post = new mongoose.Schema({
   digest: String,
   isFail: Boolean,
   wechatId: String,
-  updateNumAt: Date
+  updateNumAt: Date,
+  // 文章正文html代码
+  content: String
 }, { toJSON: { virtuals: true } });
 
 Post.plugin(require('mongoose-timestamp'));

@@ -12,7 +12,9 @@ var config = {
     isCrawlExist: false,
     // if true updateNumAt - publishAt
     crawlExistInterval: 1000*60*60*24*3,
-    targetBiz: []
+    targetBiz: [],
+    // 是否保存文章html代码
+    isSavePostContent: false
   },
   insertJsToNextProfile: {
     disable: false,
@@ -24,7 +26,9 @@ var config = {
     targetBiz: [],
     // 程序开始时间
     beginTime: new Date()
-  }
+  },
+  // 是否抓取评论
+  isCrawlComments: true
 };
 
 config.insertJsToNextProfile.targetBiz = require('./targetProfileBiz.json');

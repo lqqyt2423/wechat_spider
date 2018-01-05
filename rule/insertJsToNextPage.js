@@ -1,6 +1,7 @@
 'use strict';
 
 const url = require('url');
+const cheerio = require('cheerio');
 const querystring = require('querystring');
 const config = require('../config').insertJsToNextPage;
 const Post = require('../models/Post');
@@ -78,17 +79,28 @@ function postQueue() {
 
 function saveData(msgBiz, msgMid, msgIdx, content) {
   let wechatId = /<span class="profile_meta_value">(.+?)<\/span>/.exec(content)[1];
-  return Post.findOne({
-    msgBiz: msgBiz,
-    msgMid: msgMid,
-    msgIdx: msgIdx
-  }).then(post => {
-    if (post) {
-      return Post.findByIdAndUpdate(post._id, {
-        wechatId: wechatId
-      });
-    }
-  });
+  if (config.isSavePostContent) {
+    // 获取正文内容
+    let $ = cheerio.load(content, { decodeEntities: false });
+    let body = $('#js_content').html() || '';
+    body = body.trim();
+    return Post.findOneAndUpdate({
+      msgBiz: msgBiz,
+      msgMid: msgMid,
+      msgIdx: msgIdx
+    }, {
+      wechatId: wechatId,
+      content: body
+    }, { upsert: true });
+  } else {
+    return Post.findOneAndUpdate({
+      msgBiz: msgBiz,
+      msgMid: msgMid,
+      msgIdx: msgIdx
+    }, {
+      wechatId: wechatId
+    }, { upsert: true });
+  }
 }
 
 module.exports = insertJsToNextPage;

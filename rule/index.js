@@ -5,6 +5,7 @@ const getProfileData = require('./getProfileData');
 const insertJsToNextPage = require('./insertJsToNextPage');
 const insertJsToNextProfile = require('./insertJsToNextProfile');
 const getComment = require('./getComment');
+const config = require('../config');
 
 
 module.exports = {
@@ -75,7 +76,7 @@ module.exports = {
         }
       });
     } else if (/\/mp\/appmsg_comment/.test(link)) {
-      getComment(link, serverResData);
+      if (config.isCrawlComments) getComment(link, serverResData);
       callback(serverResData);
     } else {
       callback(serverResData);
