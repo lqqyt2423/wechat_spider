@@ -39,7 +39,4 @@ app.post('/spider', async (req, res, next) => {
 
 const server = http.createServer(app);
 
-const io = require('socket.io')(server);
-
 exports = module.exports = server;
-exports.io = io;

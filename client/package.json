@@ -26,8 +26,7 @@
     "react-router": "^2.0.1",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0",
-    "socket.io-client": "^2.0.4"
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",
