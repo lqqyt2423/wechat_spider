@@ -2,14 +2,14 @@
 
 基于Node 的微信爬虫，通过中间人代理的原理，批量获取微信文章数据，包括阅读量、点赞量和评论等数据。使用代理模块 Anyproxy。
 
-## Getting Started
+## 开始
 
 ### 安装前
 
 - Node 版本大于v8.8.1
 - MongoDB 版本大于v3.4.6
 
-### Installation
+### 安装
 
 ```shell
 git clone https://github.com/lqqyt2423/wechat_spider.git
@@ -19,7 +19,7 @@ npm install
 
 本项目基于代理模块Anyproxy，解析微信HTTPS 请求需在电脑和手机上都安装证书。可参考：[Anyproxy 文档](https://github.com/alibaba/anyproxy)。
 
-## Usage
+## 使用
 
 ```shell
 cd wechat_spider
@@ -30,6 +30,18 @@ npm start
 2. 手机上测试打开任一公众号历史文章详情页和文章页，观察电脑命令行的输出，查看数据是否保存至MongoDB
 3. 自动翻页抓取数据需配置`config.js`
 
+### 自定义配置
+
+目前可支持的配置项举例如下：
+
+- 控制是否开启文章或历史详情页自动跳转
+- 控制跳转时间间隔
+- 根据文章发布时间控制抓取范围
+- 是否保存文章正文内容
+- 是否保存文章评论
+
+可编辑`index.js` ，`config.js` 和`targetBiz.json` 进行自定义配置。文件中注释有详细说明。
+
 ### 可视化界面
 
 ```shell
@@ -37,6 +49,18 @@ cd client && npm install && npm start
 ```
 
 第一次进入`client` 运行`npm install` 之后，以后可直接在项目根目录运行`npm run client` ，根据命令行的输出地址，在浏览器中打开此网址即可。
+
+### MongoDB 数据信息
+
+数据库database: wechat_spider
+
+数据表collections:
+
+- posts - 文章数据
+- profiles - 公众号数据
+- comments - 评论数据
+- categories - 自定义的公众号分类
+
 
 ### 从MongoDB 导出数据
 
