@@ -5,7 +5,6 @@ const url = require('url');
 const querystring = require('querystring');
 const moment = require('moment');
 const debug = require('debug')('wechat_spider:data');
-// const sendPostsData = require('../api/io').sendPostsData;
 
 function getMainData(link, content) {
   let promise = Promise.resolve();
@@ -44,7 +43,6 @@ function getMainData(link, content) {
         readNum: post.readNum,
         likeNum: post.likeNum
       });
-      // sendPostsData();
     }).catch(e => {
       console.log(e);
     });

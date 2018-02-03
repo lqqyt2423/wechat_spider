@@ -1,14 +1,15 @@
 'use strict';
+
 const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const path = require('path');
 const app = express();
-const config = require('./config');
-const Category = require('./models/Category');
+const config = require('../config');
+const Category = require('../models/Category');
 
-const data = require('./api/data');
+const data = require('./api');
 
 app.use(logger('dev'));
 
@@ -17,9 +18,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/wechat-data-api', data);
 
-app.use('/wechat-data', express.static(path.join(__dirname, './client/build')));
+app.use('/wechat-data', express.static(path.join(__dirname, '../client/build')));
 app.get('/wechat-data/*', (req, res) => {
-  res.sendFile(path.join(__dirname, './client/build/index.html'));
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 // 接口设置抓取此分类内的账号

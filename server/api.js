@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const api = express.Router();
 const Profile = require('../models/Profile');
@@ -5,7 +7,7 @@ const Post = require('../models/Post');
 const Category = require('../models/Category');
 const config = require('../config').insertJsToNextProfile;
 
-api.get('/posts', (req, res, next) => {
+api.get('/posts', (req, res) => {
   let query = { title: { $exists: true } };
   if (req.query.target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
@@ -63,7 +65,7 @@ api.get('/posts', (req, res, next) => {
   });
 });
 
-api.get('/profiles', (req, res, next) => {
+api.get('/profiles', (req, res) => {
   let query = {};
   if (req.query.target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
@@ -133,7 +135,7 @@ api.post('/categories', (req, res, next) => {
   });
 });
 
-api.get('/categories', (req, res, next) => {
+api.get('/categories', (req, res) => {
   Category.find({}).populate('profiles').then(categories => {
     res.json(categories);
   }).catch(e => {
