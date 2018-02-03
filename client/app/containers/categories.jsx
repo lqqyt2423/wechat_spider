@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchCates } from '../actions';
-import Loading from '../components/loading';
+import Loading from '../components/loading.jsx';
 import { Card, CardActions, CardTitle } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 

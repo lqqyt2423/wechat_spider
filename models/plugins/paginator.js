@@ -7,7 +7,7 @@ const util = require('util');
 const Query = require('mongoose').Query;
 
 const defaults = {
-  perPage: 11, // 每页条数
+  perPage: 20, // 每页条数
   page   :  1, // 初始页数
   offset :  0,  // 偏移数
   maxPerPage: 100 // 最大单页条数

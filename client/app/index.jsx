@@ -7,9 +7,9 @@ import { Router, Route, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import { createHistory, useBasename } from 'history';
-import 'normalize.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './style/style.css';
 const ENV = process.env.NODE_ENV || 'development';
@@ -27,10 +27,10 @@ let store = createStore(
   applyMiddleware(...reduxMiddlewares)
 );
 
-import Posts from './containers/posts';
-import Profiles from './containers/profiles';
-import Home from './containers/home';
-import Categories from './containers/categories';
+import Posts from './containers/posts.jsx';
+import Profiles from './containers/profiles.jsx';
+import Home from './containers/home.jsx';
+import Categories from './containers/categories.jsx';
 
 class App extends React.Component {
 
@@ -44,11 +44,11 @@ class App extends React.Component {
       <MuiThemeProvider>
         <div>
           <Drawer width={100} open={true} >
-            <AppBar title="Home" style={{ padding: '0 16px' }} showMenuIconButton={false} titleStyle={{ 'cursor': 'pointer' }} onTitleTouchTap={() => { history.push('/'); }} />
+            <AppBar title="首页" style={{ padding: '0 16px' }} showMenuIconButton={false} titleStyle={{ 'cursor': 'pointer' }} onTitleTouchTap={() => { history.push('/'); }} />
             <List>
-              <ListItem primaryText="Posts" onClick={() => { history.push('/posts'); }} />
-              <ListItem primaryText="Profiles" onClick={() => { history.push('/profiles'); }} />
-              <ListItem primaryText="Cates" onClick={() => { history.push('/categories'); }} />
+              <ListItem primaryText="文章" onClick={() => { history.push('/posts'); }} />
+              <ListItem primaryText="公众号" onClick={() => { history.push('/profiles'); }} />
+              <ListItem primaryText="分类" onClick={() => { history.push('/categories'); }} />
             </List>
           </Drawer>
           <div className="wrapper">

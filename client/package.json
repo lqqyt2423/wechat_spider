@@ -1,15 +1,16 @@
 {
   "name": "wechat_spider_client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
     "start": "webpack-dev-server"
   },
-  "author": "",
+  "author": "liqiang",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "classnames": "^2.2.3",
     "font-awesome": "^4.7.0",
     "lodash": "^4.13.1",
@@ -18,7 +19,6 @@
     "lodash.clonedeep": "^4.5.0",
     "material-ui": "^0.19.2",
     "moment": "^2.19.1",
-    "normalize.css": "^7.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
