@@ -13,7 +13,7 @@ import 'normalize.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './style/style.css';
 const ENV = process.env.NODE_ENV || 'development';
-const BASE_URI = '/wechat-data';
+const BASE_URI = '/';
 
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';

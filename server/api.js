@@ -1,52 +1,63 @@
 'use strict';
 
 const express = require('express');
-const api = express.Router();
+const api = express();
 const Profile = require('../models/Profile');
 const Post = require('../models/Post');
 const Category = require('../models/Category');
 const config = require('../config').insertJsToNextProfile;
 
-api.get('/posts', (req, res) => {
-  let query = { title: { $exists: true } };
-  if (req.query.target === 'true') {
+api.get('/posts', (req, res, next) => {
+  const {
+    target,
+    mainData,
+    msgBiz,
+    category,
+    sortWay
+  } = req.query;
+
+  const query = { title: { $exists: true } };
+
+  if (target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
   }
-  if (req.query.mainData === 'true') {
+  if (mainData === 'true') {
     query.readNum = { $exists: true };
   }
-  if (req.query.mainData === 'false') {
+  if (mainData === 'false') {
     query.readNum = { $exists: false };
   }
-  if (req.query.msgBiz) {
-    query.msgBiz = req.query.msgBiz;
+  if (msgBiz) {
+    query.msgBiz = msgBiz;
   }
-  let sortWay = { publishAt: -1, msgIdx: 1 };
-  if (req.query.sortWay === '-updateNumAt') {
-    sortWay = { updateNumAt: -1 };
+
+  let sortWayResult = { publishAt: -1, msgIdx: 1 };
+  if (sortWay === '-updateNumAt') {
+    sortWayResult = { updateNumAt: -1 };
   }
-  if (req.query.sortWay === 'updateNumAt') {
-    sortWay = { updateNumAt: 1 };
+  if (sortWay === 'updateNumAt') {
+    sortWayResult = { updateNumAt: 1 };
   }
-  if (req.query.sortWay === '-publishAt') {
-    sortWay = { publishAt: -1, msgIdx: 1 };
+  if (sortWay === '-publishAt') {
+    sortWayResult = { publishAt: -1, msgIdx: 1 };
   }
-  if (req.query.sortWay === 'publishAt') {
-    sortWay = { publishAt: 1, msgIdx: 1 };
+  if (sortWay === 'publishAt') {
+    sortWayResult = { publishAt: 1, msgIdx: 1 };
   }
+
   let promise = Promise.resolve();
-  if (req.query.category) {
+  if (category) {
     promise = promise.then(() => {
-      return Category.findOne({ _id: req.query.category }).then(category => {
+      return Category.findOne({ _id: category }).then(category => {
         if (!category) return;
         query.msgBiz = { $in: category.msgBizs };
       });
     });
   }
   return promise.then(() => {
-    return Post.find(query).sort(sortWay).populate('profile').paginate(req.query).then(result => {
-      let data = result.data;
-      let metadata = {
+    return Post.find(query).sort(sortWayResult).populate('profile').paginate(req.query).then(result => {
+      const data = result.data;
+      const metadata = {
         options: result.options,
         perPage: result.options.perPage,
         currentPage: result.current,
@@ -56,24 +67,29 @@ api.get('/posts', (req, res) => {
         count: result.count
       };
       res.json({
-        metadata: metadata,
-        data: data
+        metadata,
+        data
       });
     });
   }).catch(e => {
-    console.log(e);
+    next(e);
   });
 });
 
-api.get('/profiles', (req, res) => {
+api.get('/profiles', (req, res, next) => {
+  const {
+    target,
+    category
+  } = req.query;
+
   let query = {};
-  if (req.query.target === 'true') {
+  if (target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
   }
   let promise = Promise.resolve();
-  if (req.query.category) {
+  if (category) {
     promise = promise.then(() => {
-      return Category.findOne({ _id: req.query.category }).then(category => {
+      return Category.findOne({ _id: category }).then(category => {
         if (!category) return;
         query.msgBiz = { $in: category.msgBizs };
       });
@@ -81,8 +97,8 @@ api.get('/profiles', (req, res) => {
   }
   return promise.then(() => {
     return Profile.find(query).sort({ openHistoryPageAt: -1 }).paginate(req.query).then(result => {
-      let data = result.data;
-      let metadata = {
+      const data = result.data;
+      const metadata = {
         options: result.options,
         perPage: result.options.perPage,
         currentPage: result.current,
@@ -110,36 +126,39 @@ api.get('/profiles', (req, res) => {
         ]);
       })).then(() => {
         res.json({
-          metadata: metadata,
-          data: data
+          metadata,
+          data
         });
       });
     });
+  }).catch(e => {
+    next(e);
   });
 });
 
 // 新建分类
 api.post('/categories', (req, res, next) => {
-  let name = req.query.name;
-  let msgBizs = req.query.msgBizs;
-  if (!name || !msgBizs) return next();
+  const { name, msgBizs } = req.query;
+  if (!name || !msgBizs) return next(new Error('请传入正确的参数'));
   Category.findOne({ name: name }).then(category => {
-    if (category) return next();
+    if (category) return next(new Error('已存在同名称分类'));
     category = new Category({
-      name: name,
+      name,
       msgBizs: msgBizs.split(',')
     });
     return category.save();
   }).then(() => {
-    res.send('ok');
+    res.status(201).send('创建分类成功');
+  }).catch(e => {
+    next(e);
   });
 });
 
-api.get('/categories', (req, res) => {
+api.get('/categories', (req, res, next) => {
   Category.find({}).populate('profiles').then(categories => {
     res.json(categories);
   }).catch(e => {
-    console.log(e);
+    next(e);
   });
 });
 
