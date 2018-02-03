@@ -6,6 +6,7 @@ const insertJsToNextPage = require('./insertJsToNextPage');
 const insertJsToNextProfile = require('./insertJsToNextProfile');
 const getComment = require('./getComment');
 const config = require('../config');
+const debug = require('debug')('wechat_spider:rule');
 
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
     // 自定义网络请求，控制历史页下拉或跳转
     if (req.url.indexOf('tonextprofile') > -1) {
       insertJsToNextProfile.isJumpToNext(req.url).then(text => {
-        console.log('isJumpToNextProfile => ', text);
+        debug('isJumpToNextProfile => ', text);
         callback(200, { 'content-type': 'text/plain' }, text);
       });
     }

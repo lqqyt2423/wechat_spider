@@ -5,12 +5,13 @@ const querystring = require('querystring');
 const config = require('../config').insertJsToNextProfile;
 const Profile = require('../models/Profile');
 const Post = require('../models/Post');
+const debug = require('debug')('wechat_spider:profile');
 var links = [];
 
 function insertJsToNextProfile(link, response, content) {
   let contentType = response.headers['content-type'];
   if (contentType.indexOf('html') === -1) return Promise.resolve(content);
-  console.log('Profile.links.length => ', links.length);
+  debug('剩余抓取公众号历史消息数量 => ', links.length);
   if (config.disable) return Promise.resolve(content);
   content = content.toString();
   let identifier = querystring.parse(url.parse(link).query);

@@ -5,10 +5,11 @@ const cheerio = require('cheerio');
 const querystring = require('querystring');
 const config = require('../config').insertJsToNextPage;
 const Post = require('../models/Post');
+const debug = require('debug')('wechat_spider:post');
 var links = [];
 
 function insertJsToNextPage(link, content) {
-  console.log('Post.links.length => ', links.length);
+  debug('剩余抓取文章数量 => ', links.length);
   let identifier = querystring.parse(url.parse(link).query);
   const [ msgBiz, msgMid, msgIdx ] = [ identifier.__biz, identifier.mid, identifier.idx ];
   content = content.toString();
@@ -78,11 +79,27 @@ function postQueue() {
 }
 
 function saveData(msgBiz, msgMid, msgIdx, content) {
-  let wechatId = /<span class="profile_meta_value">(.+?)<\/span>/.exec(content)[1];
+  let wechatId;
+  try {
+    wechatId = /<span class="profile_meta_value">(.+?)<\/span>/.exec(content)[1];
+  } catch(e) {
+    return Post.findOneAndUpdate({
+      msgBiz: msgBiz,
+      msgMid: msgMid,
+      msgIdx: msgIdx
+    }, {
+      isFail: true
+    }, { upsert: true });
+  }
   if (config.isSavePostContent) {
     // 获取正文内容
     let $ = cheerio.load(content, { decodeEntities: false });
-    let body = $('#js_content').html() || '';
+    let body;
+    if (config.saveContentType == 'html') {
+      body = $('#js_content').html() || '';
+    } else {
+      body = $('#js_content').text() || '';
+    }
     body = body.trim();
     return Post.findOneAndUpdate({
       msgBiz: msgBiz,

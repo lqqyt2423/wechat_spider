@@ -4,6 +4,8 @@ const Profile = require('../models/Profile');
 const Post = require('../models/Post');
 const url = require('url');
 const querystring = require('querystring');
+const debug = require('debug')('wechat_spider:data');
+const moment = require('moment');
 
 function getProfileData(link, response, content) {
   let serverResData = content.toString();
@@ -93,7 +95,7 @@ function getProfileData(link, response, content) {
                 cover: cover,
                 digest: digest,
                 sourceUrl: sourceUrl
-              });
+              }, { new: true });
             } else {
               let post = new Post({
                 msgBiz: msgBiz,
@@ -108,6 +110,11 @@ function getProfileData(link, response, content) {
               });
               return post.save();
             }
+          }).then(post => {
+            debug({
+              title: post.title,
+              publishAt: post.publishAt ? moment(post.publishAt).format('YYYY-MM-DD HH:mm') : ''
+            });
           });
         }
       }).catch(e => {

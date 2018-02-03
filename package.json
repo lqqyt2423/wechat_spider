@@ -1,10 +1,10 @@
 {
   "name": "wechat_spider",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
+  "description": "wechat spider by Man-in-the-middle attack",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --ignore client/",
+    "start": "DEBUG=wechat_spider:* nodemon index.js --ignore client/",
     "client": "cd client && npm start"
   },
   "author": "liqiang",
@@ -13,6 +13,7 @@
     "anyproxy": "^3.10.4",
     "body-parser": "^1.17.2",
     "cheerio": "^1.0.0-rc.2",
+    "debug": "^3.1.0",
     "ejs": "^2.5.7",
     "express": "^4.15.4",
     "json2csv": "^3.11.2",

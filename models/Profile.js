@@ -10,7 +10,9 @@ const Profile = new mongoose.Schema({
   desc: String,
   msgBiz: String,
   headimg: String,
-  openHistoryPageAt: Date
+  openHistoryPageAt: Date,
+  // 无关的字段，可忽略
+  property: String
 });
 
 Profile.plugin(require('mongoose-timestamp'));

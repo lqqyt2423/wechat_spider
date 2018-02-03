@@ -57,6 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+package-lock.json
+private/
 client/build
-
-schools.js

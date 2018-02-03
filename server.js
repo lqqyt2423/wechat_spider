@@ -23,6 +23,7 @@ app.get('/wechat-data/*', (req, res) => {
 });
 
 // 接口设置抓取此分类内的账号
+// curl localhost:8104/spider -XPOST -H "Content-Type: application/json" -d '{ "categoryId": "5a50cacbb7c8a46b635878c6" }'
 app.post('/spider', async (req, res, next) => {
   let args = req.body;
   let categoryId = args.categoryId;
