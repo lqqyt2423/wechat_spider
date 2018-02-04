@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import { fetchProfiles } from '../actions';
 import Loading from '../components/loading.jsx';
 import moment from 'moment';
-import Paginator from '../components/Paginator.jsx';
+import Paginator from '../components/paginator.jsx';
 import { Link } from 'react-router';
+import SearchInput from '../components/searchInput.jsx';
 
 class Profiles extends React.Component {
 
   constructor(props) {
     super(props);
+    this.returnCurrentSearchArgs = this.returnCurrentSearchArgs.bind(this);
   }
 
   componentDidMount() {
@@ -24,6 +26,43 @@ class Profiles extends React.Component {
     }
   }
 
+  returnCurrentSearchArgs() {
+    const { location } = this.props;
+    const { search } = location;
+    const searchArgs = {};
+    search.replace('?', '').split('&').forEach(item => {
+      let key = item.split('=')[0];
+      let value = item.replace(`${key}=`, '');
+      if (key && value) searchArgs[key] = value;
+    });
+    return searchArgs;
+  }
+
+  renderSearch() {
+    const { location } = this.props;
+    const { pathname } = location;
+    const { history } = this.props;
+    const { q = '' } = this.returnCurrentSearchArgs();
+    return (
+      <div style={{
+        padding: '0px 5px 10px 5px'
+      }}>
+        <SearchInput
+          value={q}
+          hintText="搜索公众号..."
+          fullWidth={true}
+          onEnter={q => {
+            let path = pathname;
+            if (q) {
+              path = `${pathname}?q=${q}`;
+            }
+            history.push(path);
+          }}
+        />
+      </div>
+    );
+  }
+
   render() {
     let { isFetching, profiles, history, location } = this.props;
     let { search, pathname } = location;
@@ -31,6 +70,7 @@ class Profiles extends React.Component {
     let metadata = profiles.metadata;
     return (
       <div>
+        {this.renderSearch()}
         <table className="table table-striped">
           <thead>
             <tr>

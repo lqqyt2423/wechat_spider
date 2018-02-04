@@ -25,13 +25,15 @@ class Categories extends React.Component {
         {
           cates.map(cate => {
             return (
-              <Card key={cate._id}>
-                <CardTitle title={cate.name} />
-                <CardActions>
-                  <FlatButton label="Profiles" onClick={() => { history.push(`/profiles?category=${cate._id}`); }} />
-                  <FlatButton label="Posts"  onClick={() => { history.push(`/posts?category=${cate._id}`); }} />
-                </CardActions>
-              </Card>
+              <div key={cate._id} className="col-md-6" style={{ padding: '20px' }}>
+                <Card>
+                  <CardTitle title={cate.name} />
+                  <CardActions>
+                    <FlatButton label="公众号" onClick={() => { history.push(`/profiles?category=${cate._id}`); }} />
+                    <FlatButton label="文章"  onClick={() => { history.push(`/posts?category=${cate._id}`); }} />
+                  </CardActions>
+                </Card>
+              </div>
             );
           })
         }

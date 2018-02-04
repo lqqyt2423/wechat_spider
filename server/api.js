@@ -13,11 +13,15 @@ api.get('/posts', (req, res, next) => {
     mainData,
     msgBiz,
     category,
-    sortWay
+    sortWay,
+    q
   } = req.query;
 
   const query = { title: { $exists: true } };
 
+  if (q) {
+    query.title = new RegExp(q, 'i');
+  }
   if (target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
   }
@@ -79,13 +83,15 @@ api.get('/posts', (req, res, next) => {
 api.get('/profiles', (req, res, next) => {
   const {
     target,
-    category
+    category,
+    q
   } = req.query;
 
   let query = {};
   if (target === 'true') {
     query.msgBiz = { $in: config.targetBiz };
   }
+  if (q) query.title = new RegExp(q, 'i');
   let promise = Promise.resolve();
   if (category) {
     promise = promise.then(() => {

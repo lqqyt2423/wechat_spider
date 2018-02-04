@@ -36,8 +36,11 @@ app.post('/spider', async (req, res, next) => {
 });
 
 // 前端页面
+app.get('/favicon.png', (req, res, next) => {
+  res.sendFile(path.join(__dirname, './favicon.png'));
+});
 app.use('/', express.static(path.join(__dirname, '../client/build')));
-app.get('/*', (req, res) => {
+app.get('/*', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 

@@ -29,7 +29,6 @@ let store = createStore(
 
 import Posts from './containers/posts.jsx';
 import Profiles from './containers/profiles.jsx';
-import Home from './containers/home.jsx';
 import Categories from './containers/categories.jsx';
 
 class App extends React.Component {
@@ -71,7 +70,7 @@ render(
     <Provider store={store}>
       <Router history={browserHistory}>
         <Route path="/" component={connectedApp}>
-          <IndexRoute component={Home} />
+          <IndexRoute component={Posts} />
           <Route path="/posts" component={Posts} />
           <Route path="/profiles" component={Profiles} />
           <Route path="/categories" component={Categories} />

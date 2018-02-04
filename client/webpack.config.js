@@ -50,7 +50,8 @@ module.exports = {
     contentBase: './',
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:8104'
+      '/api': 'http://localhost:8104',
+      '/favicon.png': 'http://localhost:8104'
     }
   },
   module: {
