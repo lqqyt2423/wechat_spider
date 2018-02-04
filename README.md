@@ -44,7 +44,9 @@ npm start
 
 ### 可视化界面
 
-前端页面已打包好，启动项目后，如无修改默认`server port` 配置，浏览器直接访问`http://localhost:8104` 即可。
+前端页面已打包好，启动项目后，如无修改默认`server port` 配置，浏览器直接访问`http://localhost:8104` 即可。检测数据有无抓取保存直接刷新此页面即可。
+
+![可视化界面](posts_screenshot.png)
 
 前端页面由`React` 编写，如需修改，可编辑`client` 文件中的代码。
 
@@ -67,3 +69,7 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 ```
 
 以上命令会导出数据至桌面的`posts.csv` 中。具体的个性化导出请参考MongoDB 文档或者自己编写。
+
+## License
+
+[MIT](LICENSE)
