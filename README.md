@@ -44,11 +44,9 @@ npm start
 
 ### 可视化界面
 
-```shell
-cd client && npm install && npm start
-```
+前端页面已打包好，启动项目后，如无修改默认`server port` 配置，浏览器直接访问`http://localhost:8104` 即可。
 
-第一次进入`client` 运行`npm install` 之后，以后可直接在项目根目录运行`npm run client` ，根据命令行的输出地址，在浏览器中打开此网址即可。
+前端页面由`React` 编写，如需修改，可编辑`client` 文件中的代码。
 
 ### MongoDB 数据信息
 
