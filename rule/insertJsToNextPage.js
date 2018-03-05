@@ -91,6 +91,16 @@ function saveData(msgBiz, msgMid, msgIdx, content) {
       isFail: true
     }, { upsert: true });
   }
+
+  // 如果wechatId 中包含中文字符，证明上面找错了
+  if (/[\u4e00-\u9fa5]/.test(wechatId)) {
+    wechatId = undefined;
+    const matches = /var user_name = "(.+?)"/.exec(content);
+    if (matches && matches.length > 1) {
+      wechatId = matches[1];
+    }
+  }
+
   if (config.isSavePostContent) {
     // 获取正文内容
     let $ = cheerio.load(content, { decodeEntities: false });
@@ -110,13 +120,15 @@ function saveData(msgBiz, msgMid, msgIdx, content) {
       content: body
     }, { upsert: true });
   } else {
-    return Post.findOneAndUpdate({
-      msgBiz: msgBiz,
-      msgMid: msgMid,
-      msgIdx: msgIdx
-    }, {
-      wechatId: wechatId
-    }, { upsert: true });
+    if (wechatId) {
+      return Post.findOneAndUpdate({
+        msgBiz: msgBiz,
+        msgMid: msgMid,
+        msgIdx: msgIdx
+      }, {
+        wechatId: wechatId
+      }, { upsert: true });
+    }
   }
 }
 
