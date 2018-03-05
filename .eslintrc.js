@@ -32,7 +32,7 @@ module.exports = {
           1
         ],
         "no-console": [
-          1
+          0
         ],
         "react/prop-types": [
           0

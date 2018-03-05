@@ -8,7 +8,7 @@
     "client": "cd client && npm start"
   },
   "author": "liqiang",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "anyproxy": "^3.10.4",
     "cheerio": "^1.0.0-rc.2",
