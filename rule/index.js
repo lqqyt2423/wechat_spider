@@ -88,8 +88,8 @@ module.exports = {
     return 0;
   },
 
+  // 解析全部的HTTPS 流量
   shouldInterceptHttpsReq :function(req) {
-    if (req.headers.host === 'mp.weixin.qq.com') return true;
-    return false;
+    return true;
   }
 };
