@@ -61,7 +61,7 @@ module.exports = {
         callback(serverResData);
       });
     // 通过历史消息页抓取文章url等
-    } else if (/profile_ext.+__biz/.test(link)) {
+    } else if (/mp\/profile_ext.+__biz/.test(link)) {
       getProfileData(link, res, serverResData).then(() => {
         return insertJsToNextProfile(link, res, serverResData);
       }).then(content => {
