@@ -54,4 +54,4 @@ proxyServer.start();
 // when finished
 // proxyServer.close();
 
-// require('./server').listen(8104);
+require('./server').listen(8104);
