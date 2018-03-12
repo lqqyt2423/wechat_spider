@@ -56,6 +56,7 @@ module.exports = {
         "semi": [
             2,
             "always"
-        ]
+        ],
+        "require-yield": [0]
     }
 };

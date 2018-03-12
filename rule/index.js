@@ -8,88 +8,86 @@ const getComment = require('./getComment');
 const config = require('../config');
 const debug = require('debug')('wechat_spider:rule');
 
+const rule = {
+  // 模块介绍
+  summary: 'The rule for wechat spider, written by liqiang.',
 
-module.exports = {
-  summary:function() {
-    return 'The rule for wechat spider, written by liqiang. ';
-  },
+  // 发送请求前拦截处理
+  *beforeSendRequest(requestDetail) {
+    const link = requestDetail.url;
 
-  shouldUseLocalResponse : function(req, reqBody) {
     // 自定义网络请求，控制历史页下拉或跳转
-    if (req.url.indexOf('tonextprofile') > -1) {
-      return true;
-    }
-    return false;
-  },
-
-  dealLocalResponse : function(req,reqBody,callback) {
-    // 自定义网络请求，控制历史页下拉或跳转
-    if (req.url.indexOf('tonextprofile') > -1) {
-      insertJsToNextProfile.isJumpToNext(req.url).then(text => {
-        debug('isJumpToNextProfile => ', text);
-        callback(200, { 'content-type': 'text/plain' }, text);
+    if (link.indexOf('tonextprofile') > -1) {
+      return insertJsToNextProfile.isJumpToNext(link).then(text => {
+        debug('是否跳转至下一个公众号 => ', text);
+        return {
+          response: {
+            statusCode: 200,
+            header: { 'content-type': 'text/plain' },
+            body: text
+          }
+        };
       });
     }
-    // callback(statusCode,resHeader,responseData);
   },
 
-  replaceRequestProtocol:function(req,protocol) {
-    return protocol;
-  },
+  // 发送响应前处理
+  *beforeSendResponse(requestDetail, responseDetail) {
+    const link = requestDetail.url;
+    const { response } = responseDetail;
+    const { body } = response;
 
-  replaceRequestOption : function(req,option) {
-    return option;
-  },
-
-  replaceRequestData: function(req,data) {
-    return data;
-  },
-
-  replaceResponseStatusCode: function(req,res,statusCode) {
-    return statusCode;
-  },
-
-  replaceResponseHeader: function(req,res,header) {
-    return header;
-  },
-
-  replaceServerResDataAsync: function(req,res,serverResData,callback) {
-    let link = req.url;
-    // 获取点赞量和阅读量
     if (link.indexOf('getappmsgext') > -1) {
-      getMainData(link, serverResData).then(() => {
-        callback(serverResData);
+      // 获取点赞量和阅读量
+      return getMainData(link, body).then(() => {
+        return null;
       });
-    // 通过历史消息页抓取文章url等
     } else if (/mp\/profile_ext.+__biz/.test(link)) {
-      getProfileData(link, res, serverResData).then(() => {
-        return insertJsToNextProfile(link, res, serverResData);
+      // 通过历史消息页抓取文章url等
+      return getProfileData(link, response, body).then(() => {
+        return insertJsToNextProfile(link, response, body);
       }).then(content => {
-        callback(content);
+        return {
+          response: { ...response, body: content }
+        };
       });
-    // 文章页跳转
     } else if (/\/s\?__biz/.test(link) || /mp\/appmsg\/show/.test(link)) {
-      insertJsToNextPage(link, serverResData).then((content) => {
+      // 文章页跳转
+      return insertJsToNextPage(link, body).then((content) => {
         if (content) {
-          callback(content);
+          return {
+            response: { ...response, body: content }
+          };
         } else {
-          callback(serverResData);
+          return null;
         }
       });
     } else if (/\/mp\/appmsg_comment/.test(link)) {
-      if (config.isCrawlComments) getComment(link, serverResData);
-      callback(serverResData);
+      // 抓取评论
+      if (config.isCrawlComments) {
+        return getComment(link, body).then(() => {
+          return null;
+        });
+      } else {
+        return null;
+      }
     } else {
-      callback(serverResData);
+      return null;
     }
   },
 
-  pauseBeforeSendingResponse : function(req, res) {
-    return 0;
+  // 是否处理https请求
+  *beforeDealHttpsRequest(requestDetail) {
+    const { host } = requestDetail;
+    if (host === 'mp.weixin.qq.com:443') return true;
+    return false;
   },
 
-  // 解析全部的HTTPS 流量
-  shouldInterceptHttpsReq :function(req) {
-    return true;
-  }
+  // 请求出错的事件
+  // *onError(requestDetail, error) { /* ... */ },
+
+  // https连接服务器出错
+  // *onConnectError(requestDetail, error) { /* ... */ }
 };
+
+module.exports = rule;

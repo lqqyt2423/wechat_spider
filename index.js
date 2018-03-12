@@ -1,31 +1,57 @@
 'use strict';
 
-const proxy = require('anyproxy');
+const AnyProxy = require('anyproxy');
+const exec = require('child_process').exec;
 
-// create cert when you want to use https features
-// please manually trust this rootCA when it is the first time you run it
-!proxy.isRootCAFileExists() && proxy.generateRootCA();
+// 引导安装HTTPS证书
+if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
+  AnyProxy.utils.certMgr.generateRootCA((error, keyPath) => {
+    if (!error) {
+      const certDir = require('path').dirname(keyPath);
+      console.log('The cert is generated at', certDir);
+      const isWin = /^win/.test(process.platform);
+      if (isWin) {
+        exec('start .', { cwd: certDir });
+      } else {
+        exec('open .', { cwd: certDir });
+      }
+    } else {
+      console.error('error when generating rootCA', error);
+    }
+  });
+}
 
 const options = {
-  type: 'http',
   port: 8101,
-  hostname: 'localhost',
   rule: require('./rule'),
-  // optional, save request data to a specified file, will use in-memory db if not specified
-  dbFile: null,
-  // optional, port for web interface
-  webPort: 8102,
-  // optional, internal port for web socket, replace this when it is conflict with your own service
-  socketPort: 8103,
-  // optional, speed limit in kb/s
-  throttle: 5000,
-  // optional, set it when you don't want to use the web interface
-  disableWebInterface: false,
-  // set anyproxy as your system proxy
-  setAsGlobalProxy: false,
-  // optional, do not print anything into terminal. do not set it when you are still debugging.
+  webInterface: {
+    enable: true,
+    webPort: 8102
+  },
+
+  // 默认不限速
+  // throttle: 10000,
+
+  // 强制解析所有HTTPS流量
+  forceProxyHttps: false,
+
+  // 不开启websocket代理
+  wsIntercept: false,
+
   silent: false
 };
-new proxy.proxyServer(options);
+const proxyServer = new AnyProxy.ProxyServer(options);
 
-require('./server').listen(8104);
+proxyServer.on('ready', () => {
+  console.log('ready');
+});
+proxyServer.on('error', (e) => {
+  console.error(e);
+});
+
+proxyServer.start();
+
+// when finished
+// proxyServer.close();
+
+// require('./server').listen(8104);

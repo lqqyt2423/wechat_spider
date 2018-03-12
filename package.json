@@ -10,7 +10,7 @@
   "author": "liqiang",
   "license": "MIT",
   "dependencies": {
-    "anyproxy": "^3.10.4",
+    "anyproxy": "^4.0.5",
     "cheerio": "^1.0.0-rc.2",
     "debug": "^3.1.0",
     "ejs": "^2.5.7",

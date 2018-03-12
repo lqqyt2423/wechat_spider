@@ -9,7 +9,7 @@ const debug = require('debug')('wechat_spider:profile');
 var links = [];
 
 function insertJsToNextProfile(link, response, content) {
-  let contentType = response.headers['content-type'];
+  let contentType = response.header['Content-Type'];
   if (contentType.indexOf('html') === -1) return Promise.resolve(content);
   debug('剩余抓取公众号历史消息数量 => ', links.length);
   if (config.disable) return Promise.resolve(content);

@@ -10,7 +10,7 @@ const moment = require('moment');
 function getProfileData(link, response, content) {
   let serverResData = content.toString();
   content = content.toString();
-  let contentType = response.headers['content-type'];
+  let contentType = response.header['Content-Type'];
   let postList;
   let promise = Promise.resolve();
   // content-type is json or html
