@@ -4,8 +4,8 @@
   "description": "wechat spider by Man-in-the-middle attack",
   "main": "index.js",
   "scripts": {
-    "start": "DEBUG=wechat_spider:* nodemon index.js --ignore client/",
-    "client": "cd client && npm start"
+    "start": "nodemon index.js --ignore client/",
+    "build": "pm2 start index.js --name=\"wechat_spider\""
   },
   "author": "liqiang",
   "license": "MIT",

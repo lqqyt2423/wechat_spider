@@ -8,6 +8,7 @@
 
 - Node 版本大于v8.8.1
 - MongoDB 版本大于v3.4.6
+- 全局安装`nodemon` 和`pm2`
 
 ### 安装
 
