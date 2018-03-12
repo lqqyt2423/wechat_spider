@@ -4,7 +4,7 @@ const Post = require('../models/Post');
 const url = require('url');
 const querystring = require('querystring');
 const moment = require('moment');
-const debug = require('debug')('wechat_spider:data');
+const { log } = console;
 
 function getMainData(link, content) {
   let promise = Promise.resolve();
@@ -36,13 +36,14 @@ function getMainData(link, content) {
         return post.save();
       }
     }).then(post => {
-      debug({
+      log({
         title: post.title,
         publishAt: post.publishAt ? moment(post.publishAt).format('YYYY-MM-DD HH:mm') : '',
         updateNumAt: post.updateNumAt ? moment(post.updateNumAt).format('YYYY-MM-DD HH:mm') : '',
         readNum: post.readNum,
         likeNum: post.likeNum
       });
+      log();
     }).catch(e => {
       console.log(e);
     });

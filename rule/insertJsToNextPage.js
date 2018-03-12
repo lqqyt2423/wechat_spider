@@ -5,11 +5,11 @@ const cheerio = require('cheerio');
 const querystring = require('querystring');
 const config = require('../config').insertJsToNextPage;
 const Post = require('../models/Post');
-const debug = require('debug')('wechat_spider:post');
+const { log } = console;
 var links = [];
 
 function insertJsToNextPage(link, content) {
-  debug('剩余抓取文章数量 => ', links.length);
+  log('剩余抓取文章数量 => ', links.length, '\n');
   let identifier = querystring.parse(url.parse(link).query);
   const [ msgBiz, msgMid, msgIdx ] = [ identifier.__biz, identifier.mid, identifier.idx ];
   content = content.toString();
@@ -17,7 +17,7 @@ function insertJsToNextPage(link, content) {
   promise = promise.then(() => {
     return saveData(msgBiz, msgMid, msgIdx, content).then(() => {});
   }).catch(e => {
-    console.log(e);
+    console.error(e);
   });
   if (config.disable) return promise;
   // 判断此文是否失效

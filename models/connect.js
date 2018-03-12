@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const config = require('../config');
 
-mongoose.set('debug', true);
+mongoose.set('debug', false);
 
 mongoose.connect(config.mongodb.db, {
   useMongoClient: true

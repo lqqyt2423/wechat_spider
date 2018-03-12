@@ -4,7 +4,7 @@ const Profile = require('../models/Profile');
 const Post = require('../models/Post');
 const url = require('url');
 const querystring = require('querystring');
-const debug = require('debug')('wechat_spider:data');
+const { log } = console;
 const moment = require('moment');
 
 function getProfileData(link, response, content) {
@@ -111,14 +111,15 @@ function getProfileData(link, response, content) {
               return post.save();
             }
           }).then(post => {
-            debug({
+            log({
               title: post.title,
               publishAt: post.publishAt ? moment(post.publishAt).format('YYYY-MM-DD HH:mm') : ''
             });
+            log();
           });
         }
       }).catch(e => {
-        console.log(e);
+        console.error(e);
       });
     }));
   });

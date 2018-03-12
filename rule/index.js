@@ -6,7 +6,7 @@ const insertJsToNextPage = require('./insertJsToNextPage');
 const insertJsToNextProfile = require('./insertJsToNextProfile');
 const getComment = require('./getComment');
 const config = require('../config');
-const debug = require('debug')('wechat_spider:rule');
+const { log } = console;
 
 const rule = {
   // 模块介绍
@@ -19,7 +19,7 @@ const rule = {
     // 自定义网络请求，控制历史页下拉或跳转
     if (link.indexOf('tonextprofile') > -1) {
       return insertJsToNextProfile.isJumpToNext(link).then(text => {
-        debug('是否跳转至下一个公众号 => ', text);
+        log('是否跳转至下一个公众号 => ', text, '\n');
         return {
           response: {
             statusCode: 200,
