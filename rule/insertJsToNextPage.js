@@ -7,13 +7,15 @@ const config = require('../config').insertJsToNextPage;
 const models = require('../models');
 const { Post } = models;
 const { log } = console;
-var links = [];
+const links = [];
 
 function insertJsToNextPage(link, content) {
-  log('剩余抓取文章数量 => ', links.length, '\n');
-  let identifier = querystring.parse(url.parse(link).query);
-  const [ msgBiz, msgMid, msgIdx ] = [ identifier.__biz, identifier.mid, identifier.idx ];
+  log('剩余抓取文章数量:', links.length, '\n');
+
+  const { __biz, mid, idx } = querystring.parse(url.parse(link).query);
+  const [msgBiz, msgMid, msgIdx] = [__biz, mid, idx];
   content = content.toString();
+
   let promise = Promise.resolve();
   promise = promise.then(() => {
     return saveData(msgBiz, msgMid, msgIdx, content).then(() => {});
