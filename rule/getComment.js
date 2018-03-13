@@ -2,8 +2,8 @@
 
 const url = require('url');
 const querystring = require('querystring');
-const Post = require('../models/Post');
-const Comment = require('../models/Comment');
+const models = require('../models');
+const { Post, Comment } = models;
 
 module.exports = async function(link, content) {
   content = JSON.parse(content.toString());

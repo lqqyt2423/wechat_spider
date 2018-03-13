@@ -4,7 +4,8 @@ const url = require('url');
 const cheerio = require('cheerio');
 const querystring = require('querystring');
 const config = require('../config').insertJsToNextPage;
-const Post = require('../models/Post');
+const models = require('../models');
+const { Post } = models;
 const { log } = console;
 var links = [];
 

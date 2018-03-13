@@ -3,8 +3,8 @@
 const url = require('url');
 const querystring = require('querystring');
 const config = require('../config').insertJsToNextProfile;
-const Profile = require('../models/Profile');
-const Post = require('../models/Post');
+const models = require('../models');
+const { Profile, Post } = models;
 const { log } = console;
 var links = [];
 

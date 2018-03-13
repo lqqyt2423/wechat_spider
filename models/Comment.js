@@ -1,9 +1,9 @@
 'use strict';
 
-require('./connect');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const Comment = new mongoose.Schema({
+const Comment = new Schema({
   postId: { type: 'ObjectId', ref: 'Post' },
   contentId: String,
   nickName: String,
@@ -20,4 +20,4 @@ const Comment = new mongoose.Schema({
 
 Comment.plugin(require('mongoose-timestamp'));
 
-module.exports = mongoose.model('Comment', Comment);
+mongoose.model('Comment', Comment);

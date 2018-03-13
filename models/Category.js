@@ -1,10 +1,10 @@
 'use strict';
 
-require('./connect');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // 数据结构：公众号账号
-const Category = new mongoose.Schema({
+const Category = new Schema({
   name: String,
   msgBizs: [String]
 }, { toJSON: { virtuals: true } });
@@ -17,4 +17,4 @@ Category.virtual('profiles', {
   foreignField: 'msgBiz'
 });
 
-module.exports = mongoose.model('Category', Category);
+mongoose.model('Category', Category);

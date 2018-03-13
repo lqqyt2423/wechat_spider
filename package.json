@@ -17,7 +17,7 @@
     "ip": "^1.1.5",
     "json2csv": "^3.11.2",
     "moment": "^2.18.1",
-    "mongoose": "^4.11.4",
+    "mongoose": "^5.0.10",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.8.2",
     "request": "^2.83.0",

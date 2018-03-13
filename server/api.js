@@ -2,10 +2,9 @@
 
 const express = require('express');
 const api = express();
-const Profile = require('../models/Profile');
-const Post = require('../models/Post');
-const Category = require('../models/Category');
 const config = require('../config').insertJsToNextProfile;
+const models = require('../models');
+const { Category, Profile, Post } = models;
 
 api.get('/posts', (req, res, next) => {
   const {

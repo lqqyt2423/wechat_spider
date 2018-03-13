@@ -1,11 +1,11 @@
 'use strict';
 
-const Profile = require('../models/Profile');
-const Post = require('../models/Post');
+const models = require('../models');
 const url = require('url');
 const querystring = require('querystring');
 const { log } = console;
 const moment = require('moment');
+const { Profile, Post } = models;
 
 function getProfileData(link, response, content) {
   let serverResData = content.toString();

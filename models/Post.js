@@ -1,10 +1,10 @@
 'use strict';
 
-require('./connect');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // 数据结构：文章
-const Post = new mongoose.Schema({
+const Post = new Schema({
   title: String,
   link: String,
   publishAt: Date,
@@ -41,4 +41,4 @@ Post.index({ updateNumAt: -1 });
 Post.index({ updateNumAt: 1 });
 Post.index({ msgBiz: 1 });
 
-module.exports = mongoose.model('Post', Post);
+mongoose.model('Post', Post);

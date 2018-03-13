@@ -1,10 +1,11 @@
 'use strict';
 
-const Post = require('../models/Post');
+const models = require('../models');
 const url = require('url');
 const querystring = require('querystring');
 const moment = require('moment');
 const { log } = console;
+const { Post } = models;
 
 function getMainData(link, content) {
   let promise = Promise.resolve();

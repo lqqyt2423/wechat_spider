@@ -1,10 +1,10 @@
 'use strict';
 
-require('./connect');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // 数据结构：公众号账号
-const Profile = new mongoose.Schema({
+const Profile = new Schema({
   title: String,
   wechatId: String,
   desc: String,
@@ -17,4 +17,4 @@ const Profile = new mongoose.Schema({
 
 Profile.plugin(require('mongoose-timestamp'));
 
-module.exports = mongoose.model('Profile', Profile);
+mongoose.model('Profile', Profile);

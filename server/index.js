@@ -6,7 +6,8 @@ const logger = require('morgan');
 const path = require('path');
 const app = express();
 const spiderConfig = require('../config');
-const Category = require('../models/Category');
+const models = require('../models');
+const { Category } = models;
 
 const api = require('./api');
 
