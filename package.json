@@ -16,7 +16,7 @@
     "express": "^4.15.4",
     "ip": "^1.1.5",
     "json2csv": "^3.11.2",
-    "moment": "^2.18.1",
+    "moment": "^2.21.0",
     "mongoose": "^5.0.10",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.8.2",
