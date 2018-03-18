@@ -6,6 +6,14 @@ const config = {
   mongodb: {
     db: 'mongodb://127.0.0.1:27017/wechat_spider'
   },
+  redis: {
+    port: 6379,
+    host: '127.0.0.1'
+  },
+  // 是否用本地图片替换所有的图片请求 加快网络速度
+  isReplaceImg: false,
+  // 是否替换显示在手机上的微信文章正文内容 加快网路速度
+  isReplacePostBody: false,
   insertJsToNextPage: {
     // 是否关闭自动跳转页面
     disable: false,
@@ -17,23 +25,25 @@ const config = {
     // 已有数据的文章是否再抓取
     isCrawlExist: false,
     // if true updateNumAt - publishAt
-    crawlExistInterval: 1000*60*60*24*3,
+    crawlExistInterval: 1000 * 60 * 60 * 24 * 3,
     // 抓取公众号biz范围
     targetBiz: [],
     // 是否保存文章内容
-    isSavePostContent: true,
+    isSavePostContent: false,
     // 保存内容的形式: html/text
     saveContentType: 'text',
   },
   insertJsToNextProfile: {
     // 是否关闭自动跳转页面
     disable: false,
+    // 仅scroll 不跳转
+    onlyScroll: true,
     // 跳转时间间隔 s
-    jumpInterval: 15,
+    jumpInterval: 10,
     // 抓取到minTime就跳转至下一公众号
     minTime: new Date(2018, 0, 1),
     // 自定义最近多久更新的公众号本次就不用抓取
-    maxUpdatedAt: new Date(2018, 2, 1),
+    maxUpdatedAt: new Date(2018, 2, 15),
     // 抓取公众号biz范围
     targetBiz: [],
     // 程序开始时间

@@ -1,14 +1,17 @@
 # wechat_spider 微信爬虫
 
-基于Node 的微信爬虫，通过中间人代理的原理，批量获取微信文章数据，包括阅读量、点赞量和评论等数据。使用代理模块 Anyproxy。
+基于Node 的微信爬虫，通过中间人代理的原理，批量获取微信文章数据，包括阅读量、点赞量和评论等数据。
+
+使用代理模块AnyProxy。代码已支持AnyProxy 4版本。
 
 ## 开始
 
-### 安装前
+### 安装前准备
 
-- Node 版本大于v8.8.1
-- MongoDB 版本大于v3.4.6
-- 全局安装`nodemon` 和`pm2`
+- 安装Node，版本大于 8.8.1
+- 安装MongoDB，版本大于 3.4.6
+- 安装Redis
+- 安装Node 全局模块nodemon 和pm2
 
 ### 安装
 
@@ -18,7 +21,7 @@ cd wechat_spider
 npm install
 ```
 
-本项目基于代理模块Anyproxy，解析微信HTTPS 请求需在电脑和手机上都安装证书。可参考：[Anyproxy 文档](https://github.com/alibaba/anyproxy)。
+本项目基于代理模块AnyProxy，解析微信HTTPS 请求需在电脑和手机上都安装证书。可参考：[AnyProxy 文档](http://anyproxy.io/cn/#%E8%AF%81%E4%B9%A6%E9%85%8D%E7%BD%AE)。
 
 ## 使用
 
@@ -27,7 +30,7 @@ cd wechat_spider
 npm start
 ```
 
-1. 确保电脑和手机连接同一WIFI ，`npm start` 之后，命令行输出`Http proxy started at xx.xx.xx.xx:8101` 类似语句，手机设置代理为此IP 和端口
+1. 确保电脑和手机连接同一WIFI ，`npm start` 之后，命令行输出`请配置代理: xx.xx.xx.xx:8101` 类似语句，手机设置代理为此IP 和端口
 2. 手机上测试打开任一公众号历史文章详情页和文章页，观察电脑命令行的输出，查看数据是否保存至MongoDB
 3. 自动翻页抓取数据需配置`config.js`
 

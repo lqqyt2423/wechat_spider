@@ -1,12 +1,31 @@
 'use strict';
 
-const getMainData = require('./getMainData');
-const getProfileData = require('./getProfileData');
-const insertJsToNextPage = require('./insertJsToNextPage');
-const insertJsToNextProfile = require('./insertJsToNextProfile');
-const getComment = require('./getComment');
+const {
+  getReadAndLikeNum,
+  getPostBasicInfo,
+  handlePostHtml,
+  getComments,
+  getProfileBasicInfo,
+  getPostList,
+  handleProfileHtml
+} = require('./wechatRule');
 const config = require('../config');
-const { log } = console;
+const fs = require('fs');
+const path = require('path');
+
+const { isReplaceImg } = config;
+let imgBuf;
+if (isReplaceImg) imgBuf = fs.readFileSync(path.join(__dirname, './replaceImg.png'));
+
+const sendResFns = [
+  getReadAndLikeNum,
+  getPostBasicInfo,
+  handlePostHtml,
+  getComments,
+  getProfileBasicInfo,
+  getPostList,
+  handleProfileHtml
+];
 
 const rule = {
   // 模块介绍
@@ -14,74 +33,44 @@ const rule = {
 
   // 发送请求前拦截处理
   *beforeSendRequest(requestDetail) {
-    const link = requestDetail.url;
+    const { requestOptions } = requestDetail;
+    const { headers } = requestOptions;
+    const { Accept } = headers;
 
-    // 自定义网络请求，控制历史页下拉或跳转
-    if (link.indexOf('tonextprofile') > -1) {
-      return insertJsToNextProfile.isJumpToNext(link).then(text => {
-        log('是否跳转至下一个公众号 => ', text, '\n');
-        return {
-          response: {
-            statusCode: 200,
-            header: { 'content-type': 'text/plain' },
-            body: text
-          }
-        };
-      });
+    // 处理图片返回
+    if (isReplaceImg && /^image/.test(Accept)) {
+      return {
+        response: {
+          statusCode: 200,
+          header: { 'content-type': 'image/png' },
+          body: imgBuf
+        }
+      };
     }
   },
 
   // 发送响应前处理
   *beforeSendResponse(requestDetail, responseDetail) {
-    const link = requestDetail.url;
-    const { response } = responseDetail;
-    const { body } = response;
+    const fnLens = sendResFns.length;
+    if (fnLens === 0) return;
+    let i = 0;
+    const ctx = { req: requestDetail, res: responseDetail };
+    const handleFn = () => {
+      const fn = sendResFns[i];
+      return fn(ctx).then(res => {
+        if (res) return res;
+        i += 1;
+        if (i >= fnLens) return;
+        return handleFn();
+      });
+    };
+    return handleFn().catch(e => {
+      throw e;
+    });
+  }
 
-    if (link.indexOf('getappmsgext') > -1) {
-      // 获取点赞量和阅读量
-      return getMainData(link, body).then(() => {
-        return null;
-      });
-    } else if (/mp\/profile_ext.+__biz/.test(link)) {
-      // 通过历史消息页抓取文章url等
-      return getProfileData(link, response, body).then(() => {
-        return insertJsToNextProfile(link, response, body);
-      }).then(content => {
-        return {
-          response: { ...response, body: content }
-        };
-      });
-    } else if (/\/s\?__biz/.test(link) || /mp\/appmsg\/show/.test(link)) {
-      // 文章页跳转
-      return insertJsToNextPage(link, body).then((content) => {
-        if (content) {
-          return {
-            response: { ...response, body: content }
-          };
-        } else {
-          return null;
-        }
-      });
-    } else if (/\/mp\/appmsg_comment/.test(link)) {
-      // 抓取评论
-      if (config.isCrawlComments) {
-        return getComment(link, body).then(() => {
-          return null;
-        });
-      } else {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  },
-
-  // 是否处理https请求
-  *beforeDealHttpsRequest(requestDetail) {
-    const { host } = requestDetail;
-    if (host === 'mp.weixin.qq.com:443') return true;
-    return false;
-  },
+  // 是否处理https请求 已全局开启解析https请求 此处注释掉即可
+  // *beforeDealHttpsRequest(requestDetail) { /* ... */ },
 
   // 请求出错的事件
   // *onError(requestDetail, error) { /* ... */ },

@@ -27,7 +27,7 @@ const options = {
   port: 8101,
   rule: require('./rule'),
   webInterface: {
-    enable: true,
+    enable: false,
     webPort: 8102
   },
 
@@ -35,13 +35,14 @@ const options = {
   // throttle: 10000,
 
   // 强制解析所有HTTPS流量
-  forceProxyHttps: false,
+  forceProxyHttps: true,
 
   // 不开启websocket代理
   wsIntercept: false,
 
   silent: true
 };
+
 const proxyServer = new AnyProxy.ProxyServer(options);
 
 proxyServer.on('ready', () => {
@@ -50,7 +51,7 @@ proxyServer.on('ready', () => {
   log('可视化界面: http://localhost:8104\n');
 });
 proxyServer.on('error', (e) => {
-  console.error(e);
+  throw e;
 });
 
 proxyServer.start();
