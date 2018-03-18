@@ -80,7 +80,7 @@ const getPostBasicInfo = async function(ctx) {
 
   // 若数据库中不存在此篇文章 则更新基础信息
   await models.Post.findOne({ msgBiz, msgMid, msgIdx }).then(post => {
-    if (post && post.title && post.link) return;
+    if (post && post.title && post.link && post.wechatId) return;
 
     const getTarget = regexp => {
       let target;
@@ -90,17 +90,27 @@ const getPostBasicInfo = async function(ctx) {
       return target;
     };
 
+    let wechatId = getTarget(/<span class="profile_meta_value">(.+?)<\/span>/);
+    // 如果上面找到的微信id中包含中文字符 则证明此微信号没有设置微信id 则取微信给定的user_name初始字段
+    if (wechatId && /[\u4e00-\u9fa5]/.test(wechatId)) {
+      wechatId = getTarget(/var user_name = "(.+?)"/);
+    }
+
+    // 更新wechatId
+    if (wechatId && post && (!post.wechatId) && post.title && post.link) {
+      return models.Post.findOneAndUpdate(
+        { msgBiz, msgMid, msgIdx },
+        { wechatId },
+        { upsert: true }
+      );
+    }
+
     const title = getTarget(/var msg_title = "(.+?)";/);
     let publishAt = getTarget(/var ct = "(\d+)";/);
     if (publishAt) publishAt = new Date(parseInt(publishAt) * 1000);
     const sourceUrl = getTarget(/var msg_source_url = '(.*?)';/);
     const cover = getTarget(/var msg_cdn_url = "(.+?)";/);
     const digest = getTarget(/var msg_desc = "(.+?)";/);
-    let wechatId = getTarget(/<span class="profile_meta_value">(.+?)<\/span>/);
-    // 如果上面找到的微信id中包含中文字符 则证明此微信号没有设置微信id 则取微信给定的user_name初始字段
-    if (wechatId && /[\u4e00-\u9fa5]/.test(wechatId)) {
-      wechatId = getTarget(/var user_name = "(.+?)"/);
-    }
 
     return models.Post.findOneAndUpdate(
       { msgBiz, msgMid, msgIdx },
