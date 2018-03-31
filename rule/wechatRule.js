@@ -8,14 +8,8 @@ const config = require('../config');
 const cheerio = require('cheerio');
 const redis = require('../utils/redis');
 
-/*
- * 如需删除redis中的缓存
- * 打开redis-cli 运行下面命令即可
- * del wechat_spider:post_list
- * del wechat_spider:profile_list
- */
-const POST_LIST_KEY = 'wechat_spider:post_list';
-const PROFILE_LIST_KEY = 'wechat_spider:profile_list';
+// 链接数组的缓存 每次重启程序后都会清空
+const { POST_LIST_KEY, PROFILE_LIST_KEY } = config.redis;
 
 const getReadAndLikeNum = async function(ctx) {
   const { req, res } = ctx;
