@@ -340,11 +340,12 @@ const handleProfileHtml = async function(ctx) {
   (function() {
     window.addEventListener('load', () => {
       const isScroll = time => {
-        const text = document.body.innerHTML;
-        if (/style="(?!display).+?更多/.test(text)) return false;
+        const text = document.body.innerText;
+        if (text.indexOf('已无更多') > -1) return false;
+        if (text.indexOf('接收更多消息') > -1) return false;
 
         const dateArray = [];
-        text.replace(/weui_media_extra_info">(.{4})年(.{1,2})月(.{1,2})日/g, (match, y, m, d) => {
+        text.replace(/(.{4})年(.{1,2})月(.{1,2})日/g, (match, y, m, d) => {
           dateArray.push(new Date(y, m - 1, d).getTime());
         });
         if (dateArray.length > 0) {
