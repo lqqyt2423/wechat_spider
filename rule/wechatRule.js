@@ -341,18 +341,18 @@ const handleProfileHtml = async function(ctx) {
     window.addEventListener('load', () => {
       const isScroll = time => {
         const text = document.body.innerText;
-        if (text.indexOf('已无更多') > -1) return false;
-        if (text.indexOf('接收更多消息') > -1) return false;
 
-        const dateArray = [];
+        const tmpArray = text.split(/(.{4})年(.{1,2})月(.{1,2})日/);
+        const tmpStr = tmpArray[tmpArray.length - 1];
+        if (tmpStr.indexOf('已无更多') > -1) return false;
+        if (tmpStr.indexOf('接收更多消息') > -1) return false;
+
+        let minDate;
         text.replace(/(.{4})年(.{1,2})月(.{1,2})日/g, (match, y, m, d) => {
-          dateArray.push(new Date(y, m - 1, d).getTime());
+          minDate = new Date(y, m - 1, d).getTime();
+          minDateStr = match;
         });
-        if (dateArray.length > 0) {
-          const minDate = Math.min(...dateArray);
-          if (minDate < time) return false;
-          return true;
-        }
+        if (minDate && minDate < time) return false;
         return true;
       };
 
