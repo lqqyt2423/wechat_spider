@@ -8,7 +8,9 @@ const config = {
   },
   redis: {
     port: 6379,
-    host: '127.0.0.1'
+    host: '127.0.0.1',
+    POST_LIST_KEY: 'wechat_spider:post_list',
+    PROFILE_LIST_KEY: 'wechat_spider:profile_list'
   },
   // 是否用本地图片替换所有的图片请求 加快网络速度
   isReplaceImg: false,
