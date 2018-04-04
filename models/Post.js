@@ -40,5 +40,6 @@ Post.index({ publishAt: 1, msgIdx: 1 });
 Post.index({ updateNumAt: -1 });
 Post.index({ updateNumAt: 1 });
 Post.index({ msgBiz: 1 });
+Post.index({ msgBiz: 1, publishAt: 1, msgIdx: 1 });
 
 mongoose.model('Post', Post);
