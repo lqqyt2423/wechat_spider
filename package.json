@@ -26,5 +26,17 @@
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lqqyt2423/wechat_spider.git"
+  },
+  "keywords": [
+    "wechat",
+    "spider"
+  ],
+  "bugs": {
+    "url": "https://github.com/lqqyt2423/wechat_spider/issues"
+  },
+  "homepage": "https://github.com/lqqyt2423/wechat_spider#readme"
 }
