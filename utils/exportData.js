@@ -148,6 +148,10 @@ module.exports = class ExportData {
         if (key === '发布时间' && Object.prototype.toString.call(value) == '[object Date]') postObj[key] = moment(value).format('YYYY-MM-DD HH:mm');
       });
 
+      // 用0替换undefined
+      if (!postObj.阅读量) postObj.阅读量 = 0;
+      if (!postObj.点赞量) postObj.点赞量 = 0;
+
       return postObj;
     });
 
