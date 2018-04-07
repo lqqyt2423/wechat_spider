@@ -84,7 +84,8 @@ module.exports = class ExportData {
   async toCsv(minDate, maxDate, options = {}) {
     const json = await this.toJson(minDate, maxDate, options);
     const obj = JSON.parse(json);
-    const csv = json2csv({ data: obj });
+    let csv = json2csv({ data: obj });
+    csv = addBom(csv);
     return csv;
   }
 
@@ -109,7 +110,8 @@ module.exports = class ExportData {
    */
   async toStaCsv(minDate, maxDate) {
     const data = await this.calcStatistic(minDate, maxDate);
-    const csv = json2csv({ data });
+    let csv = json2csv({ data });
+    csv = addBom(csv);
     return csv;
   }
 
@@ -247,3 +249,9 @@ module.exports = class ExportData {
   }
 
 };
+
+function addBom(csv) {
+  const bom = Buffer.from('\uFEFF');
+  const csvBuf = Buffer.from(csv);
+  return Buffer.concat([bom, csvBuf]).toString();
+}
