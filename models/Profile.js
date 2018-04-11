@@ -15,6 +15,6 @@ const Profile = new Schema({
   property: String
 });
 
-Profile.plugin(require('mongoose-timestamp'));
+Profile.plugin(require('motime'));
 
 mongoose.model('Profile', Profile);

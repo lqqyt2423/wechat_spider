@@ -23,7 +23,7 @@ const Post = new Schema({
   content: String
 }, { toJSON: { virtuals: true } });
 
-Post.plugin(require('mongoose-timestamp'));
+Post.plugin(require('motime'));
 
 Post.virtual('profile', {
   ref: 'Profile',

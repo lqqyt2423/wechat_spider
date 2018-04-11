@@ -18,6 +18,6 @@ const Comment = new Schema({
   }]
 });
 
-Comment.plugin(require('mongoose-timestamp'));
+Comment.plugin(require('motime'));
 
 mongoose.model('Comment', Comment);

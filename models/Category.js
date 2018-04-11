@@ -9,7 +9,7 @@ const Category = new Schema({
   msgBizs: [String]
 }, { toJSON: { virtuals: true } });
 
-Category.plugin(require('mongoose-timestamp'));
+Category.plugin(require('motime'));
 
 Category.virtual('profiles', {
   ref: 'Profile',

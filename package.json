@@ -18,7 +18,7 @@
     "json2csv": "^3.11.2",
     "moment": "^2.21.0",
     "mongoose": "^5.0.10",
-    "mongoose-timestamp": "^0.6.0",
+    "motime": "^0.0.2",
     "morgan": "^1.8.2",
     "redis": "^2.8.0",
     "request": "^2.83.0",
