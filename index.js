@@ -58,10 +58,15 @@ proxyServer.on('error', (e) => {
   throw e;
 });
 
-// 删除redis中对应缓存后再启动
-redis('del', POST_LIST_KEY, PROFILE_LIST_KEY).then(() => {
-  proxyServer.start();
+redis('auth', 'zxcvbnm').then(()=>{
+    redis('del', POST_LIST_KEY, PROFILE_LIST_KEY).then(() => {
+        proxyServer.start();
+    });
+}).catch(()=>{
+    console.log('redis auth failed');
 });
+// 删除redis中对应缓存后再启动
+
 
 // when finished
 // proxyServer.close();

@@ -4,18 +4,19 @@ const fs = require('fs');
 
 const config = {
   mongodb: {
-    db: 'mongodb://127.0.0.1:27017/wechat_spider'
+    db: 'mongodb://admin:zxcvbnm@118.24.68.134:27097/wechat_spider?authSource=admin'
   },
   redis: {
     port: 6379,
-    host: '127.0.0.1',
+    host: '118.24.68.134',
+    pass: 'zxcvbnm',
     POST_LIST_KEY: 'wechat_spider:post_list',
     PROFILE_LIST_KEY: 'wechat_spider:profile_list'
   },
   // 是否用本地图片替换所有的图片请求 加快网络速度
-  isReplaceImg: false,
+  isReplaceImg: true,
   // 是否替换显示在手机上的微信文章正文内容 加快网路速度
-  isReplacePostBody: false,
+  isReplacePostBody: true,
   insertJsToNextPage: {
     // 是否关闭自动跳转页面
     disable: false,
@@ -52,7 +53,7 @@ const config = {
     beginTime: new Date()
   },
   // 是否抓取评论
-  isCrawlComments: true
+  isCrawlComments: false
 };
 
 try {

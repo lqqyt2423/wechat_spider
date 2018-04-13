@@ -59,3 +59,5 @@ typings/
 
 package-lock.json
 private/
+
+.build/
