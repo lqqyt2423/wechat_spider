@@ -77,6 +77,33 @@ export function fetchProfiles(query) {
   };
 }
 
+export const REQUEST_PROFILE = 'REQUEST_PROFILE';
+
+export function requestProfile(id) {
+  return {
+    type: REQUEST_PROFILE,
+    id
+  };
+}
+
+export const RECEIVE_PROFILE = 'RECEIVE_PROFILE';
+
+export function receiveProfile(profile) {
+  return {
+    type: RECEIVE_PROFILE,
+    profile
+  };
+}
+
+export function fetchProfile(id) {
+  return function (dispatch) {
+    dispatch(requestProfile(id));
+    return fetch(`${config.profile}/${id}`).then(res => res.json()).then(profile => {
+      dispatch(receiveProfile(profile));
+    });
+  };
+}
+
 export const REQUEST_CATES = 'REQUEST_CATES';
 
 export function requestCates() {

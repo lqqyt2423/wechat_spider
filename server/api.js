@@ -6,6 +6,12 @@ const config = require('../config').insertJsToNextProfile;
 const models = require('../models');
 const { Category, Profile, Post } = models;
 
+function wrap(fn) {
+  return function(req, res, next) {
+    fn.call(this, req, res, next).catch(next);
+  };
+}
+
 api.get('/posts', (req, res, next) => {
   const {
     target,
@@ -140,6 +146,26 @@ api.get('/profiles', (req, res, next) => {
     next(e);
   });
 });
+
+api.get('/profile/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  let profile = await Profile.findById(id);
+  profile = profile.toObject();
+
+  // eslint-disable-next-line
+  const { _id, __v, ...newProfile } = profile;
+  profile = { id: _id, ...newProfile };
+  res.json(profile);
+}));
+
+api.put('/profile/:id', wrap(async (req, res) => {
+  const { params, query } = req;
+  const { id } = params;
+  const { property } = query;
+  if (!property) throw new Error('请传入property参数');
+  await Profile.findByIdAndUpdate(id, { property });
+  res.send('ok');
+}));
 
 // 新建分类
 api.post('/categories', (req, res, next) => {

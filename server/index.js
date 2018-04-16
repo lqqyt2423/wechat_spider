@@ -37,15 +37,18 @@ app.post('/spider', async (req, res, next) => {
 });
 
 // 前端页面
+// eslint-disable-next-line
 app.get('/favicon.png', (req, res, next) => {
   res.sendFile(path.join(__dirname, './favicon.png'));
 });
 app.use('/', express.static(path.join(__dirname, '../client/build')));
+// eslint-disable-next-line
 app.get('/*', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-// handle error 参数next 不能省略
+// handle error 参数next不能省略
+// eslint-disable-next-line
 app.use((error, req, res, next) => {
   if (!res.finished) {
     res.status(500).send(error.message);

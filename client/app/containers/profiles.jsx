@@ -63,6 +63,7 @@ class Profiles extends React.Component {
               <th>有数据</th>
               <th>差</th>
               <th>MsgBiz</th>
+              <th>Detail</th>
             </tr>
           </thead>
           <tbody>
@@ -79,6 +80,7 @@ class Profiles extends React.Component {
                     <td>{profile.postsHasDataCount}</td>
                     <td>{profile.postsAllCount - profile.postsHasDataCount}</td>
                     <td>{profile.msgBiz}</td>
+                    <td><Link to={`/profile/${profile._id}`}>detail</Link></td>
                   </tr>
                 );
               })
