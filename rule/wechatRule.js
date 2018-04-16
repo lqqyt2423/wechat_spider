@@ -21,10 +21,18 @@ const getReadAndLikeNum = async function(ctx) {
     const data = JSON.parse(body);
     const { read_num, like_num } = data.appmsgstat;
     const [readNum, likeNum] = [read_num, like_num];
-    const urlObj = url.parse(link, true);
-    const { query } = urlObj;
-    const { __biz, mid, idx } = query;
+
+    const { requestData } = req;
+    const reqData = String(requestData);
+    const reqArgs = reqData.split('&').map(s => s.split('='));
+    const reqObj = reqArgs.reduce((obj, arr) => {
+      const [key, value] = arr;
+      obj[key] = decodeURIComponent(value);
+      return obj;
+    }, {});
+    const { __biz, mid, idx } = reqObj;
     const [msgBiz, msgMid, msgIdx] = [__biz, mid, idx];
+
     const post = await models.Post.findOneAndUpdate(
       { msgBiz, msgMid, msgIdx },
       { readNum, likeNum, updateNumAt: new Date() },
