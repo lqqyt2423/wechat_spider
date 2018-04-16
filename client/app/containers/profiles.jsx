@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchProfiles, assembleUrl } from '../actions';
+import { fetchProfiles } from '../actions';
 import Loading from '../components/loading.jsx';
 import moment from 'moment';
 import Paginator from '../components/paginator.jsx';
 import { Link } from 'react-router';
-import SearchInput from '../components/searchInput.jsx';
+import Search from './search.jsx';
 
 class Profiles extends React.Component {
 
@@ -38,35 +38,6 @@ class Profiles extends React.Component {
     return searchArgs;
   }
 
-  renderSearch() {
-    const { location } = this.props;
-    const { pathname } = location;
-    const { history } = this.props;
-    const searchArgs = this.returnCurrentSearchArgs();
-    const { q = '' } = searchArgs;
-    const nextQuery = { ...searchArgs };
-
-    // 去掉分页query
-    if (nextQuery.page) delete nextQuery.page;
-    return (
-      <div style={{
-        padding: '0px 5px 10px 5px'
-      }}>
-        <SearchInput
-          value={q}
-          hintText="搜索公众号..."
-          fullWidth={true}
-          onEnter={q => {
-            if (q) nextQuery.q = q;
-            if (!q && nextQuery.q) delete nextQuery.q;
-            const path = assembleUrl(pathname, nextQuery);
-            history.push(path);
-          }}
-        />
-      </div>
-    );
-  }
-
   render() {
     let { isFetching, profiles, history, location } = this.props;
     let { search, pathname } = location;
@@ -74,7 +45,12 @@ class Profiles extends React.Component {
     let metadata = profiles.metadata;
     return (
       <div>
-        {this.renderSearch()}
+        <Search
+          location={location}
+          history={history}
+          searchArgs={this.returnCurrentSearchArgs()}
+          defaultText="搜索公众号..."
+        />
         <table className="table table-striped">
           <thead>
             <tr>

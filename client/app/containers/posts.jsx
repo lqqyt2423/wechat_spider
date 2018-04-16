@@ -6,7 +6,7 @@ import Paginator from '../components/paginator.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
 import moment from 'moment';
 import { Link } from 'react-router';
-import SearchInput from '../components/searchInput.jsx';
+import Search from './search.jsx';
 
 function timeDiff(update, publish) {
   let updateMoment = moment(update);
@@ -120,35 +120,6 @@ class Posts extends React.Component {
     );
   }
 
-  renderSearch() {
-    const { location } = this.props;
-    const { pathname } = location;
-    const { history } = this.props;
-    const searchArgs = this.returnCurrentSearchArgs();
-    const { q = '' } = searchArgs;
-    const nextQuery = { ...searchArgs };
-
-    // 去掉分页query
-    if (nextQuery.page) delete nextQuery.page;
-    return (
-      <div style={{
-        padding: '0px 5px 10px 5px'
-      }}>
-        <SearchInput
-          value={q}
-          hintText="搜索文章..."
-          fullWidth={true}
-          onEnter={q => {
-            if (q) nextQuery.q = q;
-            if (!q && nextQuery.q) delete nextQuery.q;
-            const path = assembleUrl(pathname, nextQuery);
-            history.push(path);
-          }}
-        />
-      </div>
-    );
-  }
-
   render() {
     let { isFetching, posts, history, location } = this.props;
     let { search, pathname } = location;
@@ -157,7 +128,12 @@ class Posts extends React.Component {
     return (
       <div>
         {this.renderFilter()}
-        {this.renderSearch()}
+        <Search
+          location={location}
+          history={history}
+          searchArgs={this.returnCurrentSearchArgs()}
+          defaultText="搜索文章..."
+        />
         <table className="table table-striped">
           <thead>
             <tr>
