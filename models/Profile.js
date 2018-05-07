@@ -17,4 +17,6 @@ const Profile = new Schema({
 
 Profile.plugin(require('motime'));
 
+Profile.index({ msgBiz: 1 });
+
 mongoose.model('Profile', Profile);
