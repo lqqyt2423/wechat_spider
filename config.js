@@ -22,8 +22,8 @@ const config = {
     // 跳转时间间隔 s
     jumpInterval: 2,
     // 跳转文章发布时间范围
-    minTime: new Date(2018, 0, 1),
-    maxTime: new Date(2018, 3, 1),
+    minTime: new Date('2018-4-1'),
+    maxTime: new Date('2018-6-10'),
     // 已有数据的文章是否再抓取
     isCrawlExist: false,
     // if true updateNumAt - publishAt
@@ -39,13 +39,13 @@ const config = {
     // 是否关闭自动跳转页面
     disable: false,
     // 仅scroll 不跳转
-    onlyScroll: true,
+    onlyScroll: false,
     // 跳转时间间隔 s
     jumpInterval: 5,
     // 抓取到minTime就跳转至下一公众号
-    minTime: new Date(2018, 0, 1),
+    minTime: new Date('2018-4-1'),
     // 自定义最近多久更新的公众号本次就不用抓取
-    maxUpdatedAt: new Date(2018, 3, 1),
+    maxUpdatedAt: new Date('2018-6-10'),
     // 抓取公众号biz范围
     targetBiz: [],
     // 程序开始时间
@@ -57,9 +57,11 @@ const config = {
 
 try {
   // 引入外部biz文件
-  fs.accessSync('./targetBiz.json');
-  config.insertJsToNextProfile.targetBiz = require('./targetBiz.json');
-  config.insertJsToNextPage.targetBiz = require('./targetBiz.json');
+  const bizs = fs.readFileSync('./bizs.txt', 'utf8').trim().split('\n') || [];
+  if (bizs.length) {
+    config.insertJsToNextProfile.targetBiz = bizs;
+    config.insertJsToNextPage.targetBiz = bizs;
+  }
 } catch(e) {
   // Do nothing
 }
