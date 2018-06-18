@@ -149,7 +149,7 @@ const handlePostHtml = async function(ctx) {
   // 替换显示在手机上的正文 加速网络
   if (config.isReplacePostBody) {
     const len = await redis('llen', POST_LIST_KEY);
-    body.replace(/<div class="rich_media_content " id="js_content">((\s|\S)+?)<\/div>\s+?<script nonce=/, (_, content) => {
+    body.replace(/<div class="rich_media_content " lang=="en" id="js_content">((\s|\S)+?)<\/div>\s+?<script nonce=/, (_, content) => {
       if (content) body = body.replace(content, `剩余文章抓取长度: ${len}`);
     });
   }
@@ -164,7 +164,7 @@ const handlePostHtml = async function(ctx) {
       const insertJsStr = '<meta http-equiv="refresh" content="' + config.insertJsToNextPage.jumpInterval + ';url=' + nextLink + '" />';
       body = body.replace('</title>', '</title>' + insertJsStr);
     }
-    
+
   }
 
   return {
@@ -385,7 +385,7 @@ const handleProfileHtml = async function(ctx) {
   };
 
 
-  
+
 };
 
 async function savePostsData(postList) {
