@@ -72,16 +72,8 @@ async function checkWechatId() {
 // 手动修复
 async function fixWechatId() {
   const array = [
-    ['st_gov', 'MzI0MDU1NzcxNg=='],
-    ['gh_255e073818cb', 'MzI0OTMyMzAyMg=='],
-    ['gh_f6346759e760', 'MzI3MjU0ODk5OQ=='],
-    ['gh_add771035570', 'MzI3MzExODg1MA=='],
-    ['gh_309eed5521e7', 'MzIxODg2NjQ5MQ=='],
-    ['gh_541d9f5f914f', 'MzIyMTczMjI1NA=='],
-    ['gh_609018f1f8e5', 'MzU2MDExMzI5OQ=='],
-    ['gh_6db4b6109707', 'MzU3MjI2NDgxNw=='],
-    ['gh_22372daf9473', 'MzA5MDg2MTAxOA=='],
-    ['gh_9af59cf5576e', 'MzIzOTE2MTUyNQ==']
+    ['JinanUniversity', 'MjM5OTQwMTE0Mw=='],
+    ['gzchfb', 'MzIyODgwMTA3Mg=='],
   ];
 
   if (array.length === 0) return;

@@ -23,7 +23,7 @@ const config = {
     jumpInterval: 2,
     // 跳转文章发布时间范围
     minTime: new Date('2018-4-1'),
-    maxTime: new Date('2018-6-10'),
+    maxTime: new Date('2018-7-1'),
     // 已有数据的文章是否再抓取
     isCrawlExist: false,
     // if true updateNumAt - publishAt
@@ -43,9 +43,9 @@ const config = {
     // 跳转时间间隔 s
     jumpInterval: 5,
     // 抓取到minTime就跳转至下一公众号
-    minTime: new Date('2018-4-1'),
+    minTime: new Date('2018-6-18'),
     // 自定义最近多久更新的公众号本次就不用抓取
-    maxUpdatedAt: new Date('2018-6-10'),
+    maxUpdatedAt: new Date('2018-7-1'),
     // 抓取公众号biz范围
     targetBiz: [],
     // 程序开始时间
