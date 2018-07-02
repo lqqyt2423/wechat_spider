@@ -19,7 +19,7 @@ const config = {
     // 限制网络速度 kb/s number
     // 设置为 undefined 不限速
     throttle: undefined,
-    // 是否强制解析所有HTTPS流量
+    // 是否强制解析所有 HTTPS 流量
     forceProxyHttps: true,
     // 是否开启 websocket 代理
     wsIntercept: false,
@@ -59,7 +59,7 @@ const config = {
 
       // 已经抓取过的文章是否需要再次抓取
       isCrawlExist: false,
-      // 如果上面设置为 true ，此项可控制再次重复抓取文章的时间间隔
+      // 如果上面设置为 true，此项可控制再次重复抓取文章的时间间隔
       // updateNumAt - publishAt < crawlExistInterval => 抓取
       // 默认 3 天，数据已趋于稳定
       crawlExistInterval: 1000 * 60 * 60 * 24 * 3,

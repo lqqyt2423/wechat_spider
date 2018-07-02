@@ -1,10 +1,11 @@
 {
   "name": "wechat_spider",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "wechat spider by Man-in-the-middle attack",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --ignore client/",
+    "start": "node index.js",
+    "dev": "nodemon index.js --ignore client/",
     "build": "pm2 start index.js --name=\"wechat_spider\""
   },
   "author": "liqiang",
