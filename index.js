@@ -7,7 +7,13 @@ const { log } = console;
 const config = require('./config');
 const redis = require('./utils/redis');
 
-const { POST_LIST_KEY, PROFILE_LIST_KEY } = config.redis;
+const {
+  redis: redisConfig,
+  anyproxy: anyproxyConfig,
+  serverPort,
+} = config;
+
+const { POST_LIST_KEY, PROFILE_LIST_KEY } = redisConfig;
 
 // 引导安装HTTPS证书
 if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
@@ -27,33 +33,18 @@ if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
   });
 }
 
-const options = {
-  port: 8101,
+const proxyServer = new AnyProxy.ProxyServer({
+  ...anyproxyConfig,
+
+  // 所有的抓取规则
   rule: require('./rule'),
-  webInterface: {
-    enable: false,
-    webPort: 8102
-  },
-
-  // 默认不限速
-  // throttle: 10000,
-
-  // 强制解析所有HTTPS流量
-  forceProxyHttps: true,
-
-  // 不开启websocket代理
-  wsIntercept: false,
-
-  silent: true
-};
-
-const proxyServer = new AnyProxy.ProxyServer(options);
+});
 
 proxyServer.on('ready', () => {
   const ipAddress = ip.address();
   log(`请配置代理: ${ipAddress}:8101`);
-  log('可视化界面: http://localhost:8104\n');
 });
+
 proxyServer.on('error', (e) => {
   throw e;
 });
@@ -66,4 +57,6 @@ redis('del', POST_LIST_KEY, PROFILE_LIST_KEY).then(() => {
 // when finished
 // proxyServer.close();
 
-require('./server').listen(8104);
+require('./server').listen(serverPort, () => {
+  log('可视化界面: http://localhost:8104');
+});

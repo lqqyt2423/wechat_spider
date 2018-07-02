@@ -8,8 +8,20 @@ const config = require('../config');
 const cheerio = require('cheerio');
 const redis = require('../utils/redis');
 
+const {
+  rule: ruleConfig,
+  redis: redisConfig,
+} = config;
+
 // 链接数组的缓存 每次重启程序后都会清空
-const { POST_LIST_KEY, PROFILE_LIST_KEY } = config.redis;
+const { POST_LIST_KEY, PROFILE_LIST_KEY } = redisConfig;
+
+const {
+  isReplacePostBody,
+  isCrawlComments,
+  page: pageConfig,
+  profile: profileConfig,
+} = ruleConfig;
 
 const getReadAndLikeNum = async function(ctx) {
   const { req, res } = ctx;
@@ -122,10 +134,10 @@ const getPostBasicInfo = async function(ctx) {
   });
 
   // 保存正文内容
-  if (config.insertJsToNextPage.isSavePostContent) {
+  if (pageConfig.isSavePostContent) {
     const $ = cheerio.load(body, { decodeEntities: false });
     let content;
-    if (config.insertJsToNextPage.saveContentType === 'html') {
+    if (pageConfig.saveContentType === 'html') {
       content = $('#js_content').html() || '';
     } else {
       content = $('#js_content').text() || '';
@@ -147,7 +159,7 @@ const handlePostHtml = async function(ctx) {
   let body = res.response.body.toString();
 
   // 替换显示在手机上的正文 加速网络
-  if (config.isReplacePostBody) {
+  if (isReplacePostBody) {
     const len = await redis('llen', POST_LIST_KEY);
     body.replace(/<div class="rich_media_content " lang=="en" id="js_content">((\s|\S)+?)<\/div>\s+?<script nonce=/, (_, content) => {
       if (content) body = body.replace(content, `剩余文章抓取长度: ${len}`);
@@ -155,13 +167,13 @@ const handlePostHtml = async function(ctx) {
   }
 
   // 加入meta head控制自动翻页
-  if (!config.insertJsToNextPage.disable) {
+  if (!pageConfig.disable) {
     const nextLink = await getNextPostLink();
     if (!nextLink) {
       log('所有文章已经抓取完毕');
       log();
     } else {
-      const insertJsStr = '<meta http-equiv="refresh" content="' + config.insertJsToNextPage.jumpInterval + ';url=' + nextLink + '" />';
+      const insertJsStr = '<meta http-equiv="refresh" content="' + pageConfig.jumpInterval + ';url=' + nextLink + '" />';
       body = body.replace('</title>', '</title>' + insertJsStr);
     }
 
@@ -173,7 +185,7 @@ const handlePostHtml = async function(ctx) {
 };
 
 const getComments = async function(ctx) {
-  if (!config.isCrawlComments) return;
+  if (!isCrawlComments) return;
 
   const { req, res } = ctx;
   const link = req.url;
@@ -315,9 +327,7 @@ const handleProfileHtml = async function(ctx) {
   const link = req.url;
   if (!/\/mp\/profile_ext\?action=home&__biz=/.test(link)) return;
 
-  const { insertJsToNextProfile } = config;
-  let { disable, onlyScroll, minTime, jumpInterval } = insertJsToNextProfile;
-  if (disable && !onlyScroll) return;
+  let { disable, minTime, jumpInterval } = profileConfig;
 
   let jumpJsStr = '';
   if (!disable) {
@@ -450,8 +460,7 @@ async function getNextPostLink() {
   if (nextLink) return nextLink;
 
   // 没有拿到链接则从数据库中查
-  const { insertJsToNextPage } = config;
-  const { minTime, maxTime, isCrawlExist, targetBiz, crawlExistInterval } = insertJsToNextPage;
+  const { minTime, maxTime, isCrawlExist, targetBiz, crawlExistInterval } = pageConfig;
 
   const searchQuery = {
     isFail: null,
@@ -499,8 +508,7 @@ async function getNextProfileLink() {
   if (nextLink) return nextLink;
 
   // 没有拿到链接则从数据库中查
-  const { insertJsToNextProfile } = config;
-  const { maxUpdatedAt, targetBiz } = insertJsToNextProfile;
+  const { maxUpdatedAt, targetBiz } = profileConfig;
 
   const searchQuery = {
     $or: [

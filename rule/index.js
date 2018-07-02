@@ -13,7 +13,7 @@ const config = require('../config');
 const fs = require('fs');
 const path = require('path');
 
-const { isReplaceImg } = config;
+const { isReplaceImg } = config.rule;
 let imgBuf;
 if (isReplaceImg) imgBuf = fs.readFileSync(path.join(__dirname, './replaceImg.png'));
 
@@ -65,6 +65,7 @@ const rule = {
       });
     };
     return handleFn().catch(e => {
+      console.log('\nError:', e, '\n');
       throw e;
     });
   }
