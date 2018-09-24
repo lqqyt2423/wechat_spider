@@ -20,6 +20,6 @@ const Comment = new Schema({
 
 Comment.plugin(require('motime'));
 
-Comment.index({ contentId: 1 });
+Comment.index({ contentId: 1 }, { unique: true });
 
 mongoose.model('Comment', Comment);

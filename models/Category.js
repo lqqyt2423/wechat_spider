@@ -17,6 +17,6 @@ Category.virtual('profiles', {
   foreignField: 'msgBiz'
 });
 
-Category.index({ name: 1 });
+Category.index({ name: 1 }, { unique: true });
 
 mongoose.model('Category', Category);

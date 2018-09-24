@@ -12,7 +12,11 @@ const config = require('../config');
 
 mongoose.connect(config.mongodb.db);
 
-mongoose.set('debug', false);
+if (process.env.NODE_ENV === 'production') {
+  mongoose.set('debug', false);
+} else {
+  mongoose.set('debug', true);
+}
 
 // Load All Models
 [
