@@ -6,21 +6,24 @@
   "scripts": {
     "start": "NODE_ENV=production node index.js",
     "dev": "nodemon index.js --ignore client/",
-    "build": "pm2 start index.js --name=\"wechat_spider\""
+    "build": "pm2 start index.js --name=\"wechat_spider\"",
+    "mpc": "cd second && tsc",
+    "mp": "DEBUG=ws:mp* node second/dist/task.js"
   },
   "author": "liqiang",
   "license": "MIT",
   "dependencies": {
     "anyproxy": "^4.0.5",
     "cheerio": "^1.0.0-rc.2",
+    "debug": "^4.0.1",
     "ejs": "^2.5.7",
     "express": "^4.15.4",
     "ip": "^1.1.5",
     "json2csv": "^3.11.2",
     "moment": "^2.21.0",
     "mongoose": "^5.0.10",
-    "motime": "^0.0.2",
     "morgan": "^1.8.2",
+    "motime": "^0.0.2",
     "redis": "^2.8.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"

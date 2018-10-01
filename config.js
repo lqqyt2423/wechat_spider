@@ -105,6 +105,11 @@ const config = {
     isReplacePostBody: false,
   },
 
+  mp: {
+    cookie: '',
+    token: '',
+  },
+
 };
 
 
@@ -125,6 +130,7 @@ try {
   };
   fn(config, myConfig);
 } catch(e) {
+  // console.log(e);
   // Do nothing
 }
 
