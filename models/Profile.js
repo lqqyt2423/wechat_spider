@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const debug = require('debug')('ws:Profile');
 
 // 数据结构：公众号账号
 const Profile = new Schema({
@@ -18,5 +19,16 @@ const Profile = new Schema({
 Profile.plugin(require('motime'));
 
 Profile.index({ msgBiz: 1 }, { unique: true });
+
+// debug Profile
+Profile.statics.logInfo = async function(msgBiz) {
+  if (!msgBiz) return;
+  let title;
+  const profile = await this.findOne({ msgBiz });
+  if (profile && profile.title) title = profile.title;
+  let arr = ['msgBiz', msgBiz];
+  if (title) arr = arr.concat(['title', title]);
+  debug(...arr);
+};
 
 mongoose.model('Profile', Profile);

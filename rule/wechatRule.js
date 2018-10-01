@@ -3,10 +3,10 @@
 const url = require('url');
 const moment = require('moment');
 const models = require('../models');
-const { log } = console;
 const config = require('../config');
 const cheerio = require('cheerio');
 const redis = require('../utils/redis');
+const debug = require('debug')('ws:wechatRule');
 
 const {
   rule: ruleConfig,
@@ -52,16 +52,16 @@ const getReadAndLikeNum = async function(ctx) {
     );
     const { id, title } = post;
     if (title) {
-      log('文章标题:',title);
+      debug('文章标题:', title);
     } else {
-      log('文章id:',id);
+      debug('文章id:', id);
     }
-    log('阅读量:', readNum, '点赞量:', likeNum);
-    log();
+    debug('阅读量:', readNum, '点赞量:', likeNum);
+    debug();
 
     await redis('llen', POST_LIST_KEY).then(len => {
-      log('剩余文章抓取长度:', len);
-      log();
+      debug('剩余文章抓取长度:', len);
+      debug();
     });
 
   } catch(e) {
@@ -170,8 +170,8 @@ const handlePostHtml = async function(ctx) {
   if (!pageConfig.disable) {
     const nextLink = await getNextPostLink();
     if (!nextLink) {
-      log('所有文章已经抓取完毕');
-      log();
+      debug('所有文章已经抓取完毕');
+      debug();
     } else {
       const insertJsStr = '<meta http-equiv="refresh" content="' + pageConfig.jumpInterval + ';url=' + nextLink + '" />';
       body = body.replace('</title>', '</title>' + insertJsStr);
@@ -246,8 +246,8 @@ const getComments = async function(ctx) {
       );
     }));
 
-    log(`已抓取${postComments.length}条评论`);
-    log();
+    debug(`已抓取${postComments.length}条评论`);
+    debug();
 
   } catch(e) {
     throw e;
@@ -329,12 +329,15 @@ const handleProfileHtml = async function(ctx) {
 
   let { disable, minTime, jumpInterval } = profileConfig;
 
+  const urlObj = url.parse(link, true);
+  const msgBiz = urlObj.query.__biz;
+
   let jumpJsStr = '';
   if (!disable) {
     const nextLink = await getNextProfileLink();
     if (!nextLink) {
-      log('所有公众号已经抓取完毕');
-      log();
+      debug('所有公众号已经抓取完毕');
+      debug();
     } else {
       // 控制页面跳转
       jumpJsStr = `
@@ -349,7 +352,13 @@ const handleProfileHtml = async function(ctx) {
   const scrollInterval = jumpInterval * 1000;
 
   // 最小时间再减一天 保证抓到的文章一定齐全
+  await models.Profile.logInfo(msgBiz);
   minTime = new Date(minTime).getTime() - 1000 * 60 * 60 * 24;
+  let debugArr = ['minTime before', new Date(minTime)];
+  minTime = await models.ProfilePubRecord.getMinTargetTime(msgBiz, minTime);
+  debugArr = debugArr.concat(['minTime after', minTime]);
+  debug(...debugArr);
+  minTime = minTime.getTime();
 
   let body = res.response.body.toString();
 
@@ -398,6 +407,7 @@ const handleProfileHtml = async function(ctx) {
 
 };
 
+// 存文章基本信息至数据库
 async function savePostsData(postList) {
   const posts = [];
   postList.forEach(post => {
@@ -413,7 +423,7 @@ async function savePostsData(postList) {
     });
   });
 
-  await Promise.all(posts.map(post => {
+  let savedPosts = await Promise.all(posts.map(post => {
     const { appMsg, publishAt } = post;
     const title = appMsg.title;
     const link = appMsg.content_url;
@@ -432,15 +442,27 @@ async function savePostsData(postList) {
       { msgBiz, msgMid, msgIdx },
       { title, link, publishAt, cover, digest, sourceUrl },
       { new: true, upsert: true }
-    ).then(post => {
-      log('发布时间:', post.publishAt ? moment(post.publishAt).format('YYYY-MM-DD HH:mm') : '');
-      log('文章标题:', post.title, '\n');
-    });
+    );
   }));
 
+  savedPosts = savedPosts.filter(p => p);
+
+  if (savedPosts.length) {
+    await models.Profile.logInfo(savedPosts[0].msgBiz);
+  }
+
+  savedPosts.forEach(post => {
+    debug('发布时间:', post.publishAt ? moment(post.publishAt).format('YYYY-MM-DD HH:mm') : '');
+    debug('文章标题:', post.title);
+  });
+  debug('');
+
+  // 记录公众号的发布记录
+  await models.ProfilePubRecord.savePubRecords(savedPosts);
+
   await redis('llen', PROFILE_LIST_KEY).then(len => {
-    log('剩余公众号抓取长度:', len);
-    log();
+    debug('剩余公众号抓取长度:', len);
+    debug('');
   });
 }
 
@@ -521,10 +543,21 @@ async function getNextProfileLink() {
 
   const links = await models.Profile.find(searchQuery).select('msgBiz').then(profiles => {
     if (!(profiles && profiles.length > 0)) return [];
-    return profiles.map(profile => {
+    let tmpProfiles = profiles.map(profile => {
       const link = `https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${profile.msgBiz}&scene=124#wechat_redirect`;
-      return link;
+      const msgBiz = profile.msgBiz;
+      return { link, msgBiz };
     });
+
+    if (targetBiz && targetBiz.length) {
+      // 按照目标 biz 排序
+      tmpProfiles.sort((a, b) => {
+        if (targetBiz.indexOf(a.msgBiz) <= targetBiz.indexOf(b.msgBiz)) return -1;
+        return 1;
+      });
+    }
+
+    return tmpProfiles.map(p => p.link);
   });
 
   // 如果还查不到 则证明已经抓取完毕了 返回undefined
@@ -544,5 +577,5 @@ module.exports = {
   getComments,
   getProfileBasicInfo,
   getPostList,
-  handleProfileHtml
+  handleProfileHtml,
 };

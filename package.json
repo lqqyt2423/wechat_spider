@@ -4,8 +4,8 @@
   "description": "wechat spider by Man-in-the-middle attack",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
-    "dev": "nodemon index.js --ignore client/",
+    "start": "DEBUG=ws:* NODE_ENV=production node index.js",
+    "dev": "DEBUG=ws:* nodemon index.js --ignore client/",
     "build": "pm2 start index.js --name=\"wechat_spider\"",
     "mpc": "cd second && tsc",
     "mp": "DEBUG=ws:mp* node second/dist/task.js"

@@ -150,7 +150,7 @@ function handleRaw(raw: RawData): HandledRes {
 }
 
 async function savePosts(posts: Post[]): Promise<void> {
-  await Promise.all(posts.map((post: Post) => {
+  const resPosts = await Promise.all(posts.map((post: Post) => {
     const {
       msgBiz,
       msgMid,
@@ -160,12 +160,17 @@ async function savePosts(posts: Post[]): Promise<void> {
       { msgBiz, msgMid, msgIdx },
       post,
       { upsert: true, new: true }
-    ).then(post => {
-      debug('title', post.title);
-      debug('id', post.id);
-      debug('publishAt', post.publishAt);
-    });
+    );
   }));
+
+  // 保存抓取记录
+  await models.ProfilePubRecord.savePubRecords(posts);
+
+  resPosts.forEach(post => {
+    debug('title', post.title);
+    debug('id', post.id);
+    debug('publishAt', post.publishAt);
+  });
 }
 
 // 控制抓取前几页的数据

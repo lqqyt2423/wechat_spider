@@ -23,7 +23,8 @@ if (process.env.NODE_ENV === 'production') {
   'Post',
   'Profile',
   'Category',
-  'Comment'
+  'Comment',
+  'ProfilePubRecord',
 ].forEach(function(modelName) {
   require(path.join(__dirname, modelName));
   exports[modelName] = mongoose.model(modelName);
