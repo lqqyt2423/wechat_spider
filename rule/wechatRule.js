@@ -161,7 +161,7 @@ const handlePostHtml = async function(ctx) {
   // 替换显示在手机上的正文 加速网络
   if (isReplacePostBody) {
     const len = await redis('llen', POST_LIST_KEY);
-    body.replace(/<div class="rich_media_content " lang=="en" id="js_content">((\s|\S)+?)<\/div>\s+?<script nonce=/, (_, content) => {
+    body.replace(/<div class="rich_media_content " id="js_content">((\s|\S)+?)<\/div>\s+?<script nonce=/, (_, content) => {
       if (content) body = body.replace(content, `剩余文章抓取长度: ${len}`);
     });
   }
