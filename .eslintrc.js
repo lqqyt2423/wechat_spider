@@ -6,14 +6,7 @@ module.exports = {
     "node": true
   },
   "globals": {
-    "_": true,
-    "$": true,
-    "WeixinJSBridge": true,
-    "sequelize": true,
-    "Sequelize": true,
-    "models": true,
-    "glue": true,
-    "ovt": true
+    "_": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {

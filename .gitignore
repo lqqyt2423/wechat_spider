@@ -60,4 +60,3 @@ typings/
 package-lock.json
 private/
 my_config.js
-dist/
