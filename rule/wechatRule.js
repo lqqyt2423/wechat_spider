@@ -6,7 +6,7 @@ const models = require('../models');
 const config = require('../config');
 const cheerio = require('cheerio');
 const redis = require('../utils/redis');
-const debug = require('debug')('ws:wechatRule');
+const debug = require('../utils/debug')('wechatRule');
 
 const {
   rule: ruleConfig,
@@ -455,14 +455,14 @@ async function savePostsData(postList) {
     debug('发布时间:', post.publishAt ? moment(post.publishAt).format('YYYY-MM-DD HH:mm') : '');
     debug('文章标题:', post.title);
   });
-  debug('');
+  debug();
 
   // 记录公众号的发布记录
   await models.ProfilePubRecord.savePubRecords(savedPosts);
 
   await redis('llen', PROFILE_LIST_KEY).then(len => {
     debug('剩余公众号抓取长度:', len);
-    debug('');
+    debug();
   });
 }
 

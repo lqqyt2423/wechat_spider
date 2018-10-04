@@ -1,12 +1,14 @@
-import {
+'use strict';
+
+const {
   debugFn,
   logProfileCrawlHistory,
   shouldCrawlProfile,
-} from './utils';
-import { crawlByPublishTime } from './crawl_urls';
+} = require('./utils');
+const { crawlByPublishTime } = require('./crawl_urls');
 
-const config = require('../../config');
-const models = require('../../models');
+const config = require('../config');
+const models = require('../models');
 
 // 目标 bizs
 const { rule: { profile: { targetBiz, minTime } } } = config;
@@ -25,7 +27,7 @@ const CRAWL_TO_TIME = new Date(minTime.getTime() - 1000 * 60 * 60 * 24);
         publishAt: { $gte: minTime },
       }).select('-content');
       await models.ProfilePubRecord.savePubRecords(posts);
-      debug('记录显示', biz, '已经抓取完成')
+      debug('记录显示', biz, '已经抓取完成');
       continue;
     }
     await crawlByPublishTime(biz, CRAWL_TO_TIME);

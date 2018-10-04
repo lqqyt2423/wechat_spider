@@ -7,8 +7,7 @@
     "start": "DEBUG=ws:* NODE_ENV=production node index.js",
     "dev": "DEBUG=ws:* nodemon index.js --ignore client/",
     "build": "pm2 start index.js --name=\"wechat_spider\"",
-    "mpc": "cd second && tsc",
-    "mp": "DEBUG=ws:mp* node second/dist/task.js"
+    "mp": "DEBUG=ws:mp* node second/task.js"
   },
   "author": "liqiang",
   "license": "MIT",

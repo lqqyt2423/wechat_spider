@@ -1,79 +1,34 @@
-import * as url from 'url';
-import {
+'use strict';
+
+const url = require('url');
+const {
   debugFn,
   sleep,
   sleepRandom,
   logCrawlHistory,
   shouldCrawl,
-} from './utils';
-import { fail } from 'assert';
-
+} = require('./utils');
 const rp = require('request-promise');
-const models = require('../../models');
-const config = require('../../config');
+const models = require('../models');
+const config = require('../config');
 
 const { mp: { cookie, token } } = config;
 
 const debug = debugFn('crawl urls');
-
-interface RawPost {
-  aid: string,
-  appmsgid: string,
-  cover: string,
-  digest: string,
-  itemidx: number,
-  link: string,
-  title: string,
-  update_time: number,
-}
-
-interface Post {
-  title: string,
-  link: string,
-  publishAt: Date,
-  msgBiz: string,
-  msgMid: string,
-  msgIdx: string,
-  cover: string,
-  digest: string,
-}
-
-interface Metadata {
-  count: number,
-  page: number,
-  perPage: number,
-  totalPage: number,
-}
-
-interface RawData {
-  app_msg_cnt: number,
-  app_msg_list: RawPost[],
-  base_resp: {
-    err_msg: string,
-    ret: number,
-  },
-  metadata: Metadata,
-}
-
-interface HandledRes {
-  raw: RawData,
-  metadata: Metadata,
-  data: Post[],
-}
 
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
   Cookie: cookie,
 };
 
-function toUrl(uri: string, params: object): string {
+function toUrl(uri, params) {
   const paramsArr = Object.keys(params).map(key => {
     return `${key}=${encodeURIComponent(params[key])}`;
   });
   return `${uri}?${paramsArr.join('&')}`;
 }
 
-async function getPosts(fakeid: string, page: number = 1, perPage: number = 5): Promise<RawData | void> {
+async function getPosts(fakeid, page = 1, perPage = 5) {
   // 处理分页
   const count = perPage;
   const begin = (page - 1) * 5;
@@ -103,7 +58,7 @@ async function getPosts(fakeid: string, page: number = 1, perPage: number = 5): 
     json: true,
   });
 
-  const { app_msg_cnt, app_msg_list, base_resp } = res;
+  const { app_msg_cnt, base_resp } = res;
   if (base_resp.err_msg === 'freq control') {
     debug('Error', 'freq control');
     debug('睡眠 1 分钟再继续');
@@ -128,12 +83,12 @@ async function getPosts(fakeid: string, page: number = 1, perPage: number = 5): 
   return res;
 }
 
-function handleRaw(raw: RawData): HandledRes {
+function handleRaw(raw) {
   const { app_msg_list, metadata  } = raw;
 
-  const data: Post[] = app_msg_list.map((rawPost) => {
+  const data = app_msg_list.map((rawPost) => {
     const { query: { __biz, mid, idx } } = url.parse(rawPost.link, true);
-    const post: Post = {
+    const post = {
       title: rawPost.title,
       link: rawPost.link,
       publishAt: new Date(rawPost.update_time * 1000),
@@ -149,8 +104,8 @@ function handleRaw(raw: RawData): HandledRes {
   return { raw, metadata, data };
 }
 
-async function savePosts(posts: Post[]): Promise<void> {
-  const resPosts = await Promise.all(posts.map((post: Post) => {
+async function savePosts(posts) {
+  const resPosts = await Promise.all(posts.map((post) => {
     const {
       msgBiz,
       msgMid,
@@ -174,7 +129,7 @@ async function savePosts(posts: Post[]): Promise<void> {
 }
 
 // 控制抓取前几页的数据
-export async function crawlByPage(fakeid: string, page: number): Promise<void> {
+async function crawlByPage(fakeid, page) {
   for (let i = 1; i <= page; i++) {
     const rawData = await getPosts(fakeid, i);
     if (!rawData) continue;
@@ -193,8 +148,8 @@ export async function crawlByPage(fakeid: string, page: number): Promise<void> {
 }
 
 // 按照发布时间控制抓取数据
-export async function crawlByPublishTime(fakeid: string, publishAt: Date): Promise<void> {
-  const fn = async (page: number): Promise<void> => {
+async function crawlByPublishTime(fakeid, publishAt) {
+  const fn = async (page) => {
     debug('正在抓取', fakeid, '第', page, '页');
     const rawData = await getPosts(fakeid, page);
     if (!rawData) return await fn(++page);
@@ -225,3 +180,8 @@ export async function crawlByPublishTime(fakeid: string, publishAt: Date): Promi
 
   await fn(1);
 }
+
+module.exports = {
+  crawlByPage,
+  crawlByPublishTime,
+};
