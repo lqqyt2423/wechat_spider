@@ -6,7 +6,8 @@ module.exports = {
     "node": true
   },
   "globals": {
-    "_": true
+    "describe": true,
+    "it": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {

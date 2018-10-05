@@ -7,7 +7,8 @@
     "start": "DEBUG=ws:* NODE_ENV=production node index.js",
     "dev": "DEBUG=ws:* nodemon index.js --ignore client/",
     "build": "pm2 start index.js --name=\"wechat_spider\"",
-    "mp": "DEBUG=ws:mp* node second/task.js"
+    "mp": "DEBUG=ws:mp* node second/task.js",
+    "test": "mocha --recursive --exit --timeout 10000"
   },
   "author": "liqiang",
   "license": "MIT",
@@ -28,6 +29,7 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
+    "mocha": "^5.2.0",
     "nodemon": "^1.11.0"
   },
   "repository": {
