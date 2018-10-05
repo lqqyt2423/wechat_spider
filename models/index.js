@@ -18,6 +18,10 @@ if (process.env.NODE_ENV === 'production') {
   mongoose.set('debug', true);
 }
 
+if (process.env.WS_MODEL_DEBUG === 'false') {
+  mongoose.set('debug', false);
+}
+
 // Load All Models
 [
   'Post',
