@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "DEBUG=ws:* NODE_ENV=production node index.js",
-    "dev": "DEBUG=ws:* nodemon index.js --ignore client/",
+    "dev": "DEBUG=ws:* nodemon index.js --ignore client/ --ignore test/",
     "build": "pm2 start index.js --name=\"wechat_spider\"",
     "mp": "DEBUG=ws:mp* node second/task.js",
     "test": "mocha --recursive --exit --timeout 10000"

@@ -95,6 +95,13 @@ ProfilePubRecord.statics.getMinTargetTime = async function(msgBiz, minTime = MIN
   }).sort('date');
   if (!records.length) return minTime;
 
+  // 最早一篇发布文章
+  const profile = await mongoose.model('Profile').findOne({ msgBiz });
+  if (!profile) return minTime;
+  if (profile.firstPublishAt && profile.firstPublishAt > minTime) {
+    minTime = profile.firstPublishAt;
+  }
+
   const today = moment().startOf('day').toDate();
   const todayTimestamp = today.getTime();
   let i = 0;

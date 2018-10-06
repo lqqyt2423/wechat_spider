@@ -24,6 +24,9 @@ const Profile = new Schema({
   // 城市
   city: String,
 
+  // 发布的第一篇文章的发布当天 0 点的时间
+  firstPublishAt: Date,
+
   // 无关的字段，可忽略
   property: String,
 });

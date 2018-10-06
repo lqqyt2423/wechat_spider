@@ -366,31 +366,67 @@ const handleProfileHtml = async function(ctx) {
   const insertJsStr = `<script type="text/javascript">
   (function() {
     window.addEventListener('load', () => {
-      const isScroll = time => {
-        const text = document.body.innerText;
 
-        const tmpArray = text.split(/(.{4})年(.{1,2})月(.{1,2})日/);
-        const tmpStr = tmpArray[tmpArray.length - 1];
-        if (tmpStr.indexOf('已无更多') > -1) return false;
-        if (tmpStr.indexOf('接收更多消息') > -1) return false;
+      // 判断是否下拉页面的方法
+      // 0 - 继续下拉
+      // 1 - 已经符合截止日期
+      // 2 - 已经抓至公众号第一篇文章
+      // 3 - 未关注公众号
+      const isScrollFn = time => {
+        let contentText = document.querySelector('.weui-panel').innerText;
+        contentText = contentText.trim();
+        const contentArr = contentText.split('\\n');
 
-        let minDate;
-        text.replace(/(.{4})年(.{1,2})月(.{1,2})日/g, (match, y, m, d) => {
-          minDate = new Date(y, m - 1, d).getTime();
-          minDateStr = match;
-        });
-        if (minDate && minDate < time) return false;
-        return true;
+        // 最后一行表示目前抓取的状态
+        // 正在加载
+        // 已无更多
+        // 关注公众帐号，接收更多消息
+        const statusStr = contentArr.pop();
+        if (statusStr.indexOf('关注公众帐号，接收更多消息') > -1) {
+          return { status: 3 };
+        }
+
+        // 倒数第二行表示最旧的一篇文章的发布日期
+        let dateStr = contentArr.pop();
+        dateStr = dateStr.trim();
+        dateStr = dateStr.replace(/(\\d{4})年(\\d{1,2})月(\\d{1,2})日/, '$1/$2/$3');
+        const minDate = new Date(dateStr).getTime();
+
+        if (statusStr.indexOf('已无更多') > -1) {
+          return { status: 2, publishAt: minDate };
+        }
+
+        if (minDate < time) return { status: 1 };
+        return { status: 0 };
       };
 
+      // 控制下拉页面的方法
       const controlScroll = () => {
-        if (isScroll(${minTime})) {
+        const res = isScrollFn(${minTime});
+        const status = res.status;
+        if (status === 0) {
           window.scrollTo(0, document.body.scrollHeight);
           setTimeout(controlScroll, ${scrollInterval});
-        } else {
-          window.scrollTo(0, 0);
-          ${jumpJsStr}
+          return;
         }
+
+        // 告诉后端此公众号已经抓至第一篇文章了
+        if (status === 2) {
+          fetch('/ws/profiles/first_post', {
+            method: 'POST',
+            body: JSON.stringify({
+              link: document.URL,
+              publishAt: res.publishAt,
+            }),
+            headers: new Headers({
+              'Content-Type': 'application/json',
+            })
+          }).then(() => {});
+        }
+
+        // 返回页头然后跳转
+        window.scrollTo(0, 0);
+        ${jumpJsStr}
       };
 
       controlScroll();
@@ -402,9 +438,6 @@ const handleProfileHtml = async function(ctx) {
   return {
     response: { ...res.response, body }
   };
-
-
-
 };
 
 // 存文章基本信息至数据库

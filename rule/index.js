@@ -12,6 +12,9 @@ const {
 const config = require('../config');
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
+const models = require('../models');
+const debug = require('../utils/debug')('rule index');
 
 const { isReplaceImg } = config.rule;
 let imgBuf;
@@ -33,8 +36,8 @@ const rule = {
 
   // 发送请求前拦截处理
   *beforeSendRequest(requestDetail) {
-    const { requestOptions } = requestDetail;
-    const { headers } = requestOptions;
+    const { requestOptions, url: link, requestData } = requestDetail;
+    const { headers, method } = requestOptions;
     const { Accept } = headers;
 
     // 处理图片返回
@@ -44,6 +47,24 @@ const rule = {
           statusCode: 200,
           header: { 'content-type': 'image/png' },
           body: imgBuf
+        }
+      };
+    }
+
+    // 处理前端发来的公众号已经抓取至第一篇文章的消息
+    if (link.indexOf('/ws/profiles/first_post') > -1 && method === 'POST') {
+      const data = JSON.parse(String(requestData));
+      const msgBiz = url.parse(data.link, true).query.__biz;
+      yield models.Profile.findOneAndUpdate(
+        { msgBiz },
+        { firstPublishAt: new Date(data.publishAt) }
+      );
+      debug(msgBiz, '更新 firstPublishAt 成功');
+      return {
+        response: {
+          statusCode: 200,
+          header: { 'content-type': 'text/plain' },
+          body: 'ok'
         }
       };
     }
