@@ -68,6 +68,25 @@ const rule = {
         }
       };
     }
+
+    // 和历史消息页面交互，返回下一篇跳转的地址
+    if (link.indexOf('/wx/profiles/next_link') > -1 && method === 'GET') {
+      let nextLink;
+      if (!config.rule.profile.disable) {
+        nextLink = yield models.Profile.getNextProfileLink();
+      }
+      if (!nextLink) nextLink = '';
+      debug('nextLink', nextLink);
+      return {
+        response: {
+          statusCode: 200,
+          header: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            data: nextLink
+          })
+        }
+      };
+    }
   },
 
   // 发送响应前处理

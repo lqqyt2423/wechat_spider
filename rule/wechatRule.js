@@ -327,27 +327,10 @@ const handleProfileHtml = async function(ctx) {
   const link = req.url;
   if (!/\/mp\/profile_ext\?action=home&__biz=/.test(link)) return;
 
-  let { disable, minTime, jumpInterval } = profileConfig;
+  let { minTime, jumpInterval } = profileConfig;
 
   const urlObj = url.parse(link, true);
   const msgBiz = urlObj.query.__biz;
-
-  let jumpJsStr = '';
-  if (!disable) {
-    const nextLink = await getNextProfileLink();
-    if (!nextLink) {
-      debug('所有公众号已经抓取完毕');
-      debug();
-    } else {
-      // 控制页面跳转
-      jumpJsStr = `
-  const refreshMeta = document.createElement('meta');
-  refreshMeta.httpEquiv = 'refresh';
-  refreshMeta.content = '${jumpInterval};url=${nextLink}';
-  document.head.appendChild(refreshMeta);
-`;
-    }
-  }
 
   const scrollInterval = jumpInterval * 1000;
 
@@ -366,6 +349,29 @@ const handleProfileHtml = async function(ctx) {
   const insertJsStr = `<script type="text/javascript">
   (function() {
     window.addEventListener('load', () => {
+
+      // 跳转至下一个页面的方法
+      const jumpFn = link => {
+        const refreshMeta = document.createElement('meta');
+        refreshMeta.httpEquiv = 'refresh';
+        refreshMeta.content = '0;url=' + link;
+        document.head.appendChild(refreshMeta);
+      };
+
+      // 控制跳转
+      const controlJump = () => {
+        setTimeout(() => {
+          fetch('/wx/profiles/next_link')
+            .then(res => res.json())
+            .then(res => {
+              const nextLink = res.data;
+              // 跳转
+              if (nextLink) return jumpFn(nextLink);
+              // 重来
+              controlJump();
+            })
+        }, ${scrollInterval});
+      };
 
       // 判断是否下拉页面的方法
       // 0 - 继续下拉
@@ -426,7 +432,7 @@ const handleProfileHtml = async function(ctx) {
 
         // 返回页头然后跳转
         window.scrollTo(0, 0);
-        ${jumpJsStr}
+        controlJump();
       };
 
       controlScroll();
@@ -554,53 +560,6 @@ async function getNextPostLink() {
 
   // 再查一次就有下一个链接了
   return getNextPostLink();
-}
-
-// 公众号跳转链接放在redis中
-async function getNextProfileLink() {
-  // 先从redis中取链接
-  let nextLink = await redis('lpop', PROFILE_LIST_KEY);
-  if (nextLink) return nextLink;
-
-  // 没有拿到链接则从数据库中查
-  const { maxUpdatedAt, targetBiz } = profileConfig;
-
-  const searchQuery = {
-    $or: [
-      { openHistoryPageAt: { $lte: maxUpdatedAt } },
-      { openHistoryPageAt: { $exists: false } }
-    ]
-  };
-
-  if (targetBiz && targetBiz.length > 0) searchQuery.msgBiz = { $in: targetBiz };
-
-  const links = await models.Profile.find(searchQuery).select('msgBiz').then(profiles => {
-    if (!(profiles && profiles.length > 0)) return [];
-    let tmpProfiles = profiles.map(profile => {
-      const link = `https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${profile.msgBiz}&scene=124#wechat_redirect`;
-      const msgBiz = profile.msgBiz;
-      return { link, msgBiz };
-    });
-
-    if (targetBiz && targetBiz.length) {
-      // 按照目标 biz 排序
-      tmpProfiles.sort((a, b) => {
-        if (targetBiz.indexOf(a.msgBiz) <= targetBiz.indexOf(b.msgBiz)) return -1;
-        return 1;
-      });
-    }
-
-    return tmpProfiles.map(p => p.link);
-  });
-
-  // 如果还查不到 则证明已经抓取完毕了 返回undefined
-  if (links.length === 0) return;
-
-  // 将从数据库中查到的链接放入redis中
-  await redis('rpush', PROFILE_LIST_KEY, links);
-
-  // 再查一次就有下一个链接了
-  return getNextProfileLink();
 }
 
 module.exports = {
