@@ -112,6 +112,12 @@ const config = {
 
 };
 
+// docker 配置
+if (process.env.DEPLOY === 'docker') {
+  config.mongodb.db = 'mongodb://mongo:27017/wechat_spider';
+  config.redis.host = 'redis';
+}
+
 
 // 忽略下面的代码
 try {

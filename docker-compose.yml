@@ -1,0 +1,24 @@
+version: '3'
+services:
+  app:
+    build: ./
+    image: wechat-spider:latest
+    environment:
+      - NODE_ENV=production
+      - DEPLOY=docker
+      - DEBUG=ws:*
+    expose:
+      - "8101"
+      - "8102"
+      - "8104"
+    ports:
+      - 8101:8101
+      - 8102:8102
+      - 8104:8104
+    links:
+      - redis
+      - mongo
+  redis:
+    image: redis:alpine
+  mongo:
+    image: mongo:3.6

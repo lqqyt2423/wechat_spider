@@ -4,6 +4,8 @@
 
 使用代理模块 AnyProxy。代码已支持 AnyProxy 4 版本。
 
+支持 Docker 部署。
+
 ## 开始
 
 ### 安装前准备
@@ -21,6 +23,23 @@ npm install
 ```
 
 本项目基于代理模块 AnyProxy，解析微信 HTTPS 请求需在电脑和手机上都安装证书。可参考：[AnyProxy 文档](http://anyproxy.io/cn/#%E8%AF%81%E4%B9%A6%E9%85%8D%E7%BD%AE)。
+
+### 通过 Docker 部署
+
+```shell
+git clone https://github.com/lqqyt2423/wechat_spider.git
+cd wechat_spider
+# build image
+docker-compose build
+# 运行实例
+docker-compose up
+# 终止运行
+docker-compose down
+```
+
+- `Dockerfile` 中已经设置了在 `Linux` 环境的 Docker 中添加根证书的操作步骤，所以接下来仅需在手机上安装 https 证书即可。
+- 最终手机上设置的代理 ip 还是需要以自己电脑上的 ip 为准，需忽略 Docker 实例中打印的 ip 地址
+- 可编辑 `Dockerfile` 和 `docker-compose.yml` 改变部署规则
 
 ## 使用
 
