@@ -9,6 +9,7 @@ const {
   getPostList,
   handleProfileHtml
 } = require('./wechatRule');
+const basicAuth = require('./basicAuth');
 const config = require('../config');
 const fs = require('fs');
 const path = require('path');
@@ -39,6 +40,10 @@ const rule = {
     const { requestOptions, url: link, requestData } = requestDetail;
     const { headers, method } = requestOptions;
     const { Accept } = headers;
+
+    // Proxy-Authorization
+    const authRes = basicAuth(headers);
+    if (authRes) return authRes;
 
     // 处理图片返回
     if (isReplaceImg && /^image/.test(Accept)) {

@@ -110,6 +110,14 @@ const config = {
     token: '',
   },
 
+  // 添加代理基本认证
+  // 如果开启此配置，则代理时需要先输入用户和密码才可正常运行
+  proxyBasicAuth: {
+    enable: false,
+    user: 'admin',
+    password: '123456',
+  },
+
 };
 
 // docker 配置
