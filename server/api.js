@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const express = require('express');
 const api = express();
-const config = require('../config').insertJsToNextProfile;
+const config = require('../config');
 const models = require('../models');
 const { Category, Profile } = models;
 
@@ -43,8 +43,9 @@ api.get('/posts', wrap(async (req, res) => {
   const bizsArr = [];
 
   if (q) query.title = new RegExp(_.escapeRegExp(q), 'i');
-  if (target === 'true' && config.targetBiz && config.targetBiz.length) {
-    bizsArr.push(config.targetBiz);
+  if (target === 'true') {
+    const targetBiz = config.rule.page.targetBiz;
+    if (targetBiz && targetBiz.length) bizsArr.push(config.targetBiz);
   }
   if (mainData === 'true') query.readNum = { $exists: true };
   if (mainData === 'false') query.readNum = { $exists: false };
@@ -121,6 +122,14 @@ api.get('/posts/:id', wrap(async (req, res) => {
   res.json({ data: post.toObject() });
 }));
 
+// update post api
+// TODO: 权限, validate
+api.put('/posts/:id', wrap(async (req, res) => {
+  const { _id: id } = req.query;
+  await models.Post.findByIdAndUpdate(id, req.query);
+  res.json({ state: 1, message: '更新文章成功' });
+}));
+
 // profiles api
 api.get('/profiles', wrap(async (req, res) => {
   // target = true 表示显示目标抓取的公众号的条目
@@ -133,8 +142,9 @@ api.get('/profiles', wrap(async (req, res) => {
   const bizsArr = [];
 
   if (q) query.title = new RegExp(_.escapeRegExp(q), 'i');
-  if (target === 'true' && config.targetBiz && config.targetBiz.length) {
-    bizsArr.push(config.targetBiz);
+  if (target === 'true') {
+    const targetBiz = config.rule.profile.targetBiz;
+    if (targetBiz && targetBiz.length) bizsArr.push(config.targetBiz);
   }
 
   if (categoryId && /^\w{24}$/.test(categoryId)) {
@@ -218,12 +228,23 @@ api.post('/categories', (req, res, next) => {
   });
 });
 
-api.get('/categories', (req, res, next) => {
-  Category.find({}).populate('profiles').then(categories => {
-    res.json(categories);
-  }).catch(e => {
-    next(e);
-  });
-});
+// categories api
+api.get('/categories', wrap(async (req, res) => {
+  const { page = 1, perPage = 20 } = req.query;
+  let { metadata, data } = await models.Category.find({}).paginate({ page, perPage });
+  data = data.map(i => ({
+    id: i.id,
+    name: i.name || '',
+    msgBizs: i.msgBizs || [],
+  }));
+  res.json({ metadata, data });
+}));
+
+// show category api
+api.get('/categories/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const category = await models.Category.findById(id);
+  res.json({ data: category.toObject() });
+}));
 
 module.exports = api;

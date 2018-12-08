@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchCates } from '../actions';
 import Loading from '../components/loading.jsx';
-import { Card, CardActions, CardTitle } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import { Link } from 'react-router';
+import Paginator from '../components/paginator.jsx';
 
 
 class Categories extends React.Component {
@@ -13,30 +13,53 @@ class Categories extends React.Component {
   }
 
   componentDidMount() {
-    let { dispatch } = this.props;
-    dispatch(fetchCates());
+    const { dispatch, location } = this.props;
+    dispatch(fetchCates(location.query));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.search !== this.props.location.search) {
+      const { dispatch } = this.props;
+      dispatch(fetchCates(nextProps.location.query));
+    }
   }
 
   render() {
-    let { cates, isFetching, history } = this.props;
-    if (isFetching || !cates.length) return <Loading />;
+    const { cates, isFetching, history, location } = this.props;
+    const { search, pathname } = location;
+    if (isFetching || !cates.data) return <Loading />;
+
+    const { metadata, data } = cates;
+
     return (
       <div>
-        {
-          cates.map(cate => {
-            return (
-              <div key={cate._id} className="col-md-6" style={{ padding: '20px' }}>
-                <Card>
-                  <CardTitle title={cate.name} />
-                  <CardActions>
-                    <FlatButton label="公众号" onClick={() => { history.push(`/profiles?category=${cate._id}`); }} />
-                    <FlatButton label="文章"  onClick={() => { history.push(`/posts?category=${cate._id}`); }} />
-                  </CardActions>
-                </Card>
-              </div>
-            );
-          })
-        }
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>分类名</th>
+              <th>公众号数量</th>
+              <th>公众号</th>
+              <th>文章</th>
+              <th>详情</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              data.map(i => (
+                <tr key={i.id}>
+                  <td>{i.id}</td>
+                  <td>{i.name}</td>
+                  <td>{i.msgBizs.length}</td>
+                  <td><Link to={`/profiles?category=${i.id}`}>详情</Link></td>
+                  <td><Link to={`/posts?category=${i.id}`}>详情</Link></td>
+                  <td><Link to={`/categories/${i.id}`}>详情</Link></td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <Paginator {...metadata} history={history} search={search} pathname={pathname} ></Paginator>
       </div>
     );
   }

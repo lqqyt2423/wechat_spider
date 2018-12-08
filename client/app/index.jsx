@@ -32,6 +32,7 @@ import Post from './containers/post.jsx';
 import Profiles from './containers/profiles.jsx';
 import Profile from './containers/profile.jsx';
 import Categories from './containers/categories.jsx';
+import Category from './containers/category.jsx';
 
 class App extends React.Component {
 
@@ -78,6 +79,7 @@ render(
           <Route path="/profiles" component={Profiles} />
           <Route path="/profiles/:id" component={Profile} />
           <Route path="/categories" component={Categories} />
+          <Route path="/categories/:id" component={Category} />
         </Route>
       </Router>
     </Provider>

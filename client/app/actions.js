@@ -148,11 +148,50 @@ export function receiveCates(cates) {
   };
 }
 
-export function fetchCates() {
+export function fetchCates(query) {
+  const path = assembleUrl(config.cates, query);
   return function(dispatch) {
     dispatch(requestCates());
-    return fetch(config.cates).then(res => res.json()).then(cates => {
+    return fetch(path).then(res => res.json()).then(cates => {
       dispatch(receiveCates(cates));
     });
   };
 }
+
+export const REQUEST_CATE = 'REQUEST_CATE';
+
+export function requestCate(id) {
+  return {
+    type: REQUEST_CATE,
+    id
+  };
+}
+
+export const RECEIVE_CATE = 'RECEIVE_CATE';
+
+export function receiveCate(cate) {
+  return {
+    type: RECEIVE_CATE,
+    cate
+  };
+}
+
+export function fetchCate(id) {
+  return function (dispatch) {
+    dispatch(requestCate(id));
+    return fetch(`${config.cate}/${id}`).then(res => res.json()).then(cate => {
+      dispatch(receiveCate(cate));
+    });
+  };
+}
+
+// update post
+// export async function updatePost(doc) {
+//   let res = await fetch(config.post, {
+//     method: 'PUT',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify(doc),
+//   });
+//   res = res.json();
+//   return res;
+// }

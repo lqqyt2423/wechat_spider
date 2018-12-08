@@ -5,7 +5,8 @@ const config = {
   post: '/api/posts',
   profiles: '/api/profiles',
   profile: '/api/profiles',
-  cates: '/api/categories'
+  cates: '/api/categories',
+  cate: '/api/categories',
 };
 
 export default config;
