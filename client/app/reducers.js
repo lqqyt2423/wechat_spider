@@ -1,6 +1,8 @@
 import {
   REQUEST_POSTS,
   RECEIVE_POSTS,
+  REQUEST_POST,
+  RECEIVE_POST,
   REQUEST_PROFILES,
   RECEIVE_PROFILES,
   REQUEST_PROFILE,
@@ -11,6 +13,7 @@ import {
 
 const initialState = {
   posts: {},
+  post: {},
   profiles: {},
   profile: {},
   cates: [],
@@ -20,6 +23,7 @@ const initialState = {
 function reducer(state = initialState, action) {
   switch (action.type) {
     case REQUEST_POSTS:
+    case REQUEST_POST:
     case REQUEST_PROFILES:
     case REQUEST_PROFILE:
     case REQUEST_CATES:
@@ -31,6 +35,12 @@ function reducer(state = initialState, action) {
         isFetching: false,
         posts: action.posts
       });
+    case RECEIVE_POST:
+      return {
+        ...state,
+        isFetching: false,
+        post: action.post
+      };
     case RECEIVE_PROFILES:
       return Object.assign({}, state, {
         isFetching: false,

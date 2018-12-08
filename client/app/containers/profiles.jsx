@@ -54,6 +54,7 @@ class Profiles extends React.Component {
         <table className="table table-striped">
           <thead>
             <tr>
+              <th>ID</th>
               <th>更新时间</th>
               <th>头像</th>
               <th>公众号</th>
@@ -63,14 +64,15 @@ class Profiles extends React.Component {
               <th>有数据</th>
               <th>差</th>
               <th>MsgBiz</th>
-              <th>Detail</th>
+              <th>详情</th>
             </tr>
           </thead>
           <tbody>
             {
               profiles.data.map(profile => {
                 return (
-                  <tr key={profile._id}>
+                  <tr key={profile.id}>
+                    <td>{profile.id}</td>
                     <td>{profile.openHistoryPageAt ? moment(profile.openHistoryPageAt).format('YY-MM-DD HH:mm') : ''}</td>
                     <td><img style={{ height: '24px', marginRight: '3px' }} src={profile.headimg} className="img-circle" /></td>
                     <td><Link to={`/posts?msgBiz=${profile.msgBiz}`}>{profile.title}</Link></td>
@@ -80,7 +82,7 @@ class Profiles extends React.Component {
                     <td>{profile.postsHasDataCount}</td>
                     <td>{profile.postsAllCount - profile.postsHasDataCount}</td>
                     <td>{profile.msgBiz}</td>
-                    <td><Link to={`/profile/${profile._id}`}>detail</Link></td>
+                    <td><Link to={`/profiles/${profile.id}`}>详情</Link></td>
                   </tr>
                 );
               })

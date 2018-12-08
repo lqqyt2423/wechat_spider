@@ -2,8 +2,9 @@
 
 const config = {
   posts: '/api/posts',
+  post: '/api/posts',
   profiles: '/api/profiles',
-  profile: '/api/profile',
+  profile: '/api/profiles',
   cates: '/api/categories'
 };
 

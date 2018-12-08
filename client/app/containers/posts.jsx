@@ -121,10 +121,32 @@ class Posts extends React.Component {
   }
 
   render() {
-    let { isFetching, posts, history, location } = this.props;
-    let { search, pathname } = location;
+    const { isFetching, posts, history, location } = this.props;
+    const { search, pathname } = location;
     if (isFetching || !posts.data) return <Loading />;
-    let metadata = posts.metadata;
+    const { metadata, data } = posts;
+
+    // show
+    const showData = data.map(i => {
+      let showTitle = i.title.substr(0, 25) || '暂无';
+      if (i.link) {
+        showTitle = <a title={i.title} href={i.link} rel="noopener noreferrer" target="_blank">{showTitle}</a>;
+      } else {
+        showTitle = <a title={i.title}>{showTitle}</a>;
+      }
+      return {
+        id: i.id,
+        publishAt: i.publishAt ? moment(i.publishAt).format('YY-MM-DD HH:mm') : '暂无',
+        showTitle,
+        msgIdx: i.msgIdx || '0',
+        readNum: i.readNum || '',
+        likeNum: i.likeNum || '',
+        updateNumAt: i.updateNumAt ? moment(i.updateNumAt).format('YY-MM-DD HH:mm') : '暂无',
+        updateInterval: (i.updateNumAt && i.publishAt) ? timeDiff(i.updateNumAt, i.publishAt) : '',
+        showProfile: <Link to={`/posts?msgBiz=${i.msgBiz}`}>{i.profile ? (<span><img style={{ height: '24px', marginRight: '3px' }} src={i.profile.headimg} className="img-circle" />{i.profile.title}</span>) : i.msgBiz}</Link>
+      };
+    });
+
     return (
       <div>
         {this.renderFilter()}
@@ -137,29 +159,33 @@ class Posts extends React.Component {
         <table className="table table-striped">
           <thead>
             <tr>
+              <th>ID</th>
               <th>发布时间 {this.sortByTime('publishAt')}</th>
               <th>文章标题</th>
               <th>位置</th>
               <th>阅读数</th>
               <th>点赞数</th>
               <th>更新时间 {this.sortByTime('updateNumAt')}</th>
-              <th>时间间隔</th>
+              <th>间隔</th>
               <th>公众号</th>
+              <th>详情</th>
             </tr>
           </thead>
           <tbody>
             {
-              posts.data.map(post => {
+              showData.map(i => {
                 return (
-                  <tr key={post._id}>
-                    <td>{moment(post.publishAt).format('YY-MM-DD HH:mm')}</td>
-                    <td><a title={post.title} href={post.link} target="_blank">{post.title.substr(0, 25)}</a></td>
-                    <td>{post.msgIdx}</td>
-                    <td>{post.readNum >= 0 ? post.readNum : ''}</td>
-                    <td>{post.likeNum >= 0 ? post.likeNum : ''}</td>
-                    <td>{post.updateNumAt ? moment(post.updateNumAt).format('YY-MM-DD HH:mm') : ''}</td>
-                    <td>{post.updateNumAt ? timeDiff(post.updateNumAt, post.publishAt) : ''}</td>
-                    <td><Link to={`/posts?msgBiz=${post.msgBiz}`}>{post.profile ? (<span><img style={{ height: '24px', marginRight: '3px' }} src={post.profile.headimg} className="img-circle" />{post.profile.title}</span>) : post.msgBiz}</Link></td>
+                  <tr key={i.id}>
+                    <td>{i.id}</td>
+                    <td>{i.publishAt}</td>
+                    <td>{i.showTitle}</td>
+                    <td>{i.msgIdx}</td>
+                    <td>{i.readNum}</td>
+                    <td>{i.likeNum}</td>
+                    <td>{i.updateNumAt}</td>
+                    <td>{i.updateInterval}</td>
+                    <td>{i.showProfile}</td>
+                    <td><Link to={`/posts/${i.id}`}>详情</Link></td>
                   </tr>
                 );
               })

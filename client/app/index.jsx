@@ -28,6 +28,7 @@ let store = createStore(
 );
 
 import Posts from './containers/posts.jsx';
+import Post from './containers/post.jsx';
 import Profiles from './containers/profiles.jsx';
 import Profile from './containers/profile.jsx';
 import Categories from './containers/categories.jsx';
@@ -73,8 +74,9 @@ render(
         <Route path="/" component={connectedApp}>
           <IndexRoute component={Posts} />
           <Route path="/posts" component={Posts} />
+          <Route path="/posts/:id" component={Post} />
           <Route path="/profiles" component={Profiles} />
-          <Route path="/profile/:id" component={Profile} />
+          <Route path="/profiles/:id" component={Profile} />
           <Route path="/categories" component={Categories} />
         </Route>
       </Router>

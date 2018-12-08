@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchProfile } from '../actions';
+import { fetchPost } from '../actions';
 import Loading from '../components/loading.jsx';
 import Paper from 'material-ui/Paper';
 
-class Profile extends React.Component {
+class Post extends React.Component {
 
   constructor(props) {
     super(props);
@@ -13,12 +13,12 @@ class Profile extends React.Component {
   componentDidMount() {
     const { params, dispatch } = this.props;
     const { id } = params;
-    dispatch(fetchProfile(id));
+    dispatch(fetchPost(id));
   }
 
   render() {
-    const { isFetching, profile } = this.props;
-    if (isFetching || !profile.data) return <Loading />;
+    const { isFetching, post } = this.props;
+    if (isFetching || !post.data) return <Loading />;
     return (
       <Paper
         style={{
@@ -27,11 +27,11 @@ class Profile extends React.Component {
         }}
       >
         <pre>
-          {JSON.stringify(profile.data, null, 4)}
+          {JSON.stringify(post.data, null, 4)}
         </pre>
       </Paper>
     );
   }
 }
 
-export default connect(state => state)(Profile);
+export default connect(state => state)(Post);

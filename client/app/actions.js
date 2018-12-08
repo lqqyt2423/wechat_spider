@@ -50,6 +50,33 @@ export function fetchPosts(query) {
   };
 }
 
+export const REQUEST_POST = 'REQUEST_POST';
+
+export function requestPost(id) {
+  return {
+    type: REQUEST_POST,
+    id
+  };
+}
+
+export const RECEIVE_POST = 'RECEIVE_POST';
+
+export function receivePost(post) {
+  return {
+    type: RECEIVE_POST,
+    post
+  };
+}
+
+export function fetchPost(id) {
+  return function (dispatch) {
+    dispatch(requestPost(id));
+    return fetch(`${config.post}/${id}`).then(res => res.json()).then(post => {
+      dispatch(receivePost(post));
+    });
+  };
+}
+
 export const REQUEST_PROFILES = 'REQUEST_PROFILES';
 
 export function requestProfiles() {
