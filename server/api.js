@@ -1,164 +1,197 @@
 'use strict';
 
+const _ = require('lodash');
 const express = require('express');
 const api = express();
 const config = require('../config').insertJsToNextProfile;
 const models = require('../models');
-const { Category, Profile, Post } = models;
+const { Category, Profile } = models;
 
+// 包装 api handler
 function wrap(fn) {
   return function(req, res, next) {
     fn.call(this, req, res, next).catch(next);
   };
 }
 
-api.get('/posts', (req, res, next) => {
-  const {
-    target,
-    mainData,
-    msgBiz,
-    category,
-    sortWay,
-    q
-  } = req.query;
+const nullRes = (page, perPage) => {
+  return {
+    metadata: {
+      count: 0,
+      totalPages: 0,
+      currentPage: page,
+      perPage,
+    },
+    data: [],
+  };
+};
 
-  const query = { title: { $exists: true } };
+// posts api
+api.get('/posts', wrap(async (req, res) => {
+  // target = true 表示显示目标抓取的公众号的条目
+  // mainData
+  //   - = true 表示仅显示有阅读量的条目
+  //   - = false 表示仅显示无阅读量的条目
+  // msgBiz - 筛选特定公众号的条目，逗号分隔
+  // category - 根据存储在数据库的 category id 筛选特定公众号组的内容
+  // q - 搜索词
+  // sortWay - 排序方式: -updateNumAt, updateNumAt, -publishAt, publishAt
+  const { target, mainData, msgBiz, category: categoryId, sortWay, q, page = 1, perPage = 20 } = req.query;
 
-  if (q) {
-    query.title = new RegExp(q, 'i');
+  const query = {};
+  // 取各个筛选条件确定的 msgBiz 交集
+  const bizsArr = [];
+
+  if (q) query.title = new RegExp(_.escapeRegExp(q), 'i');
+  if (target === 'true' && config.targetBiz && config.targetBiz.length) {
+    bizsArr.push(config.targetBiz);
   }
-  if (target === 'true') {
-    query.msgBiz = { $in: config.targetBiz };
-  }
-  if (mainData === 'true') {
-    query.readNum = { $exists: true };
-  }
-  if (mainData === 'false') {
-    query.readNum = { $exists: false };
-  }
-  if (msgBiz) {
-    query.msgBiz = msgBiz;
+  if (mainData === 'true') query.readNum = { $exists: true };
+  if (mainData === 'false') query.readNum = { $exists: false };
+  if (msgBiz) bizsArr.push(msgBiz.split(','));
+
+  if (categoryId && /^\w{24}$/.test(categoryId)) {
+    const category = await models.Category.findById(categoryId);
+    if (category && category.msgBizs && category.msgBizs.length) {
+      bizsArr.push(category.msgBizs);
+    }
   }
 
-  let sortWayResult = { publishAt: -1, msgIdx: 1 };
-  if (sortWay === '-updateNumAt') {
-    sortWayResult = { updateNumAt: -1 };
-  }
-  if (sortWay === 'updateNumAt') {
-    sortWayResult = { updateNumAt: 1 };
-  }
-  if (sortWay === '-publishAt') {
-    sortWayResult = { publishAt: -1, msgIdx: 1 };
-  }
-  if (sortWay === 'publishAt') {
-    sortWayResult = { publishAt: 1, msgIdx: 1 };
+  if (bizsArr.length) {
+    const msgBizs = _.intersection(...bizsArr);
+    // 交集为空，返回给前端空数据
+    if (!msgBizs.length) {
+      return res.json(nullRes(page, perPage));
+    }
+    query.msgBiz = { $in: msgBizs };
   }
 
-  let promise = Promise.resolve();
-  if (category) {
-    promise = promise.then(() => {
-      return Category.findOne({ _id: category }).then(category => {
-        if (!category) return;
-        query.msgBiz = { $in: category.msgBizs };
-      });
-    });
+  let sortWayResult;
+  switch (sortWay) {
+    case '-updateNumAt':
+      sortWayResult = { updateNumAt: -1 };
+      break;
+    case 'updateNumAt':
+      sortWayResult = { updateNumAt: 1 };
+      break;
+    case '-publishAt':
+      sortWayResult = { publishAt: -1, msgIdx: 1 };
+      break;
+    case 'publishAt':
+      sortWayResult = { publishAt: 1, msgIdx: 1 };
+      break;
+    default:
+      sortWayResult = { publishAt: -1, msgIdx: 1 };
+      break;
   }
-  return promise.then(() => {
-    return Post.find(query).sort(sortWayResult).populate('profile').paginate(req.query).then(result => {
-      const data = result.data;
-      const metadata = {
-        options: result.options,
-        perPage: result.options.perPage,
-        currentPage: result.current,
-        next: result.next,
-        prev: result.prev,
-        totalPages: result.totalPages,
-        count: result.count
+
+  let { metadata, data } = await models.Post.find(query)
+    .sort(sortWayResult)
+    .populate('profile')
+    .paginate({ page, perPage });
+
+  data = data.map(i => {
+    let profile = null;
+    if (i.profile) {
+      profile = {
+        title: i.profile.title || '',
+        headimg: i.profile.headimg || '',
       };
-      res.json({
-        metadata,
-        data
-      });
-    });
-  }).catch(e => {
-    next(e);
+    }
+    return {
+      id: i.id,
+      title: i.title || '',
+      link: i.link || '',
+      publishAt: i.publishAt || null,
+      msgBiz: i.msgBiz || '',
+      msgIdx: i.msgIdx || '',
+      readNum: i.readNum || 0,
+      likeNum: i.likeNum || 0,
+      updateNumAt: i.updateNumAt || null,
+      profile,
+    };
   });
-});
-
-api.get('/profiles', (req, res, next) => {
-  const {
-    target,
-    category,
-    q
-  } = req.query;
-
-  let query = {};
-  if (target === 'true') {
-    query.msgBiz = { $in: config.targetBiz };
-  }
-  if (q) query.title = new RegExp(q, 'i');
-  let promise = Promise.resolve();
-  if (category) {
-    promise = promise.then(() => {
-      return Category.findOne({ _id: category }).then(category => {
-        if (!category) return;
-        query.msgBiz = { $in: category.msgBizs };
-      });
-    });
-  }
-  return promise.then(() => {
-    return Profile.find(query).sort({ openHistoryPageAt: -1 }).paginate(req.query).then(result => {
-      const data = result.data;
-      const metadata = {
-        options: result.options,
-        perPage: result.options.perPage,
-        currentPage: result.current,
-        next: result.next,
-        prev: result.prev,
-        totalPages: result.totalPages,
-        count: result.count
-      };
-      Promise.all(data.map(item => {
-        return Promise.all([
-          Post.count({ msgBiz: item.msgBiz }).then(count => {
-            item._doc.postsAllCount = count;
-          }),
-          Post.count({ msgBiz: item.msgBiz, readNum: { $exists: true } }).then(count => {
-            item._doc.postsHasDataCount = count;
-          }),
-          Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: -1 }).limit(1).then(posts => {
-            if (!posts.length) return;
-            item._doc.newestPostTime = posts[0].publishAt;
-          }),
-          Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: 1 }).limit(1).then(posts => {
-            if (!posts.length) return;
-            item._doc.oldestPostTime = posts[0].publishAt;
-          })
-        ]);
-      })).then(() => {
-        res.json({
-          metadata,
-          data
-        });
-      });
-    });
-  }).catch(e => {
-    next(e);
-  });
-});
-
-api.get('/profile/:id', wrap(async (req, res) => {
-  const { id } = req.params;
-  let profile = await Profile.findById(id);
-  profile = profile.toObject();
-
-  // eslint-disable-next-line
-  const { _id, __v, ...newProfile } = profile;
-  profile = { id: _id, ...newProfile };
-  res.json(profile);
+  res.json({ metadata, data });
 }));
 
-api.put('/profile/:id', wrap(async (req, res) => {
+// show post api
+api.get('/posts/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const post = await models.Post.findById(id);
+  res.json({ data: post.toObject() });
+}));
+
+// profiles api
+api.get('/profiles', wrap(async (req, res) => {
+  // target = true 表示显示目标抓取的公众号的条目
+  // category - 根据存储在数据库的 category id 筛选特定公众号组的内容
+  // q - 搜索词
+  const { target, category: categoryId, q, page = 1, perPage = 20 } = req.query;
+
+  const query = {};
+  // 取各个筛选条件确定的 msgBiz 交集
+  const bizsArr = [];
+
+  if (q) query.title = new RegExp(_.escapeRegExp(q), 'i');
+  if (target === 'true' && config.targetBiz && config.targetBiz.length) {
+    bizsArr.push(config.targetBiz);
+  }
+
+  if (categoryId && /^\w{24}$/.test(categoryId)) {
+    const category = await models.Category.findById(categoryId);
+    if (category && category.msgBizs && category.msgBizs.length) {
+      bizsArr.push(category.msgBizs);
+    }
+  }
+
+  if (bizsArr.length) {
+    const msgBizs = _.intersection(...bizsArr);
+    // 交集为空，返回给前端空数据
+    if (!msgBizs.length) {
+      return res.json(nullRes(page, perPage));
+    }
+    query.msgBiz = { $in: msgBizs };
+  }
+
+  let { metadata, data } = await models.Profile.find(query)
+    .sort({ openHistoryPageAt: -1 })
+    .paginate({ page, perPage });
+
+  data = data.map(i => ({
+    id: i.id,
+    openHistoryPageAt: i.openHistoryPageAt || null,
+    headimg: i.headimg || '',
+    msgBiz: i.msgBiz || '',
+    title: i.title || '',
+  }));
+
+  // 一些额外数据，耗时
+  for (const item of data) {
+    let postsAllCount = 0, postsHasDataCount = 0, newestPostTime = null, oldestPostTime = null;
+    if (item.msgBiz) {
+      postsAllCount = await models.Post.count({ msgBiz: item.msgBiz });
+      postsHasDataCount = await models.Post.count({ msgBiz: item.msgBiz, readNum: { $exists: true } });
+      newestPostTime = ((await models.Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: -1 }).limit(1))[0] || {}).publishAt || null;
+      oldestPostTime = ((await models.Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: 1 }).limit(1))[0] || {}).publishAt || null;
+    }
+    item.postsAllCount = postsAllCount;
+    item.postsHasDataCount = postsHasDataCount;
+    item.newestPostTime = newestPostTime;
+    item.oldestPostTime = oldestPostTime;
+  }
+
+  res.json({ metadata, data });
+}));
+
+// single profile api
+api.get('/profiles/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const profile = await models.Profile.findById(id);
+  res.json({ data: profile.toObject() });
+}));
+
+// TODO: single profile update api
+api.put('/profiles/:id', wrap(async (req, res) => {
   const { params, query } = req;
   const { id } = params;
   const { property } = query;

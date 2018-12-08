@@ -50,6 +50,7 @@ app.get('/*', (req, res, next) => {
 // handle error 参数next不能省略
 // eslint-disable-next-line
 app.use((error, req, res, next) => {
+  console.log(error);
   if (!res.finished) {
     res.status(500).send(error.message);
   }
