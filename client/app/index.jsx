@@ -76,10 +76,13 @@ render(
           <IndexRoute component={Posts} />
           <Route path="/posts" component={Posts} />
           <Route path="/posts/:id" component={Post} />
+          <Route path="/posts/:id/edit" component={Post} />
           <Route path="/profiles" component={Profiles} />
           <Route path="/profiles/:id" component={Profile} />
+          <Route path="/profiles/:id/edit" component={Profile} />
           <Route path="/categories" component={Categories} />
           <Route path="/categories/:id" component={Category} />
+          <Route path="/categories/:id/edit" component={Category} />
         </Route>
       </Router>
     </Provider>

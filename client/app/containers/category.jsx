@@ -1,13 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchCate } from '../actions';
+import { fetchCate, updateCate } from '../actions';
 import Loading from '../components/loading.jsx';
-import Paper from 'material-ui/Paper';
+import Edit from '../components/edit.jsx';
+import Dialog from 'material-ui/Dialog';
 
 class Category extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      dialogOpen: false,
+      dialogContent: '',
+    };
+    this.dialogTimeout = null;
   }
 
   componentDidMount() {
@@ -16,20 +22,51 @@ class Category extends React.Component {
     dispatch(fetchCate(id));
   }
 
+  message(content) {
+    if (this.dialogTimeout) {
+      this.dialogTimeout = null;
+      clearTimeout(this.dialogTimeout);
+    }
+    this.setState({ dialogOpen: true, dialogContent: content });
+    this.dialogTimeout = setTimeout(() => {
+      this.setState({ dialogOpen: false });
+    }, 1000);
+  }
+
   render() {
-    const { isFetching, cate } = this.props;
+    const { isFetching, cate, location, params, dispatch, history } = this.props;
+    const { dialogOpen, dialogContent } = this.state;
+    const { id } = params;
+    const { pathname } = location;
+    const isEdit = /edit$/.test(pathname);
     if (isFetching || !cate.data) return <Loading />;
+
     return (
-      <Paper
-        style={{
-          padding: '30px',
-          margin: '40px 20px'
-        }}
-      >
-        <pre>
-          {JSON.stringify(cate.data, null, 4)}
-        </pre>
-      </Paper>
+      <div>
+        <Edit
+          isEdit={isEdit}
+          pathname={pathname}
+          message={this.message.bind(this)}
+          history={history}
+          content={JSON.stringify(cate.data, null, 4)}
+          onSave={async (doc) => {
+            const res = await updateCate(id, doc);
+            if ([1, 2].includes(res.state)) this.message(res.message);
+            if ([0, 1].includes(res.state)) {
+              dispatch(fetchCate(id));
+              history.replace(`/categories/${id}`);
+            }
+          }}
+        />
+        <Dialog
+          open={dialogOpen}
+          onRequestClose={() => {
+            this.setState({ dialogOpen: false });
+          }}
+        >
+          {dialogContent}
+        </Dialog>
+      </div>
     );
   }
 }

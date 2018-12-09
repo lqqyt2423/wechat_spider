@@ -5,6 +5,7 @@ const express = require('express');
 const api = express();
 const config = require('../config');
 const models = require('../models');
+const utils = require('../utils');
 const { Category, Profile } = models;
 
 // 包装 api handler
@@ -125,8 +126,10 @@ api.get('/posts/:id', wrap(async (req, res) => {
 // update post api
 // TODO: 权限, validate
 api.put('/posts/:id', wrap(async (req, res) => {
-  const { _id: id } = req.query;
-  await models.Post.findByIdAndUpdate(id, req.query);
+  const { id } = req.params;
+  const fields = ['title', 'link', 'publishAt', 'readNum', 'likeNum', 'msgBiz', 'msgMid', 'msgIdx', 'sourceUrl', 'cover', 'digest', 'isFail', 'wechatId', 'updateNumAt', 'content'];
+  const doc = utils.extract(req.body, fields);
+  await models.Post.findByIdAndUpdate(id, doc);
   res.json({ state: 1, message: '更新文章成功' });
 }));
 
@@ -200,14 +203,13 @@ api.get('/profiles/:id', wrap(async (req, res) => {
   res.json({ data: profile.toObject() });
 }));
 
-// TODO: single profile update api
+// profile update api
 api.put('/profiles/:id', wrap(async (req, res) => {
-  const { params, query } = req;
-  const { id } = params;
-  const { property } = query;
-  if (!property) throw new Error('请传入property参数');
-  await Profile.findByIdAndUpdate(id, { property });
-  res.send('ok');
+  const { id } = req.params;
+  const fields = ['title', 'wechatId', 'desc', 'msgBiz', 'headimg', 'openHistoryPageAt', 'province', 'city', 'firstPublishAt', 'property'];
+  const doc = utils.extract(req.body, fields);
+  await models.Profile.findByIdAndUpdate(id, doc);
+  res.json({ state: 1, message: '更新公众号成功' });
 }));
 
 // 新建分类
@@ -245,6 +247,15 @@ api.get('/categories/:id', wrap(async (req, res) => {
   const { id } = req.params;
   const category = await models.Category.findById(id);
   res.json({ data: category.toObject() });
+}));
+
+// update category api
+api.put('/categories/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const fields = ['name', 'msgBizs'];
+  const doc = utils.extract(req.body, fields);
+  await models.Category.findByIdAndUpdate(id, doc);
+  res.json({ state: 1, message: '更新分类成功' });
 }));
 
 module.exports = api;

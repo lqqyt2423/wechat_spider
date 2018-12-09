@@ -186,12 +186,35 @@ export function fetchCate(id) {
 }
 
 // update post
-// export async function updatePost(doc) {
-//   let res = await fetch(config.post, {
-//     method: 'PUT',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(doc),
-//   });
-//   res = res.json();
-//   return res;
-// }
+// TODO: 提取公共 http 请求逻辑
+export async function updatePost(id, doc) {
+  let res = await fetch(`${config.post}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  res = res.json();
+  return res;
+}
+
+// update profile
+export async function updateProfile(id, doc) {
+  let res = await fetch(`${config.profile}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  res = res.json();
+  return res;
+}
+
+// update category
+export async function updateCate(id, doc) {
+  let res = await fetch(`${config.cate}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  res = res.json();
+  return res;
+}
