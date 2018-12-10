@@ -1,6 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import { showMessage } from '../actions';
 
 export default class Edit extends React.Component {
   constructor(props) {
@@ -13,11 +14,11 @@ export default class Edit extends React.Component {
 
   async onClickSave() {
     let { content } = this.state;
-    const { onSave, message } = this.props;
+    const { onSave, dispatch } = this.props;
     try {
       content = JSON.parse(content);
     } catch(e) {
-      message('解析文档错误，请检查');
+      dispatch(showMessage('解析文档错误，请检查'));
       return;
     }
     onSave(content);

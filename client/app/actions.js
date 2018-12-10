@@ -218,3 +218,25 @@ export async function updateCate(id, doc) {
   res = res.json();
   return res;
 }
+
+// message
+export const SHOW_MESSAGE = 'SHOW_MESSAGE';
+export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
+let msgTimeout = null;
+export function closeMessage() {
+  return function(dispatch) {
+    dispatch({ type: CLOSE_MESSAGE });
+  };
+}
+export function showMessage(content) {
+  return function(dispatch) {
+    if (msgTimeout) {
+      msgTimeout = null;
+      clearTimeout(msgTimeout);
+    }
+    dispatch({ type: SHOW_MESSAGE, content });
+    msgTimeout = setTimeout(() => {
+      dispatch({ type: CLOSE_MESSAGE });
+    }, 1000);
+  };
+}

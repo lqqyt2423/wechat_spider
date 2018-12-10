@@ -11,6 +11,8 @@ import {
   RECEIVE_CATES,
   REQUEST_CATE,
   RECEIVE_CATE,
+  SHOW_MESSAGE,
+  CLOSE_MESSAGE,
 } from './actions';
 
 const initialState = {
@@ -21,6 +23,10 @@ const initialState = {
   cates: {},
   cate: {},
   isFetching: false,
+  message: {
+    open: false,
+    content: '',
+  },
 };
 
 function reducer(state = initialState, action) {
@@ -66,6 +72,22 @@ function reducer(state = initialState, action) {
         ...state,
         isFetching: false,
         cate: action.cate
+      };
+    case SHOW_MESSAGE:
+      return {
+        ...state,
+        message: {
+          open: true,
+          content: action.content
+        },
+      };
+    case CLOSE_MESSAGE:
+      return {
+        ...state,
+        message: {
+          open: false,
+          content: ''
+        },
       };
     default:
       return state;
