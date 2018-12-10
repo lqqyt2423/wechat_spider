@@ -30,11 +30,9 @@ let store = createStore(
 );
 
 import Posts from './containers/posts.jsx';
-import Post from './containers/post.jsx';
 import Profiles from './containers/profiles.jsx';
-import Profile from './containers/profile.jsx';
 import Categories from './containers/categories.jsx';
-import Category from './containers/category.jsx';
+import Doc from './containers/doc.jsx';
 
 class App extends React.Component {
 
@@ -85,14 +83,14 @@ render(
         <Route path="/" component={connectedApp}>
           <IndexRoute component={Posts} />
           <Route path="/posts" component={Posts} />
-          <Route path="/posts/:id" component={Post} />
-          <Route path="/posts/:id/edit" component={Post} />
+          <Route path="/posts/:id" component={Doc} />
+          <Route path="/posts/:id/edit" component={Doc} />
           <Route path="/profiles" component={Profiles} />
-          <Route path="/profiles/:id" component={Profile} />
-          <Route path="/profiles/:id/edit" component={Profile} />
+          <Route path="/profiles/:id" component={Doc} />
+          <Route path="/profiles/:id/edit" component={Doc} />
           <Route path="/categories" component={Categories} />
-          <Route path="/categories/:id" component={Category} />
-          <Route path="/categories/:id/edit" component={Category} />
+          <Route path="/categories/:id" component={Doc} />
+          <Route path="/categories/:id/edit" component={Doc} />
         </Route>
       </Router>
     </Provider>
