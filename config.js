@@ -1,5 +1,7 @@
 'use strict';
 
+const merge = require('./utils/merge');
+
 const config = {
 
   // 接口和前端等可视化相关的端口号
@@ -130,19 +132,7 @@ if (process.env.DEPLOY === 'docker') {
 // 忽略下面的代码
 try {
   const myConfig = require('./my_config');
-  const fn = (a, b) => {
-    const keys  = Object.keys(a);
-    keys.forEach(k => {
-      if (b.hasOwnProperty(k)) {
-        if (Object.prototype.toString.call(b[k]) === '[object Object]') {
-          fn(a[k], b[k]);
-        } else {
-          a[k] = b[k];
-        }
-      }
-    });
-  };
-  fn(config, myConfig);
+  merge(config, myConfig);
 } catch(e) {
   // console.log(e);
   // Do nothing

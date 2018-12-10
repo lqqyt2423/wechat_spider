@@ -7,6 +7,7 @@ const config = {
   profile: '/api/profiles',
   cates: '/api/categories',
   cate: '/api/categories',
+  conf: '/api/conf',
 };
 
 export default config;

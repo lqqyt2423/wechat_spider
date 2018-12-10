@@ -51,6 +51,7 @@ class App extends React.Component {
               <ListItem primaryText="文章" onClick={() => { history.push('/posts'); }} />
               <ListItem primaryText="公众号" onClick={() => { history.push('/profiles'); }} />
               <ListItem primaryText="分类" onClick={() => { history.push('/categories'); }} />
+              <ListItem primaryText="配置" onClick={() => { history.push('/conf'); }} />
             </List>
           </Drawer>
           <div className="wrapper">
@@ -91,6 +92,8 @@ render(
           <Route path="/categories" component={Categories} />
           <Route path="/categories/:id" component={Doc} />
           <Route path="/categories/:id/edit" component={Doc} />
+          <Route path="/conf" component={Doc} />
+          <Route path="/conf/edit" component={Doc} />
         </Route>
       </Router>
     </Provider>

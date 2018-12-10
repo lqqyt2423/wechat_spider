@@ -240,3 +240,24 @@ export function showMessage(content) {
     }, 1000);
   };
 }
+
+// server side config
+export const REQUEST_CONF = 'REQUEST_CONF';
+export const RECEIVE_CONF = 'RECEIVE_CONF';
+export function fetchConf() {
+  return function (dispatch) {
+    dispatch({ type: REQUEST_CONF });
+    return fetch(config.conf).then(res => res.json()).then(conf => {
+      dispatch({ type: RECEIVE_CONF, conf });
+    });
+  };
+}
+export async function updateConf(doc) {
+  let res = await fetch(config.conf, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  res = res.json();
+  return res;
+}

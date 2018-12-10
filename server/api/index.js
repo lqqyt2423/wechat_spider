@@ -3,17 +3,14 @@
 const _ = require('lodash');
 const express = require('express');
 const api = express();
-const config = require('../config');
-const models = require('../models');
-const utils = require('../utils');
-const { Category, Profile } = models;
+const config = require('../../config');
+const models = require('../../models');
+const utils = require('../../utils');
+const wrap = require('../wrap');
+const conf = require('./conf');
+const { Category } = models;
 
-// 包装 api handler
-function wrap(fn) {
-  return function(req, res, next) {
-    fn.call(this, req, res, next).catch(next);
-  };
-}
+api.use('/conf', conf);
 
 const nullRes = (page, perPage) => {
   return {

@@ -8,6 +8,8 @@ import {
   updateProfile,
   fetchCate,
   updateCate,
+  fetchConf,
+  updateConf,
 } from '../actions';
 import Loading from '../components/loading.jsx';
 import Edit from '../components/edit.jsx';
@@ -32,6 +34,11 @@ class Doc extends React.Component {
       this.updateFn = updateCate;
       this.stateName = 'cate';
       this.statePath = 'categories';
+    } else if (pathname.includes('conf')) {
+      this.fetchFn = fetchConf;
+      this.updateFn = updateConf;
+      this.stateName = 'conf';
+      this.statePath = 'conf';
     } else {
       throw new Error('invalide pathname');
     }
@@ -40,7 +47,11 @@ class Doc extends React.Component {
   componentDidMount() {
     const { params, dispatch } = this.props;
     const { id } = params;
-    dispatch(this.fetchFn(id));
+    if (id) {
+      dispatch(this.fetchFn(id));
+    } else {
+      dispatch(this.fetchFn());
+    }
   }
 
   render() {
@@ -60,11 +71,21 @@ class Doc extends React.Component {
           dispatch={dispatch}
           content={JSON.stringify(doc, null, 4)}
           onSave={async (doc) => {
-            const res = await this.updateFn(id, doc);
+            let res;
+            if (id) {
+              res = await this.updateFn(id, doc);
+            } else {
+              res = await this.updateFn(doc);
+            }
             if ([1, 2].includes(res.state)) dispatch(showMessage(res.message));
             if ([0, 1].includes(res.state)) {
-              dispatch(this.fetchFn(id));
-              history.replace(`/${this.statePath}/${id}`);
+              if (id) {
+                dispatch(this.fetchFn(id));
+                history.replace(`/${this.statePath}/${id}`);
+              } else {
+                dispatch(this.fetchFn());
+                history.replace(`/${this.statePath}`);
+              }
             }
           }}
         />

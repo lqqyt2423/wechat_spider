@@ -13,6 +13,8 @@ import {
   RECEIVE_CATE,
   SHOW_MESSAGE,
   CLOSE_MESSAGE,
+  REQUEST_CONF,
+  RECEIVE_CONF,
 } from './actions';
 
 const initialState = {
@@ -27,6 +29,8 @@ const initialState = {
     open: false,
     content: '',
   },
+  // crawl server side config
+  conf: {},
 };
 
 function reducer(state = initialState, action) {
@@ -37,6 +41,7 @@ function reducer(state = initialState, action) {
     case REQUEST_PROFILE:
     case REQUEST_CATES:
     case REQUEST_CATE:
+    case REQUEST_CONF:
       return Object.assign({}, state, {
         isFetching: true
       });
@@ -88,6 +93,12 @@ function reducer(state = initialState, action) {
           open: false,
           content: ''
         },
+      };
+    case RECEIVE_CONF:
+      return {
+        ...state,
+        isFetching: false,
+        conf: action.conf,
       };
     default:
       return state;

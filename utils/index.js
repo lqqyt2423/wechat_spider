@@ -1,5 +1,14 @@
 'use strict';
 
+const config = require('../config');
+const redis = require('./redis');
+
+const {
+  redis: redisConfig,
+} = config;
+
+const { POST_LIST_KEY, PROFILE_LIST_KEY } = redisConfig;
+
 function extract(doc, fields) {
   return fields.reduce((obj, key) => {
     const val = doc[key];
@@ -8,4 +17,9 @@ function extract(doc, fields) {
   }, {});
 }
 
+function delCrawlLinkCache(callback) {
+  redis('del', POST_LIST_KEY, PROFILE_LIST_KEY).then(callback);
+}
+
 exports.extract = extract;
+exports.delCrawlLinkCache = delCrawlLinkCache;
