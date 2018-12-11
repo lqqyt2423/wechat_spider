@@ -52,6 +52,7 @@ class App extends React.Component {
               <ListItem primaryText="公众号" onClick={() => { history.push('/profiles'); }} />
               <ListItem primaryText="分类" onClick={() => { history.push('/categories'); }} />
               <ListItem primaryText="配置" onClick={() => { history.push('/conf'); }} />
+              <a href="https://github.com/lqqyt2423/wechat_spider" target="_blank" rel="noopener noreferrer"><ListItem primaryText="GitHub" /></a>
             </List>
           </Drawer>
           <div className="wrapper">
