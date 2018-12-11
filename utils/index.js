@@ -17,8 +17,8 @@ function extract(doc, fields) {
   }, {});
 }
 
-function delCrawlLinkCache(callback) {
-  redis('del', POST_LIST_KEY, PROFILE_LIST_KEY).then(callback);
+function delCrawlLinkCache() {
+  return redis('del', POST_LIST_KEY, PROFILE_LIST_KEY);
 }
 
 exports.extract = extract;

@@ -47,8 +47,11 @@ proxyServer.on('error', (e) => {
 });
 
 // 删除redis中对应缓存后再启动
-utils.delCrawlLinkCache(() => {
+utils.delCrawlLinkCache().then(() => {
   proxyServer.start();
+}, e => {
+  console.log('Error when del redis cache');
+  console.log(e);
 });
 
 // when finished

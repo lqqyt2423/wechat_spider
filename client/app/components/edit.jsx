@@ -49,7 +49,7 @@ export default class Edit extends React.Component {
           <textarea
             style={{
               width: '100%',
-              height: '300px',
+              height: '350px',
               padding: '5px',
               fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier',
               outline: 'none',

@@ -129,9 +129,9 @@ if (process.env.DEPLOY === 'docker') {
 }
 
 
-// 忽略下面的代码
+// 加载自定义的配置
 try {
-  const myConfig = require('./my_config');
+  const myConfig = require('./my_config.json');
   merge(config, myConfig);
 } catch(e) {
   // console.log(e);
