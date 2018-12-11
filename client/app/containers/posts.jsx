@@ -33,6 +33,7 @@ class Posts extends React.Component {
     dispatch(fetchPosts(location.query));
   }
 
+  // eslint-disable-next-line
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.search !== this.props.location.search) {
       let { dispatch } = this.props;

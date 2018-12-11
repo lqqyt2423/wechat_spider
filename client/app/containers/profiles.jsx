@@ -19,6 +19,7 @@ class Profiles extends React.Component {
     dispatch(fetchProfiles(location.query));
   }
 
+  // eslint-disable-next-line
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.search !== this.props.location.search) {
       let { dispatch } = this.props;

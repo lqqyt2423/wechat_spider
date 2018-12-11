@@ -17,7 +17,10 @@ import Edit from '../components/edit.jsx';
 class Doc extends React.Component {
   constructor(props) {
     super(props);
-    const { location } = this.props;
+  }
+
+  initDoc(props) {
+    const { location, params, dispatch } = props;
     const { pathname } = location;
     if (pathname.includes('posts')) {
       this.fetchFn = fetchPost;
@@ -42,10 +45,7 @@ class Doc extends React.Component {
     } else {
       throw new Error('invalide pathname');
     }
-  }
 
-  componentDidMount() {
-    const { params, dispatch } = this.props;
     const { id } = params;
     if (id) {
       dispatch(this.fetchFn(id));
@@ -54,7 +54,20 @@ class Doc extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.initDoc(this.props);
+  }
+
+  // eslint-disable-next-line
+  componentWillReceiveProps(nextProps) {
+    // 路由变化，重新请求接口
+    if (nextProps.location.pathname !== this.props.location.pathname) {
+      this.initDoc(nextProps);
+    }
+  }
+
   render() {
+    if (!this.fetchFn) return <Loading />;
     const { isFetching, location, params, dispatch, history } = this.props;
     const { id } = params;
     const { pathname } = location;

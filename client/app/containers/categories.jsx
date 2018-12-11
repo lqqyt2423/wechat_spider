@@ -17,6 +17,7 @@ class Categories extends React.Component {
     dispatch(fetchCates(location.query));
   }
 
+  // eslint-disable-next-line
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.search !== this.props.location.search) {
       const { dispatch } = this.props;
