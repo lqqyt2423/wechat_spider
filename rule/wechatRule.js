@@ -510,7 +510,8 @@ function isPostPage(ctx) {
   const link = req.url;
   const isPost = /mp\.weixin\.qq\.com\/s\?__biz/.test(link);
   const isOldPost = /mp\/appmsg\/show/.test(link);
-  if (!(isPost || isOldPost)) return false;
+  const isSafeDispute = /mp\.weixin\.qq\.com\/safe/.test(link);
+  if (!(isPost || isOldPost || isSafeDispute)) return false;
   return true;
 }
 
