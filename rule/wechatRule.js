@@ -23,7 +23,7 @@ const {
   profile: profileConfig,
 } = ruleConfig;
 
-const getReadAndLikeNum = async function(ctx) {
+const getReadAndLikeNum = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
   if (!/mp\/getappmsgext/.test(link)) return;
@@ -64,12 +64,12 @@ const getReadAndLikeNum = async function(ctx) {
       debug();
     });
 
-  } catch(e) {
+  } catch (e) {
     throw e;
   }
 };
 
-const getPostBasicInfo = async function(ctx) {
+const getPostBasicInfo = async function (ctx) {
   if (!isPostPage(ctx)) return;
 
   const { req, res } = ctx;
@@ -152,7 +152,7 @@ const getPostBasicInfo = async function(ctx) {
 
 };
 
-const handlePostHtml = async function(ctx) {
+const handlePostHtml = async function (ctx) {
   if (!isPostPage(ctx)) return;
 
   const { res } = ctx;
@@ -184,7 +184,7 @@ const handlePostHtml = async function(ctx) {
   };
 };
 
-const getComments = async function(ctx) {
+const getComments = async function (ctx) {
   if (!isCrawlComments) return;
 
   const { req, res } = ctx;
@@ -249,12 +249,12 @@ const getComments = async function(ctx) {
     debug(`已抓取${postComments.length}条评论`);
     debug();
 
-  } catch(e) {
+  } catch (e) {
     throw e;
   }
 };
 
-const getProfileBasicInfo = async function(ctx) {
+const getProfileBasicInfo = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
   if (!/\/mp\/profile_ext\?action=home&__biz=/.test(link)) return;
@@ -298,15 +298,15 @@ const getProfileBasicInfo = async function(ctx) {
   };
 
   try {
-    const data = JSON.parse(escape2Html(content).replace(/\\\//g,'/'));
+    const data = JSON.parse(escape2Html(content).replace(/\\\//g, '/'));
     const postList = data.list;
     await savePostsData(postList);
-  } catch(e) {
+  } catch (e) {
     throw e;
   }
 };
 
-const getPostList = async function(ctx) {
+const getPostList = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
   if (!/\/mp\/profile_ext\?action=getmsg&__biz=/.test(link)) return;
@@ -317,12 +317,12 @@ const getPostList = async function(ctx) {
     const data = JSON.parse(body);
     const postList = JSON.parse(data.general_msg_list).list;
     await savePostsData(postList);
-  } catch(e) {
+  } catch (e) {
     throw e;
   }
 };
 
-const handleProfileHtml = async function(ctx) {
+const handleProfileHtml = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
   if (!/\/mp\/profile_ext\?action=home&__biz=/.test(link)) return;
@@ -395,7 +395,15 @@ const handleProfileHtml = async function(ctx) {
         // 倒数第二行表示最旧的一篇文章的发布日期
         let dateStr = contentArr.pop();
         dateStr = dateStr.trim();
-        dateStr = dateStr.replace(/(\\d{4})年(\\d{1,2})月(\\d{1,2})日/, '$1/$2/$3');
+        const dateRegexp = /(\\d{4})年(\\d{1,2})月(\\d{1,2})日/;
+        if (dateRegexp.test(dateStr)) {
+          dateStr = dateStr.match(dateRegexp)[0];
+        }
+        dateStr = dateStr.replace(dateRegexp, '$1/$2/$3');
+
+        // alert('dateStr');
+        // alert(dateStr);
+
         const minDate = new Date(dateStr).getTime();
 
         if (statusStr.indexOf('已无更多') > -1) {
@@ -409,6 +417,10 @@ const handleProfileHtml = async function(ctx) {
       // 控制下拉页面的方法
       const controlScroll = () => {
         const res = isScrollFn(${minTime});
+
+        // alert('res.status');
+        // alert(res.status);
+
         const status = res.status;
         if (status === 0) {
           window.scrollTo(0, document.body.scrollHeight);
@@ -439,8 +451,8 @@ const handleProfileHtml = async function(ctx) {
     });
   })();
 </script>`;
-  body = body.replace('<!--headTrap<body></body><head></head><html></html>-->','').replace('<!--tailTrap<body></body><head></head><html></html>-->','');
-  body = body.replace('</body>',insertJsStr + '\n</body>');
+  body = body.replace('<!--headTrap<body></body><head></head><html></html>-->', '').replace('<!--tailTrap<body></body><head></head><html></html>-->', '');
+  body = body.replace('</body>', insertJsStr + '\n</body>');
   return {
     response: { ...res.response, body }
   };
@@ -475,7 +487,7 @@ async function savePostsData(postList) {
     if (!idx) idx = query['amp;idx'];
     const [msgBiz, msgMid, msgIdx] = [__biz, mid, idx];
 
-    const [ cover, digest, sourceUrl ] = [ appMsg.cover, appMsg.digest, appMsg.source_url ];
+    const [cover, digest, sourceUrl] = [appMsg.cover, appMsg.digest, appMsg.source_url];
 
     return models.Post.findOneAndUpdate(
       { msgBiz, msgMid, msgIdx },
