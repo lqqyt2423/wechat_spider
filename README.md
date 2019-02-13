@@ -118,6 +118,10 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 邮箱： `974923609@qq.com`。
 
+微信：
+
+![](https://dy6.top/static_files/lq_wechat.png)
+
 ## License
 
 [MIT](LICENSE)
