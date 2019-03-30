@@ -7,7 +7,8 @@ const {
   getComments,
   getProfileBasicInfo,
   getPostList,
-  handleProfileHtml
+  handleProfileHtml,
+  getNextPostLink,
 } = require('./wechatRule');
 const basicAuth = require('./basicAuth');
 const config = require('../config');
@@ -80,7 +81,10 @@ const rule = {
       if (!config.rule.profile.disable) {
         nextLink = yield models.Profile.getNextProfileLink();
       }
-      if (!nextLink) nextLink = '';
+      if (!nextLink) {
+        nextLink = yield getNextPostLink();
+        debug('没有需要抓取的公众号了，自动开始文章抓取');
+      }
       debug('nextLink', nextLink);
       return {
         response: {
