@@ -448,7 +448,17 @@ const handleProfileHtml = async function (ctx) {
         controlJump();
       };
 
-      controlScroll();
+      // controlScroll();
+
+      const startControlScroll = () => {
+        if(document.querySelector('.weui-panel').innerText) {
+          controlScroll()
+        } else {
+          setTimeout(startControlScroll, 1000)
+        }
+      }
+
+      startControlScroll();
     });
   })();
 </script>`;
