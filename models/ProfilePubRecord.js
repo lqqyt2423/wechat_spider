@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schema = mongoose.Schema;
-const debug = require('debug')('ws:ProfilePubRecord');
 const config = require('../config');
 const redis = require('../utils/redis');
 
@@ -32,7 +31,7 @@ ProfilePubRecord.index({ msgBiz: 1, date: 1 }, { unique: true });
 
 // 传入 posts 记录发布文章记录（确保当批记录按照天区分、确保为同一 profile）
 // 记录公众号的发布文章记录
-ProfilePubRecord.statics.savePubRecords = async function(posts) {
+ProfilePubRecord.statics.savePubRecords = async function (posts) {
   if (!posts || !posts.length) return;
   const msgBiz = posts[0].msgBiz;
   const redisKey = `${SAVE_RECORD_KEY_PREFIX}${msgBiz}`;
@@ -64,7 +63,7 @@ ProfilePubRecord.statics.savePubRecords = async function(posts) {
   // insert or update
   for (let timestamp = minTimestamp; timestamp <= maxTimestamp; timestamp += DAY_MS) {
     const date = new Date(timestamp);
-    const record = await this.findOneAndUpdate(
+    await this.findOneAndUpdate(
       {
         msgBiz,
         date,
@@ -75,11 +74,6 @@ ProfilePubRecord.statics.savePubRecords = async function(posts) {
       },
       { upsert: true, new: true }
     );
-    // debug('写入数据库成功',
-    //   record.msgBiz,
-    //   moment(record.date).format('YYYY-MM-DD'),
-    //   record.pubCount,
-    //   record.postCount);
   }
 
   // 本次存储的最小抓取时间作为下次的最大抓取时间
@@ -87,7 +81,7 @@ ProfilePubRecord.statics.savePubRecords = async function(posts) {
 };
 
 // 传入目标最小时间，返回需要抓取的最小时间
-ProfilePubRecord.statics.getMinTargetTime = async function(msgBiz, minTime = MIN_TIME) {
+ProfilePubRecord.statics.getMinTargetTime = async function (msgBiz, minTime = MIN_TIME) {
   minTime = moment(minTime).startOf('day').toDate();
   const records = await this.find({
     msgBiz,
@@ -114,3 +108,16 @@ ProfilePubRecord.statics.getMinTargetTime = async function(msgBiz, minTime = MIN
 };
 
 mongoose.model('ProfilePubRecord', ProfilePubRecord);
+
+// 查询哪些公众号每天可以发布多次
+// db.profilepubrecords.aggregate([
+//   { $match: { pubCount: { $gt: 1 } } },
+//   { $group: { _id: '$msgBiz', pubCount: { $max: '$pubCount' } } },
+//   { $sort: { pubCount: -1 } },
+//   { $lookup: {
+//     from: 'profiles',
+//     localField: '_id',
+//     foreignField: 'msgBiz',
+//     as: 'profile'
+//   } }
+// ]).pretty()

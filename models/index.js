@@ -12,11 +12,8 @@ const config = require('../config');
 
 mongoose.connect(config.mongodb.db);
 
-if (process.env.NODE_ENV === 'production') {
-  mongoose.set('debug', false);
-} else {
-  mongoose.set('debug', true);
-}
+if (config.isProd) mongoose.set('debug', false);
+if (config.isDev) mongoose.set('debug', true);
 
 if (process.env.WS_MODEL_DEBUG === 'false') {
   mongoose.set('debug', false);
@@ -29,7 +26,7 @@ if (process.env.WS_MODEL_DEBUG === 'false') {
   'Category',
   'Comment',
   'ProfilePubRecord',
-].forEach(function(modelName) {
+].forEach(function (modelName) {
   require(path.join(__dirname, modelName));
   exports[modelName] = mongoose.model(modelName);
 });
