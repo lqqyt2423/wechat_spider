@@ -7,7 +7,8 @@ const moment = require('moment');
 const profileMap = {
   公众号: 'title',
   公众号ID: 'wechatId',
-  公众号属性: 'property'
+  公众号属性: 'property',
+  机构名称: 'organization'
 };
 
 const postMap = {
@@ -27,11 +28,12 @@ const postMap = {
 module.exports = class ExportData {
 
   constructor(options = {}) {
-    const { msgBiz, category } = options;
+    const { msgBiz, category, bizToInfoMap } = options;
     this.msgBiz = [];
     this.category = [];
     this.shouldGetMsgBiz = false;
     this.bizCategoryNameMap = {};
+    this.bizToInfoMap = bizToInfoMap;
 
     if (msgBiz) this.msgBiz = this.msgBiz.concat(msgBiz);
     if (category) this.category = this.category.concat(category);
@@ -41,9 +43,9 @@ module.exports = class ExportData {
 
   /**
    * 导出为json字符串
-   * @param {Date} minDate 
-   * @param {Date} maxDate 
-   * @param {Object} options 
+   * @param {Date} minDate
+   * @param {Date} maxDate
+   * @param {Object} options
    * @return {String}
    * @api public
    */
@@ -75,9 +77,9 @@ module.exports = class ExportData {
 
   /**
    * 导出为csv字符串
-   * @param {Date} minDate 
-   * @param {Date} maxDate 
-   * @param {Object} options 
+   * @param {Date} minDate
+   * @param {Date} maxDate
+   * @param {Object} options
    * @return {String}
    * @api public
    */
@@ -91,8 +93,8 @@ module.exports = class ExportData {
 
   /**
    * 导出统计信息json字符串
-   * @param {Date} minDate 
-   * @param {Date} maxDate 
+   * @param {Date} minDate
+   * @param {Date} maxDate
    * @return {String}
    * @api public
    */
@@ -103,8 +105,8 @@ module.exports = class ExportData {
 
   /**
    * 导出统计信息csv字符串
-   * @param {Date} minDate 
-   * @param {Date} maxDate 
+   * @param {Date} minDate
+   * @param {Date} maxDate
    * @return {String}
    * @api public
    */
@@ -127,10 +129,30 @@ module.exports = class ExportData {
       isFail: { $ne: true }
     }).sort({ msgBiz: 1, publishAt: 1, msgIdx: 1 }).populate('profile');
 
-    const handledPosts = posts.map(post => {
+    // 按照 this.msgBiz 排序
+    const postGroupMap = {};
+    posts.forEach(i => {
+      const { msgBiz } = i;
+      postGroupMap[msgBiz] = postGroupMap[msgBiz] || [];
+      postGroupMap[msgBiz].push(i);
+    });
+    const postGroupKeys = Object.keys(postGroupMap);
+    postGroupKeys.sort((a, b) => {
+      const i = this.msgBiz.indexOf(a) - this.msgBiz.indexOf(b);
+      if (i < 0) return -1;
+      if (i > 0) return 1;
+      return 0;
+    });
+
+    let sortedPosts = [];
+    postGroupKeys.forEach(key => {
+      sortedPosts = sortedPosts.concat(postGroupMap[key]);
+    });
+
+    const handledPosts = sortedPosts.map(post => {
       const { profile, msgBiz } = post;
       const postObj = {};
-      
+
       // 分类
       const category = this.bizCategoryNameMap[msgBiz];
       if (category) postObj.分类 = category;
@@ -140,6 +162,13 @@ module.exports = class ExportData {
         const value = profile[profileMap[key]];
         if (value) postObj[key] = value;
       });
+
+      // 传入的额外公众号信息
+      if (this.bizToInfoMap && this.bizToInfoMap[msgBiz]) {
+        const { property, organization } = this.bizToInfoMap[msgBiz];
+        postObj['公众号属性'] = property;
+        postObj['机构名称'] = organization;
+      }
 
       // 文章信息
       Object.keys(postMap).forEach(key => {
@@ -187,6 +216,7 @@ module.exports = class ExportData {
         aggrObj[key] = {
           分类: item.分类,
           公众号属性: item.公众号属性,
+          机构名称: item.机构名称,
           公众号: item.公众号,
           公众号ID: item.公众号ID,
           总阅读量: item.阅读量 || 0,
@@ -212,6 +242,7 @@ module.exports = class ExportData {
         公众号ID: item.公众号ID,
         分类: item.分类,
         公众号属性: item.公众号属性,
+        机构名称: item.机构名称,
         msgBiz: key,
         总阅读量: item.总阅读量,
         平均阅读量: Math.round(item.总阅读量 / item.总发文数),
