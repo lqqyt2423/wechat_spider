@@ -1,8 +1,14 @@
 'use strict';
 
 const merge = require('./utils/merge');
+const env = process.env.NODE_ENV || 'development';
 
 const config = {
+
+  // 环境相关
+  env,
+  isDev: env === 'development',
+  isProd: env === 'production',
 
   // 接口和前端等可视化相关的端口号
   serverPort: 8104,
@@ -14,7 +20,7 @@ const config = {
     // anyproxy 的前端可视化界面
     webInterface: {
       // 是否开启
-      enable: true,
+      enable: false,
       // 访问的端口地址
       webPort: 8102
     },
@@ -26,7 +32,7 @@ const config = {
     // 是否开启 websocket 代理
     wsIntercept: false,
     // 控制 anyproxy 是否在命令行打印抓取记录等 log 信息
-    silent: false
+    silent: true
   },
 
   // mongo 数据库设置
@@ -56,11 +62,11 @@ const config = {
       jumpInterval: 2,
 
       // 跳转文章发布时间范围
-      minTime: new Date('2018-1-1'),
-      maxTime: new Date('2018-7-1'),
+      minTime: new Date('2020/1/1'),
+      maxTime: new Date('2021/1/1'),
 
       // 已经抓取过的文章是否需要再次抓取
-      isCrawlExist: false,
+      isCrawlExist: true,
       // 如果上面设置为 true，此项可控制再次重复抓取文章的时间间隔
       // updateNumAt - publishAt < crawlExistInterval => 抓取
       // 默认 3 天，数据已趋于稳定
@@ -83,15 +89,15 @@ const config = {
       // 跳转不能文章页和公众号历史页互相跳转
       disable: false,
       // 跳转时间间隔，单位秒
-      jumpInterval: 5,
+      jumpInterval: 8,
 
       // 页面会自动下拉
       // 下拉至此项设置的时间便会停止
       // 然后跳转至下一个公众号历史页面
-      minTime: new Date('2018-1-1'),
+      minTime: new Date('2020/1/1'),
 
       // 控制在此时间后已经抓取过的公众号本次就不用再抓取了
-      maxUpdatedAt: new Date('2018-7-1'),
+      maxUpdatedAt: new Date('2021/1/1'),
 
       // 抓取公众号 biz 范围 [string]
       // 为空表示不限制范围
@@ -102,9 +108,9 @@ const config = {
     isCrawlComments: true,
 
     // 优化项：是否替换掉所有的图片请求
-    isReplaceImg: false,
+    isReplaceImg: true,
     // 优化项：是否替换手机上显示的正文内容
-    isReplacePostBody: false,
+    isReplacePostBody: true,
   },
 
   mp: {
@@ -131,10 +137,9 @@ if (process.env.DEPLOY === 'docker') {
 
 // 加载自定义的配置
 try {
-  const myConfig = require('./my_config.json');
+  const myConfig = require('./my_config.js');
   merge(config, myConfig);
-} catch(e) {
-  // console.log(e);
+} catch (e) {
   // Do nothing
 }
 
