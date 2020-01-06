@@ -13,25 +13,28 @@
   "author": "liqiang",
   "license": "MIT",
   "dependencies": {
-    "anyproxy": "^4.0.5",
-    "cheerio": "^1.0.0-rc.2",
-    "debug": "^4.0.1",
-    "ejs": "^2.5.7",
-    "express": "^4.15.4",
+    "anyproxy": "^4.1.2",
+    "cheerio": "^1.0.0-rc.3",
+    "debug": "^4.1.1",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
     "ip": "^1.1.5",
-    "json2csv": "^3.11.2",
-    "lodash": "^4.17.11",
-    "moment": "^2.21.0",
-    "mongoose": "^5.0.10",
-    "morgan": "^1.8.2",
+    "json2csv": "^4.5.4",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "mongoose": "^5.8.4",
+    "morgan": "^1.9.1",
     "motime": "^0.0.2",
     "redis": "^2.8.0",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.14.3",
     "mocha": "^5.2.0",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.19.1"
   },
   "repository": {
     "type": "git",
