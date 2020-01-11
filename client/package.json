@@ -42,6 +42,6 @@
     "html-webpack-plugin": "^2.29.0",
     "style-loader": "^0.18.2",
     "webpack": "^3.3.0",
-    "webpack-dev-server": "^2.6.1"
+    "webpack-dev-server": "^3.1.11"
   }
 }
