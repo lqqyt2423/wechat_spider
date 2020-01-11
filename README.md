@@ -31,8 +31,8 @@ git clone https://github.com/lqqyt2423/wechat_spider.git
 cd wechat_spider
 # build image
 docker-compose build
-# 运行实例
-docker-compose up
+# 运行实例（mongo数据存储地址需通过环境变量MONGO_PATH传入）
+MONGO_PATH=/data/mongo docker-compose up
 # 终止运行
 docker-compose down
 ```

@@ -3,6 +3,7 @@ services:
   app:
     build: ./
     image: wechat-spider:latest
+    restart: always
     environment:
       - NODE_ENV=production
       - DEPLOY=docker
@@ -16,6 +17,10 @@ services:
       - redis
       - mongo
   redis:
-    image: redis:alpine
+    image: redis:latest
+    restart: always
   mongo:
     image: mongo:3.6
+    restart: always
+    volumes:
+      - "${MONGO_PATH}:/data/db"

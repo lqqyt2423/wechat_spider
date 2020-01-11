@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js --ignore client/ --ignore test/",
-    "build": "pm2 start index.js --name=\"wechat_spider\"",
-    "mp": "node second/task.js",
+    "prod": "NODE_ENV=production npm start",
     "test": "mocha --recursive --exit --timeout 10000"
   },
   "author": "liqiang",
@@ -15,7 +14,6 @@
   "dependencies": {
     "anyproxy": "^4.1.2",
     "cheerio": "^1.0.0-rc.3",
-    "ejs": "^3.0.1",
     "express": "^4.17.1",
     "ip": "^1.1.5",
     "json2csv": "^4.5.4",
