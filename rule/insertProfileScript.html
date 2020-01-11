@@ -1,0 +1,127 @@
+<!-- 跳转间隔: JUMP_INTERVAL s -->
+<!-- 检测的最小时间: JUMP_MIN_TIME -->
+<script type="text/javascript">
+  (function () {
+    // logger
+    function logger(msg) {
+      if (typeof msg === "object") msg = JSON.stringify(msg);
+      fetch("/wx/front_end_logger", {
+        method: "POST",
+        body: JSON.stringify({
+          message: msg
+        }),
+        headers: new Headers({
+          "Content-Type": "application/json"
+        })
+      });
+    }
+
+    // 跳转至下一个页面的方法
+    function jumpFn(link) {
+      const refreshMeta = document.createElement("meta");
+      refreshMeta.httpEquiv = "refresh";
+      refreshMeta.content = "0;url=" + link;
+      document.head.appendChild(refreshMeta);
+    }
+
+    // 控制跳转
+    function controlJump() {
+      setTimeout(() => {
+        fetch("/wx/profiles/next_link")
+          .then(res => res.json())
+          .then(res => {
+            const nextLink = res.data;
+            // 跳转
+            if (nextLink) return jumpFn(nextLink);
+            // 重来
+            controlJump();
+          });
+      }, JUMP_INTERVAL);
+    }
+
+    // 判断是否下拉页面的方法
+    // -1 - 未获取到目标元素，等待很短的时间后重新开始
+    // 0 - 继续下拉
+    // 1 - 已经符合截止日期
+    // 2 - 已经抓至公众号第一篇文章
+    // 3 - 未关注公众号
+    function isScrollFn(time) {
+      let contentText = document.querySelector(".weui-panel").innerText;
+      contentText = contentText.trim();
+
+      if (!contentText) return { status: -1 };
+
+      // 去除中间的空行
+      const contentArr = contentText.split("\n").filter(i => i);
+      // 最后一行表示目前抓取的状态
+      // 正在加载
+      // 已无更多
+      // 关注公众帐号，接收更多消息
+      const statusStr = contentArr.pop();
+      if (statusStr.indexOf("关注公众帐号，接收更多消息") > -1) {
+        return { status: 3 };
+      }
+
+      // 倒数第二行表示最旧的一篇文章的发布日期
+      let dateStr = contentArr.pop();
+      dateStr = dateStr.trim();
+      const dateRegexp = /(\d{4})年(\d{1,2})月(\d{1,2})日/;
+      if (dateRegexp.test(dateStr)) {
+        dateStr = dateStr.match(dateRegexp)[0];
+      }
+      dateStr = dateStr.replace(dateRegexp, "$1/$2/$3");
+
+      const minDate = new Date(dateStr).getTime();
+
+      if (statusStr.indexOf("已无更多") > -1) {
+        return { status: 2, publishAt: minDate };
+      }
+
+      if (minDate < time) return { status: 1 };
+      return { status: 0 };
+    }
+
+    // 控制下拉页面的方法
+    function controlScroll() {
+      const res = isScrollFn(JUMP_MIN_TIME);
+
+      const status = res.status;
+      if (status === -1) {
+        setTimeout(controlScroll, 100);
+        return;
+      }
+
+      if (status === 0) {
+        window.scrollTo(0, document.body.scrollHeight);
+        setTimeout(controlScroll, JUMP_INTERVAL);
+        return;
+      }
+
+      // 告诉后端此公众号已经抓至第一篇文章了
+      if (status === 2) {
+        fetch("/wx/profiles/first_post", {
+          method: "POST",
+          body: JSON.stringify({
+            link: document.URL,
+            publishAt: res.publishAt
+          }),
+          headers: new Headers({
+            "Content-Type": "application/json"
+          })
+        }).then(() => { });
+      }
+
+      if (status === 3) {
+        // TODO: 需要告诉后端吧
+      }
+
+      // 返回页头然后跳转
+      window.scrollTo(0, 0);
+      controlJump();
+    }
+
+    window.addEventListener("load", () => {
+      controlScroll();
+    });
+  })();
+</script>

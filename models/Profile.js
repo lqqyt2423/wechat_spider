@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require('moment');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const logger = require('../utils/logger');
@@ -93,7 +94,7 @@ Profile.statics.updateLatestPublishAt = async function (posts) {
   });
   if (!profile.latestPublishAt || latestPublishAt > profile.latestPublishAt) {
     await this.findByIdAndUpdate(profile.id, { $set: { latestPublishAt } });
-    logger.info('[profile updateLatestPublishAt] biz: %s, title: %s, at: %s', msgBiz, profile.title, latestPublishAt);
+    logger.info('[profile updateLatestPublishAt] biz: %s, title: %s, at: %s', msgBiz, profile.title, moment(latestPublishAt).format('YYYY-MM-DD HH:mm'));
   }
 };
 

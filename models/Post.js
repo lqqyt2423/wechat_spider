@@ -40,7 +40,6 @@ const Post = new Schema({
   // 上次更新阅读数、点赞数的时间
   updateNumAt: Date,
 
-  // TODO: 逻辑中区分区分为不同的字段
   // 文章正文 纯文本
   content: String,
   // 文章正文 html
