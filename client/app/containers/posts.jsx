@@ -116,7 +116,7 @@ class Posts extends React.Component {
           const path = assembleUrl(pathname, nextQuery);
           history.push(path);
         }} label="无阅读量" style={style} />
-        { !count ? '' : <span>共{count}条数据</span> }
+        {!count ? '' : <span>共{count}条数据</span>}
       </div>
     );
   }
@@ -129,6 +129,7 @@ class Posts extends React.Component {
 
     // show
     const showData = data.map(i => {
+      i.title = i.title || '';
       let showTitle = i.title.substr(0, 25) || '暂无';
       if (i.link) {
         showTitle = <a title={i.title} href={i.link} rel="noopener noreferrer" target="_blank">{showTitle}</a>;
@@ -193,7 +194,7 @@ class Posts extends React.Component {
             }
           </tbody>
         </table>
-        <Paginator { ...metadata } history={ history } search={ search } pathname={ pathname } ></Paginator>
+        <Paginator {...metadata} history={history} search={search} pathname={pathname} ></Paginator>
       </div>
     );
   }
