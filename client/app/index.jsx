@@ -31,7 +31,6 @@ let store = createStore(
 
 import Posts from './containers/posts.jsx';
 import Profiles from './containers/profiles.jsx';
-import Categories from './containers/categories.jsx';
 import Doc from './containers/doc.jsx';
 
 class App extends React.Component {
@@ -50,7 +49,6 @@ class App extends React.Component {
             <List>
               <ListItem primaryText="文章" onClick={() => { history.push('/posts'); }} />
               <ListItem primaryText="公众号" onClick={() => { history.push('/profiles'); }} />
-              <ListItem primaryText="分类" onClick={() => { history.push('/categories'); }} />
               <ListItem primaryText="配置" onClick={() => { history.push('/conf'); }} />
               <a href="https://github.com/lqqyt2423/wechat_spider" target="_blank" rel="noopener noreferrer"><ListItem primaryText="GitHub" /></a>
             </List>
@@ -90,9 +88,6 @@ render(
           <Route path="/profiles" component={Profiles} />
           <Route path="/profiles/:id" component={Doc} />
           <Route path="/profiles/:id/edit" component={Doc} />
-          <Route path="/categories" component={Categories} />
-          <Route path="/categories/:id" component={Doc} />
-          <Route path="/categories/:id/edit" component={Doc} />
           <Route path="/conf" component={Doc} />
           <Route path="/conf/edit" component={Doc} />
         </Route>

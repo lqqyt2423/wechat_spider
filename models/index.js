@@ -19,7 +19,6 @@ if (config.isDev) mongoose.set('debug', true);
 [
   'Post',
   'Profile',
-  'Category',
   'Comment',
   'ProfilePubRecord',
 ].forEach(function (modelName) {

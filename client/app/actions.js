@@ -4,7 +4,7 @@ export function assembleUrl(path, params, method) {
   path = path || '';
   params = params || {};
   method = method ? method.toLowerCase() : 'get';
-  Object.keys(params).forEach(function(key) {
+  Object.keys(params).forEach(function (key) {
     let _path = path.replace(`:${key}`, params[key]);
     if (_path === path) {
       if (method === 'get') {
@@ -42,7 +42,7 @@ export function receivePosts(posts) {
 
 export function fetchPosts(query) {
   let path = assembleUrl(config.posts, query);
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(requestPosts());
     return fetch(path).then(res => res.json()).then(posts => {
       dispatch(receivePosts(posts));
@@ -96,7 +96,7 @@ export function receiveProfiles(profiles) {
 
 export function fetchProfiles(query) {
   let path = assembleUrl(config.profiles, query);
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(requestProfiles());
     return fetch(path).then(res => res.json()).then(profiles => {
       dispatch(receiveProfiles(profiles));
@@ -131,60 +131,6 @@ export function fetchProfile(id) {
   };
 }
 
-export const REQUEST_CATES = 'REQUEST_CATES';
-
-export function requestCates() {
-  return {
-    type: REQUEST_CATES
-  };
-}
-
-export const RECEIVE_CATES = 'RECEIVE_CATES';
-
-export function receiveCates(cates) {
-  return {
-    type: RECEIVE_CATES,
-    cates
-  };
-}
-
-export function fetchCates(query) {
-  const path = assembleUrl(config.cates, query);
-  return function(dispatch) {
-    dispatch(requestCates());
-    return fetch(path).then(res => res.json()).then(cates => {
-      dispatch(receiveCates(cates));
-    });
-  };
-}
-
-export const REQUEST_CATE = 'REQUEST_CATE';
-
-export function requestCate(id) {
-  return {
-    type: REQUEST_CATE,
-    id
-  };
-}
-
-export const RECEIVE_CATE = 'RECEIVE_CATE';
-
-export function receiveCate(cate) {
-  return {
-    type: RECEIVE_CATE,
-    cate
-  };
-}
-
-export function fetchCate(id) {
-  return function (dispatch) {
-    dispatch(requestCate(id));
-    return fetch(`${config.cate}/${id}`).then(res => res.json()).then(cate => {
-      dispatch(receiveCate(cate));
-    });
-  };
-}
-
 // update post
 // TODO: 提取公共 http 请求逻辑
 export async function updatePost(id, doc) {
@@ -208,28 +154,17 @@ export async function updateProfile(id, doc) {
   return res;
 }
 
-// update category
-export async function updateCate(id, doc) {
-  let res = await fetch(`${config.cate}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(doc),
-  });
-  res = res.json();
-  return res;
-}
-
 // message
 export const SHOW_MESSAGE = 'SHOW_MESSAGE';
 export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 let msgTimeout = null;
 export function closeMessage() {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({ type: CLOSE_MESSAGE });
   };
 }
 export function showMessage(content) {
-  return function(dispatch) {
+  return function (dispatch) {
     if (msgTimeout) {
       msgTimeout = null;
       clearTimeout(msgTimeout);
