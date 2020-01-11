@@ -6,14 +6,11 @@ services:
     environment:
       - NODE_ENV=production
       - DEPLOY=docker
-      - DEBUG=ws:*
     expose:
       - "8101"
-      - "8102"
       - "8104"
     ports:
       - 8101:8101
-      - 8102:8102
       - 8104:8104
     links:
       - redis
