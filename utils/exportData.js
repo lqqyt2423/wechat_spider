@@ -8,7 +8,6 @@ const profileMap = {
   公众号: 'title',
   公众号ID: 'wechatId',
   公众号属性: 'property',
-  机构名称: 'organization'
 };
 
 const postMap = {
@@ -28,17 +27,12 @@ const postMap = {
 module.exports = class ExportData {
 
   constructor(options = {}) {
-    const { msgBiz, category, bizToInfoMap } = options;
+    const { msgBiz, bizToInfoMap } = options;
     this.msgBiz = [];
-    this.category = [];
-    this.shouldGetMsgBiz = false;
-    this.bizCategoryNameMap = {};
     this.bizToInfoMap = bizToInfoMap;
 
     if (msgBiz) this.msgBiz = this.msgBiz.concat(msgBiz);
-    if (category) this.category = this.category.concat(category);
-    if (this.msgBiz.length === 0 && this.category.length === 0) throw new Error('请传入参数');
-    if (this.category.length > 0) this.shouldGetMsgBiz = true;
+    if (this.msgBiz.length === 0) throw new Error('请传入参数');
   }
 
   /**
@@ -122,7 +116,6 @@ module.exports = class ExportData {
    * @api private
    */
   async findPosts(minDate, maxDate) {
-    if (this.shouldGetMsgBiz) await this.getMsgBiz();
     const posts = await models.Post.find({
       msgBiz: { $in: this.msgBiz },
       publishAt: { $gte: minDate, $lt: maxDate },
@@ -153,10 +146,6 @@ module.exports = class ExportData {
       const { profile, msgBiz } = post;
       const postObj = {};
 
-      // 分类
-      const category = this.bizCategoryNameMap[msgBiz];
-      if (category) postObj.分类 = category;
-
       // 公众号信息
       Object.keys(profileMap).forEach(key => {
         const value = profile[profileMap[key]];
@@ -165,9 +154,8 @@ module.exports = class ExportData {
 
       // 传入的额外公众号信息
       if (this.bizToInfoMap && this.bizToInfoMap[msgBiz]) {
-        const { property, organization } = this.bizToInfoMap[msgBiz];
+        const { property } = this.bizToInfoMap[msgBiz];
         postObj['公众号属性'] = property;
-        postObj['机构名称'] = organization;
       }
 
       // 文章信息
@@ -257,28 +245,6 @@ module.exports = class ExportData {
     });
     return aggrArray;
   }
-
-  /**
-   * 通过category获取msgbizs
-   * @api private
-   */
-  async getMsgBiz() {
-    const categories = await models.Category.find({ _id: { $in: this.category } });
-    if (!(categories && categories.length)) return;
-
-    categories.forEach(category => {
-      const { name, msgBizs } = category;
-
-      // 找到所有的msgBiz都加入进来
-      this.msgBiz = this.msgBiz.concat(msgBizs);
-
-      // 添加msgBiz和分类名称的映射
-      msgBizs.forEach(msgBiz => {
-        this.bizCategoryNameMap[msgBiz] = name;
-      });
-    });
-  }
-
 };
 
 function addBom(csv) {
