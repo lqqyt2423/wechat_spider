@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let NODE_ENV = process.env.NODE_ENV || 'development';
 
-let publicPath = '/';
+const publicPath = '/';
 
 const babelLoader = {
   loader: 'babel-loader',
@@ -30,7 +30,6 @@ const plugins = [
 ];
 
 if (NODE_ENV != 'development') {
-  publicPath = '';
   plugins.push(
     new webpack.DefinePlugin({
       'process.env': {
