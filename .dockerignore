@@ -1,1 +1,8 @@
 node_modules
+client/app
+client/node_modules
+client/package-lock.json
+client/package.json
+client/webpack.config.js
+.git
+.gitignore
