@@ -16,7 +16,7 @@
 
 ### 安装
 
-```shell
+```bash
 git clone https://github.com/lqqyt2423/wechat_spider.git
 cd wechat_spider
 npm install
@@ -26,7 +26,7 @@ npm install
 
 ### 通过 Docker 部署
 
-```shell
+```bash
 git clone https://github.com/lqqyt2423/wechat_spider.git
 cd wechat_spider
 # build image
@@ -43,7 +43,7 @@ docker-compose down
 
 ## 使用
 
-```shell
+```bash
 cd wechat_spider
 npm start
 ```
@@ -72,7 +72,7 @@ npm start
 
 ![可视化界面](imgs/posts_screenshot.png)
 
-前端页面由`React` 编写，如需修改，可编辑`client` 文件中的代码。
+前端页面由 `React` 编写，如需修改，可编辑 `client` 文件中的代码。
 
 ### MongoDB 数据信息
 
@@ -86,15 +86,19 @@ npm start
 
 ### 从 MongoDB 导出数据
 
-#### 命令行直接导出数据：
+#### 命令行直接导出数据
 
-```shell
+```bash
 mongoexport --db wechat_spider --collection posts --type=csv --fields title,link,publishAt,readNum,likeNum,msgBiz,msgMid,msgIdx,sourceUrl,cover,digest,isFail --out ~/Desktop/posts.csv
 ```
 
-#### 脚本导出：
+#### 脚本导出
 
-文件 `/utils/exportData.js` 已经编写好成型的导出数据的方法，直接通过 `JavaScript` 调用即可。
+可参考文件 `/test/exportData.js` 。
+
+## 感谢
+
+感谢此文章提供思路：[微信公众号文章批量采集系统的构建](https://zhuanlan.zhihu.com/p/24302048)
 
 ## 赞赏
 
@@ -102,19 +106,17 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 ![赞赏](imgs/pay.png)
 
-## 付费 Support
+## 联系作者
 
-我已经通过此项目累计抓取了 20w+ 多条数据，所以对于碰到不能获取阅读量、不能自动翻页等等问题而邮件我的，我一律不会回复的。代码就在这里，一些配置的问题，如不明白直接看代码，也不要再邮件我。
+代码已经开源，且功能已测试成功，所以碰到问题先看代码，不懂原理的可看上面链接的文章。
 
-如果实在不明白，请先扫码赞赏，然后邮件联系我。
+鉴于时间珍贵，如果实在有问题要咨询，可接受付费咨询，添加微信好友先发红包再提问，金额随缘。
 
-如需帮忙搭建抓取环境、更高级的功能定制或帮忙抓取数据等，也可邮件联系，价格都好商量。
-
-邮箱： `974923609@qq.com`。
+邮箱： `974923609@qq.com`
 
 微信：
 
-![](https://dy6.top/static_files/lq_wechat.png)
+![wx](imgs/wx.png)
 
 ## License
 
