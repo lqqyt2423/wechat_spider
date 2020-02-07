@@ -70,7 +70,7 @@ npm start
 
 前端页面已打包好，启动项目后，如无修改默认 `server port` 配置，浏览器直接访问 `http://localhost:8104` 即可。检测数据有无抓取保存直接刷新此页面即可。
 
-![可视化界面](imgs/posts_screenshot.png)
+![可视化界面](https://lq-1251676417.cos.ap-shanghai.myqcloud.com/img/posts_screenshot.png)
 
 前端页面由 `React` 编写，如需修改，可编辑 `client` 文件中的代码。
 
@@ -104,7 +104,7 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 如本项目对你有所帮助，可扫码赞赏。
 
-![赞赏](imgs/pay.png)
+![赞赏](https://lq-1251676417.cos.ap-shanghai.myqcloud.com/img/pay.png)
 
 ## 联系作者
 
@@ -116,7 +116,7 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 微信：
 
-![wx](imgs/wx.png)
+![wx](https://lq-1251676417.cos.ap-shanghai.myqcloud.com/img/qrcode_for_gh_a2bc41c80cc8_258.jpg)
 
 ## License
 
