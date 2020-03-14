@@ -6,6 +6,8 @@
 
 支持 Docker 部署。
 
+项目可运行在个人电脑上，也可部署在服务器上。
+
 ## 开始
 
 ### 安装前准备
@@ -53,6 +55,18 @@ npm start
 
 > - 如需测试自动翻页，可先多次分别打开不同的公众号的历史详情页，等数据库中有了翻页的基础公众号信息之后，再随便进入历史页等待翻页跳转
 > - 翻页逻辑仅支持公众号历史页面跳公众号历史页面，微信文章页面跳微信文章页面，两个不同页面不能互相跳转
+
+### 针对微信新版需注意
+
+1. 历史页面可自行拼接后发送至微信中打开，拼接规则为：
+
+```javascript
+var biz = 'MzI4NjQyMTM2Mw==';
+var history_page = 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=' + biz + '&scene=124#wechat_redirect';
+// https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI4NjQyMTM2Mw==&scene=124#wechat_redirect
+```
+
+2. 进入微信文章页面先刷新一下
 
 ### 自定义配置
 
@@ -112,9 +126,7 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 代码已经开源，且功能已测试成功，所以碰到问题先看代码，不懂原理的可看上面链接的文章。
 
-鉴于时间珍贵，如果实在有问题要咨询，可接受付费咨询，添加微信好友先发红包再提问，金额随缘。
-
-邮箱： `974923609@qq.com`
+如果你符合这些条件：不懂技术、时间宝贵不想花时间研究、比较土豪。可付费（1000+元）联系我帮你搭建此项目，且回答你的疑惑点。否则请尽量自己研究。
 
 微信：
 
