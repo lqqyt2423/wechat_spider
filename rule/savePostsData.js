@@ -2,7 +2,6 @@
 
 const url = require('url');
 const moment = require('moment');
-const cheerio = require('cheerio');
 const models = require('../models');
 const logger = require('../utils/logger');
 const redis = require('../utils/redis');
@@ -164,11 +163,7 @@ async function getPostDetail(link, body) {
     nickname,
   } = doc;
 
-  // 从数据库中先查找文章
-  const post = await models.Post.findOne({ msgBiz, msgMid, msgIdx });
-
-  // 如果文章可以找到，且各字段数据都有，就不必再存一次了
-  if (!(post && post.title && post.link && post.wechatId)) {
+  {
     const updateObj = { msgBiz, msgMid, msgIdx, link };
     if (title) updateObj.title = title;
     if (wechatId) updateObj.wechatId = wechatId;
@@ -185,9 +180,7 @@ async function getPostDetail(link, body) {
     logger.info('[save post basic info] %s %s %s %s', msgBiz, msgMid, msgIdx, title);
   }
 
-  // 从数据库中查找对应的公众号
-  const profile = await models.Profile.findOne({ msgBiz });
-  if (!(profile && profile.wechatId && profile.username && profile.headimg)) {
+  {
     const updateObj = { msgBiz };
     if (nickname) updateObj.title = nickname;
     if (wechatId) updateObj.wechatId = wechatId;
@@ -203,37 +196,25 @@ async function getPostDetail(link, body) {
 
   // 保存正文内容
   if (pageConfig.isSavePostContent) {
-    let shouldSaveToDb = true;
+    let content, html;
 
-    if (post) {
-      if (post.html && pageConfig.saveContentType === 'html') {
-        shouldSaveToDb = false;
-      } else if (post.content && pageConfig.saveContentType === 'text') {
-        shouldSaveToDb = false;
-      }
+    if (pageConfig.saveContentType === 'html') {
+      html = await ch.toHtml();
+      content = await ch.toText();
+    } else {
+      content = await ch.toText();
     }
 
-    if (shouldSaveToDb) {
-      let content, html;
-
-      if (pageConfig.saveContentType === 'html') {
-        html = await ch.toHtml();
-        content = await ch.toText();
-      } else {
-        content = await ch.toText();
-      }
-
-      if (content || html) {
-        const updateObj = { msgBiz, msgMid, msgIdx };
-        if (content) updateObj.content = content;
-        if (html) updateObj.html = html;
-        await models.Post.findOneAndUpdate(
-          { msgBiz, msgMid, msgIdx },
-          { $set: updateObj },
-          { upsert: true }
-        );
-        logger.info('[save post content] %s %s %s %s', msgBiz, msgMid, msgIdx, title);
-      }
+    if (content || html) {
+      const updateObj = { msgBiz, msgMid, msgIdx };
+      if (content) updateObj.content = content;
+      if (html) updateObj.html = html;
+      await models.Post.findOneAndUpdate(
+        { msgBiz, msgMid, msgIdx },
+        { $set: updateObj },
+        { upsert: true }
+      );
+      logger.info('[save post content] %s %s %s %s', msgBiz, msgMid, msgIdx, title);
     }
   }
 }

@@ -31,7 +31,10 @@ async function getNextPostLink() {
   const searchQuery = {
     isFail: null,
     link: { $exists: true },
-    publishAt: { $gte: minTime, $lte: maxTime }
+    $or: [
+      { publishAt: { $gte: minTime, $lte: maxTime } },
+      { publishAt: null },
+    ],
   };
 
   if (targetBiz && targetBiz.length > 0) searchQuery.msgBiz = { $in: targetBiz };
@@ -48,6 +51,7 @@ async function getNextPostLink() {
       return posts.filter(post => {
         const { publishAt, updateNumAt } = post;
         if (!updateNumAt) return true;
+        if (!publishAt) return true;
         if (new Date(updateNumAt).getTime() - new Date(publishAt).getTime() > crawlExistInterval) {
           return false;
         } else {
