@@ -66,6 +66,8 @@ npm start
 - 是否保存文章正文内容
 - 是否保存文章评论
 
+需注意，本项目修改了 AnyProxy 的默认端口。连接代理的端口改为 8101，AnyProxy 管理界面的端口改为 8102，且仅在 `NODE_ENV=development` 时才会开启 AnyProxy 的管理界面功能。如需修改，可编辑 `config.js`。
+
 ### 可视化界面
 
 前端页面已打包好，启动项目后，如无修改默认 `server port` 配置，浏览器直接访问 `http://localhost:8104` 即可。检测数据有无抓取保存直接刷新此页面即可。
