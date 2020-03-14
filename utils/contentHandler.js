@@ -75,4 +75,58 @@ module.exports = class ContentHandler {
 
     return { msgBiz, msgMid, msgIdx };
   }
+
+  // 获取文章详情数据
+  async getDetail() {
+    const { msgBiz, msgMid, msgIdx } = await this.getIdentifying();
+    if (!msgBiz || !msgMid || !msgIdx) return null;
+
+    const doc = { msgBiz, msgMid, msgIdx };
+    const body = await this.getBody();
+
+    // 判断此文是否失效
+    if (body.includes('global_error_msg') || body.includes('icon_msg warn')) {
+      doc.isFail = true;
+      return doc;
+    }
+
+    // 从 html 中提取必要信息
+    const getTarget = regexp => {
+      let target = '';
+      body.replace(regexp, (_, t) => {
+        target = t;
+      });
+      return target;
+    };
+
+    let wechatId = getTarget(/<span class="profile_meta_value">(.+?)<\/span>/);
+    const username = getTarget(/var user_name = "(.+?)"/);
+    // 如果上面找到的微信id中包含中文字符 则证明此微信号没有设置微信id 则取微信给定的 username 初始字段
+    if (wechatId && /[\u4e00-\u9fa5]/.test(wechatId)) {
+      wechatId = username;
+    }
+    const title = getTarget(/var msg_title = "(.+?)";/);
+    let publishAt = getTarget(/var ct = "(\d+)";/);
+    if (publishAt) publishAt = new Date(parseInt(publishAt) * 1000);
+    const sourceUrl = getTarget(/var msg_source_url = '(.*?)';/);
+    const cover = getTarget(/var msg_cdn_url = "(.+?)";/);
+    const digest = getTarget(/var msg_desc = "(.+?)";/);
+
+    // 公众号头像
+    const headimg = getTarget(/var hd_head_img = "(.+?)"/);
+    const nickname = getTarget(/var nickname = "(.+?)"/);
+
+    return {
+      ...doc,
+      wechatId,
+      username,
+      title,
+      publishAt,
+      sourceUrl,
+      cover,
+      digest,
+      headimg,
+      nickname,
+    };
+  }
 };
