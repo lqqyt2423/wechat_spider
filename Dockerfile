@@ -1,7 +1,7 @@
 FROM node:10.16.3
 WORKDIR /app
 COPY package.json package-lock.json /app/
-RUN npm install
+RUN npm install --only=prod
 COPY . /app
 # ubuntu 添加根证书相关操作
 RUN cd ~ \
