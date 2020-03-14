@@ -3,12 +3,15 @@
 const merge = require('./utils/merge');
 const env = process.env.NODE_ENV || 'development';
 
+const isDev = env === 'development';
+const isProd = env === 'production';
+
 const config = {
 
   // 环境相关
   env,
-  isDev: env === 'development',
-  isProd: env === 'production',
+  isDev,
+  isProd,
 
   // 接口和前端等可视化相关的端口号
   serverPort: 8104,
@@ -20,7 +23,7 @@ const config = {
     // anyproxy 的前端可视化界面
     webInterface: {
       // 是否开启
-      enable: false,
+      enable: isDev ? true : false,
       // 访问的端口地址
       webPort: 8102
     },
@@ -32,7 +35,7 @@ const config = {
     // 是否开启 websocket 代理
     wsIntercept: false,
     // 控制 anyproxy 是否在命令行打印抓取记录等 log 信息
-    silent: true
+    silent: isDev ? false : true
   },
 
   // mongo 数据库设置
@@ -78,7 +81,7 @@ const config = {
 
       // 是否保存微信文章内容
       // 内容占用很多空间，尤其是html形式
-      isSavePostContent: false,
+      isSavePostContent: isDev ? true : false,
       // 保存内容的形式: html/text
       saveContentType: 'text',
     },
@@ -108,14 +111,9 @@ const config = {
     isCrawlComments: true,
 
     // 优化项：是否替换掉所有的图片请求
-    isReplaceImg: true,
+    isReplaceImg: isDev ? false : true,
     // 优化项：是否替换手机上显示的正文内容
-    isReplacePostBody: true,
-  },
-
-  mp: {
-    cookie: '',
-    token: '',
+    isReplacePostBody: isDev ? false : true,
   },
 
   // 添加代理基本认证
