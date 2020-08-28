@@ -12,20 +12,20 @@
   "author": "liqiang",
   "license": "MIT",
   "dependencies": {
-    "anyproxy": "^4.1.2",
+    "anyproxy": "^4.1.3",
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
     "ip": "^1.1.5",
     "json2csv": "3.11.5",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0",
-    "mongoose": "^5.8.4",
-    "morgan": "^1.9.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.27.0",
+    "mongoose": "^5.10.1",
+    "morgan": "^1.10.0",
     "motime": "^0.0.2",
     "redis": "^2.8.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5",
-    "winston": "^3.2.1"
+    "request-promise": "^4.2.6",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
