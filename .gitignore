@@ -60,3 +60,4 @@ typings/
 private/
 my_config.js
 my_config.json
+.DS_Store
