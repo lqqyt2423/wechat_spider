@@ -1,6 +1,6 @@
 # wechat_spider 微信爬虫
 
-基于 Node.js 的微信爬虫，通过中间人代理的原理，批量获取微信文章数据，包括阅读量、点赞量、评论和文章正文等数据。
+基于 Node.js 的微信爬虫，通过中间人代理的原理，批量获取微信文章数据，包括阅读量、点赞量、在看数、评论和文章正文等数据。
 
 使用代理模块 AnyProxy。代码已支持 AnyProxy 4 版本。
 
@@ -86,7 +86,7 @@ var history_page = 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=' 
 
 前端页面已打包好，启动项目后，如无修改默认 `server port` 配置，浏览器直接访问 `http://localhost:8104` 即可。检测数据有无抓取保存直接刷新此页面即可。
 
-![可视化界面](https://lq-1251676417.cos.ap-shanghai.myqcloud.com/img/posts_screenshot.png)
+![可视化界面](./imgs/posts_screenshot.png)
 
 前端页面由 `React` 编写，如需修改，可编辑 `client` 文件中的代码。
 
@@ -120,7 +120,7 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 如本项目对你有所帮助，可扫码赞赏。
 
-![赞赏](https://lq-1251676417.cos.ap-shanghai.myqcloud.com/img/pay.png)
+![赞赏](./imgs/pay.png)
 
 ## 联系作者
 
@@ -130,7 +130,7 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 微信：
 
-![wx](https://lq-1251676417.cos.ap-shanghai.myqcloud.com/img/qrcode_for_gh_a2bc41c80cc8_258.jpg)
+![wx](./imgs/wx.png)
 
 ## License
 
