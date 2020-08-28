@@ -17,6 +17,8 @@ const Post = new Schema({
   readNum: Number,
   // 点赞数
   likeNum: Number,
+  // 在看数
+  likeNum2: Number,
   // 公众号标志
   msgBiz: String,
   // 应该是每次发布的消息的标志

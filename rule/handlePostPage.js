@@ -20,8 +20,8 @@ const getReadAndLikeNum = async function (ctx) {
 
   const body = res.response.body.toString();
   const data = JSON.parse(body);
-  const { read_num, like_num } = data.appmsgstat;
-  const [readNum, likeNum] = [read_num, like_num];
+  const { read_num, like_num, old_like_num } = data.appmsgstat;
+  const [readNum, likeNum2, likeNum] = [read_num, like_num, old_like_num];
 
   const { requestData } = req;
   const reqData = String(requestData);
@@ -36,11 +36,11 @@ const getReadAndLikeNum = async function (ctx) {
 
   const post = await models.Post.findOneAndUpdate(
     { msgBiz, msgMid, msgIdx },
-    { readNum, likeNum, updateNumAt: new Date() },
+    { readNum, likeNum, likeNum2, updateNumAt: new Date() },
     { new: true, upsert: true }
   );
 
-  logger.info('[获取文章阅读点赞] id: %s, title: %s, read: %s, like: %s', post.id, post.title, readNum, likeNum);
+  logger.info('[获取文章阅读点赞] id: %s, title: %s, 阅读: %s, 赞: %s, 在看: %s', post.id, post.title, readNum, likeNum, likeNum2);
   logger.info(await debugInfo());
 };
 

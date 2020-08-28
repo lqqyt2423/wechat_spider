@@ -105,7 +105,7 @@ var history_page = 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=' 
 #### 命令行直接导出数据
 
 ```bash
-mongoexport --db wechat_spider --collection posts --type=csv --fields title,link,publishAt,readNum,likeNum,msgBiz,msgMid,msgIdx,sourceUrl,cover,digest,isFail --out ~/Desktop/posts.csv
+mongoexport --db wechat_spider --collection posts --type=csv --fields title,link,publishAt,readNum,likeNum,likeNum2,msgBiz,msgMid,msgIdx,sourceUrl,cover,digest,isFail --out ~/Desktop/posts.csv
 ```
 
 #### 脚本导出
