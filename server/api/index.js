@@ -163,8 +163,8 @@ api.get('/profiles', wrap(async (req, res) => {
   for (const item of data) {
     let postsAllCount = 0, postsHasDataCount = 0, newestPostTime = null, oldestPostTime = null;
     if (item.msgBiz) {
-      postsAllCount = await models.Post.count({ msgBiz: item.msgBiz });
-      postsHasDataCount = await models.Post.count({ msgBiz: item.msgBiz, readNum: { $exists: true } });
+      postsAllCount = await models.Post.countDocuments({ msgBiz: item.msgBiz });
+      postsHasDataCount = await models.Post.countDocuments({ msgBiz: item.msgBiz, readNum: { $exists: true } });
       newestPostTime = ((await models.Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: -1 }).limit(1))[0] || {}).publishAt || null;
       oldestPostTime = ((await models.Post.find({ msgBiz: item.msgBiz, publishAt: { $exists: true } }).sort({ publishAt: 1 }).limit(1))[0] || {}).publishAt || null;
     }

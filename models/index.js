@@ -11,13 +11,22 @@ require('./plugins/paginator');
 
 const config = require('../config');
 
-mongoose.connect(config.mongodb.db, (err) => {
-  if (err) {
-    logger.warn('connect to mongodb failed');
-    logger.error(err);
-    process.exit(1);
+mongoose.connect(
+  config.mongodb.db,
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  },
+  (err) => {
+    if (err) {
+      logger.warn('connect to mongodb failed');
+      logger.error(err);
+      process.exit(1);
+    }
   }
-});
+);
 
 if (config.isProd) mongoose.set('debug', false);
 if (config.isDev) mongoose.set('debug', true);

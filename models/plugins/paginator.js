@@ -35,7 +35,7 @@ Query.prototype.paginate = async function (options, callback) {
   let count = opts.count || 0;
 
   try {
-    if (!count) count = await model.where(conditions).count();
+    if (!count) count = await model.where(conditions).countDocuments();
 
     // 计算每页数
     opts.perPage = opts.perPage >= opts.maxPerPage ? opts.maxPerPage : opts.perPage;
