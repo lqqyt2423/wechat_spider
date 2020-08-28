@@ -133,7 +133,7 @@ module.exports = class ContentHandler {
     if (wechatId && /[\u4e00-\u9fa5]/.test(wechatId)) {
       wechatId = username;
     }
-    const title = getTarget(/var msg_title = "(.+?)";/);
+    const title = getTarget(/var msg_title = '(.+?)'/);
     let publishAt = getTarget(/var ct = "(\d+)";/);
     if (publishAt) publishAt = new Date(parseInt(publishAt) * 1000);
     const sourceUrl = getTarget(/var msg_source_url = '(.*?)';/);
