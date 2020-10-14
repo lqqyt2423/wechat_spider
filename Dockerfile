@@ -12,5 +12,5 @@ RUN cd ~ \
   && update-ca-certificates
 # 修改时区
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-EXPOSE 8101 8104
+EXPOSE 8101 8104 8102
 CMD ["node", "index.js"]
