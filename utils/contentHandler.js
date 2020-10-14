@@ -38,8 +38,8 @@ module.exports = class ContentHandler {
    */
   async toHtml() {
     if (this.html) return this.html;
-    this.html = (await this.parseBodyToHtml()).html().trim() || '';
-    return this.html;
+    this.html = (await this.parseBodyToHtml()).html() || '';
+    return this.html.trim();
   }
 
   /**
