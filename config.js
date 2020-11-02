@@ -31,7 +31,8 @@ const config = {
     // 设置为 undefined 不限速
     throttle: undefined,
     // 是否强制解析所有 HTTPS 流量
-    forceProxyHttps: true,
+    // anyproxy 性能比较差，所以这里默认关闭，仅当域名是微信相关时，才会解析
+    forceProxyHttps: false,
     // 是否开启 websocket 代理
     wsIntercept: false,
     // 控制 anyproxy 是否在命令行打印抓取记录等 log 信息

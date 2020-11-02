@@ -127,10 +127,21 @@ const rule = {
     } catch (e) {
       logger.error(e);
     }
-  }
+  },
 
-  // 是否处理https请求 已全局开启解析https请求 此处注释掉即可
-  // *beforeDealHttpsRequest(requestDetail) { /* ... */ },
+  // 默认关闭全局解析 HTTPS 流量
+  // 仅当为微信的域名时，才会拦截解析，这样子性能会好很多
+  *beforeDealHttpsRequest(requestDetail) {
+    const { host } = requestDetail;
+
+    const whitelist = [
+      'mp.weixin.qq.com:443',
+    ];
+
+    const dealHttps = whitelist.includes(host);
+    logger.info('receive https request: %s, %s', host, dealHttps ? 'begin intercept' : 'only transpond');
+    return dealHttps;
+  },
 
   // 请求出错的事件
   // *onError(requestDetail, error) { /* ... */ },
