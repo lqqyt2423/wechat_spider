@@ -138,7 +138,7 @@ module.exports = class ContentHandler {
     if (publishAt) publishAt = new Date(parseInt(publishAt) * 1000);
     const sourceUrl = getTarget(/var msg_source_url = '(.*?)';/);
     const cover = getTarget(/var msg_cdn_url = "(.+?)";/);
-    const digest = getTarget(/var msg_desc = "(.+?)";/);
+    const digest = getTarget(/var msg_desc = htmlDecode\("(.+?)"\);/);
 
     // 公众号头像
     const headimg = getTarget(/var hd_head_img = "(.+?)"/);
@@ -168,16 +168,16 @@ module.exports = class ContentHandler {
       return target;
     };
 
-    const username = getTarget(/d.user_name = "(.+?)"/);
-    const title = getTarget(/d.title = "(.+?)"/);
-    let publishAt = getTarget(/d.ct = "(\d+)";/);
+    const username = getTarget(/user_name: "(.+?)"/);
+    const title = getTarget(/d.title = .*'(.+?)';/);
+    let publishAt = getTarget(/d.ct = .*'(\d+)';/);
     if (publishAt) publishAt = new Date(parseInt(publishAt) * 1000);
 
     const $ = await this.get$Html();
     const cover = ($('#img_list img').attr() || {}).src;
 
-    const headimg = getTarget(/d.hd_head_img = "(.+?)"/);
-    const nickname = getTarget(/d.nick_name = "(.+?)"/);
+    const headimg = getTarget(/d.hd_head_img = .*'(.+?)' \|\|/);
+    const nickname = getTarget(/d.nick_name = .*'(.+?)';/);
 
     return {
       ...doc,
