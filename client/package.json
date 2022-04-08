@@ -18,7 +18,7 @@
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
     "material-ui": "^0.19.2",
-    "moment": "^2.21.0",
+    "moment": "^2.29.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
