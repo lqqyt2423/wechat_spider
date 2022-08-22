@@ -3,7 +3,7 @@
 const ExportData = require('../utils/exportData');
 
 async function run() {
-  const bizs = ['MzI5NDM5MjU1Nw==', 'MjEwNDI4NTA2MQ=='];
+  const bizs = ['MjM5MjAyNDUyMA==', 'Mzk0MjE3NDE0Ng=='];
   const endAt = new Date();
   const startAt = new Date(endAt.getTime() - 1000 * 60 * 60 * 24 * 30);
 

@@ -66,8 +66,8 @@ const config = {
       jumpInterval: 2,
 
       // 跳转文章发布时间范围
-      minTime: new Date('2020/1/1'),
-      maxTime: new Date('2021/1/1'),
+      minTime: new Date('2022/2/1'),
+      maxTime: new Date('2022/8/1'),
 
       // 已经抓取过的文章是否需要再次抓取
       isCrawlExist: true,
@@ -98,10 +98,10 @@ const config = {
       // 页面会自动下拉
       // 下拉至此项设置的时间便会停止
       // 然后跳转至下一个公众号历史页面
-      minTime: new Date('2020/1/1'),
+      minTime: new Date('2022/2/1'),
 
       // 控制在此时间后已经抓取过的公众号本次就不用再抓取了
-      maxUpdatedAt: new Date('2021/1/1'),
+      maxUpdatedAt: new Date('2022/8/1'),
 
       // 抓取公众号 biz 范围 [string]
       // 为空表示不限制范围
