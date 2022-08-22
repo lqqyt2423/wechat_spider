@@ -13,7 +13,7 @@
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.3",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.13.1",
+    "lodash": "^4.17.21",
     "lodash.assign": "^4.0.9",
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
