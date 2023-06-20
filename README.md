@@ -116,11 +116,19 @@ mongoexport --db wechat_spider --collection posts --type=csv --fields title,link
 
 感谢此文章提供思路：[微信公众号文章批量采集系统的构建](https://zhuanlan.zhihu.com/p/24302048)
 
-## 联系作者
+### 赞助我
 
-如需赞赏、技术交流、数据抓取、商务合作等，可联系作者。
+如果你觉得这个项目对你有帮助，不妨考虑给我买杯咖啡。
 
-![添加微信](./imgs/wx.JPG)
+赞助时可备注来源 wechat spider，我会将你添加至下面的赞助列表中。
+
+<div align="center">
+	<img alt="sponsorme" src="./imgs/sponsor-me.jpeg" style="width: 300px" />
+</div>
+
+感谢以下赞助者：
+
+暂无
 
 ## License
 
